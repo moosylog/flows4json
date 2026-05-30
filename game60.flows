@@ -1,0 +1,111 @@
+uid = "gaming60"
+type = "mutation"
+language = "us"
+title = "🎮 Gaming Layer"
+subtitle = "Adds a Gaming Layer"
+description = """
+Adds a dedicated gaming layer to your layout for optimized gameplay controls.
+✔️ Go60
+❌ Glove80
+This creates a Gaming Layer on Go60, similar to copy layer.  
+📢 You need to add the layer toggle yourself manually!
+
+"""
+# ==============================================================================
+# 🎮 MOERGO GO60 GAMING LAYER INJECTOR
+# ==============================================================================
+
+# Purpose: Adds a dedicated Gaming layer to your Go60 layout.
+# Safety: Prevents running on wrong hardware (Glove80) or if layer exists.
+# Pattern: Atomic Injection (All-or-Nothing safety).
+# ==============================================================================
+
+# 1. SCOPE FINDER
+# We wrap the whole script in this parenthesis to find the right entry point.
+# Some files have a ".keymap" wrapper, others don't. This handles both.
+
+(if .keymap then .keymap else . end) |= (
+
+  # ----------------------------------------------------------------------------
+  # 🛑 SAFETY CHECKS (FAIL FAST)
+  # ----------------------------------------------------------------------------
+
+  # Check 1: Hardware Match
+  ((.keyboard // "unknown") | ascii_downcase) as $hw_sig |
+  if ($hw_sig != "go60") then
+    "Err: Hardware mismatch. Target: 'go60', Found: '\($hw_sig)'." | halt_error
+  else . end |
+
+  # Check 2: Duplication Guard
+  if (.layer_names | index("Gaming")) then
+    "Err: Gaming layer exists" | halt_error
+  else . end |
+
+  # ----------------------------------------------------------------------------
+  # 🛠️ HELPERS
+  # ----------------------------------------------------------------------------
+
+  def kp($code):
+    { "value": "&kp", "params": [{ "value": $code, "params": [] }] };
+
+  def kp_mod($code; $modifier):
+    { "value": "&kp", "params": [{ "value": $modifier, "params": [{ "value": $code, "params": [] }] }] };
+
+  # ----------------------------------------------------------------------------
+  # 📝 KEYBOARD DATA MAPPING
+  # ----------------------------------------------------------------------------
+
+  [
+    # Number Row (0-12)
+    [0,"ESC"], [1,"N1"], [2,"N2"], [3,"N3"], [4,"N4"], [5,"N5"], [6,"N6"],
+    [7,"N7"], [8,"N8"], [9,"N9"], [10,"N0"], [11,"MINUS"], [12,"RET"],
+
+    # Top Row (13-24)
+    [13,"TAB"], [14,"Q"], [15,"W"], [16,"E"], [17,"R"], [18,"Y"], [19,"U"],
+    [20,"I"], [21,"O"], [22,"P"], [24,"GRAVE"],
+
+    # Home Row (25-36)
+    [25,"LSHFT"], [26,"A"], [27,"S"], [28,"D"], [29,"F"], [30,"H"],
+    [31,"J"], [32,"K"], [33,"L"], [34,"SEMI"], [36,"B"],
+
+    # Bottom Row (37-46)
+    [37,"LCTRL"], [38,"Z"], [39,"X"], [40,"C"], [41,"V"], [42,"N"],
+    [43,"M"], [44,"UP"],
+
+    # Thumb Cluster & Modifiers (47-59)
+    [47,"LGUI"], [48,"LALT"], [49,"T"], [50,"G"], [51,"LEFT"],
+    [52,"DOWN"], [53,"RIGHT"], [54,"SPACE"],
+    [55,"LSHFT"], [56,"LCTRL"], [57,"BSPC"], [58,"LALT"], [59,"RET"],
+
+    # Special Shifted Symbols
+    [23,"EQUAL","LS"], [35,"SQT","LS"], [45,"COMMA","LS"], [46,"DOT","LS"]
+  ] as $mapping |
+
+  # ----------------------------------------------------------------------------
+  # 🚀 EXECUTION PHASE
+  # ----------------------------------------------------------------------------
+
+  (.layers | length) as $new_idx |
+
+  .creator = "moosy" |
+  .layer_names += ["Gaming"] |
+
+  # Initialize layer with transparent keys
+  .layers[$new_idx] = [range(60) | { "value": "&trans", "params": [] }] |
+
+  # Fill keys
+  reduce $mapping[] as $map (.;
+    if ($map | length) == 3 then
+      .layers[$new_idx][$map[0]] = kp_mod($map[1]; $map[2])
+    else
+      .layers[$new_idx][$map[0]] = kp($map[1])
+    end
+  )
+)
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+[config]
+foo = "Beginners"
+num = 123
