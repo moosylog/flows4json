@@ -233,7 +233,7 @@ def get_as_holdtap: {
 """
 [manifest]
 author = "moosyresearch"
-keyboards = ["go60"]
+keyboards = ["go60","glove80"]
 [config]
 foo = "Beginners"
 num = 123
