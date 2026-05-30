@@ -22,8 +22,8 @@ Autoshift does nothing until you switch to the Autoshift layer.
 # Check if a key is a valid candidate for AutoShift (A-Z or N0-N9)
 def is_autoshift_candidate($val):
   ($val | type == "string") and (
-    ($val | test("^[A-Z]$")) or
-    ($val | test("^N[0-9]$"))
+    ($val | test("^[A-Z]$")) or      # Alpha keys
+    ($val | test("^N[0-9]$"))        # Number row (N1, N2, etc.)
   );
 
 # Safely extracts the base key code regardless of nesting depth
@@ -55,12 +55,10 @@ def get_as_macros: [
     ],
     "params": ["code"]
   },
-
   {
     "name": "&AS_v1_TKZ",
     "description": "AutoShift: Main Entry",
-    "waitMs": 10,
-    "tapMs": 10,
+    "waitMs": 10, "tapMs": 10,
     "bindings": [
       {"value":"&macro_press","params":[]},
       {"value":"&macro_param_1to1","params":[]},
@@ -79,7 +77,7 @@ def get_as_macros: [
 def get_as_holdtap: {
   "name": "&AS_HT_v2_TKZ",
   "description": "AutoShift: Engine",
-  "bindings": ["&AS_Shifted_v1_TKZ","&kp"],
+  "bindings": ["&AS_Shifted_v1_TKZ", "&kp"],
   "tappingTermMs": 190,
   "flavor": "tap-preferred"
 };
@@ -94,7 +92,7 @@ def get_as_holdtap: {
 
 # Step 2: Perform transformation on the keymap branch
 (.keymap // .) |= (
-
+  
   # Inject Behaviors
   .macros = ([.macros // [], get_as_macros] | flatten | unique_by(.name)) |
   .holdTaps = ([.holdTaps // [], [get_as_holdtap]] | flatten | unique_by(.name)) |
@@ -108,26 +106,15 @@ def get_as_holdtap: {
   .layers[$as_idx] = [
     range($key_count) as $i |
     $base_layer[$i] as $k |
+    (if ($k | type == "object") then ($k.params[0].value // "") else ($k | tostring) end) as $val |
 
-    (if ($k | type == "object")
-     then ($k.params[0].value // "")
-     else ($k | tostring)
-     end) as $val |
-
-    if ($k.value == "&kp" or ($k | type == "string" and startswith("&kp ")))
-       and is_autoshift_candidate($val)
-    then
+    if ($k.value == "&kp" or ($k | type == "string" and startswith("&kp "))) and is_autoshift_candidate($val) then
       {
         "value": "&AS_v1_TKZ",
         "params": [
           {
-            "value": $val,
-            "params": (
-              if ($k | type == "object")
-              then ($k.params[0].params // [])
-              else []
-              end
-            )
+            "value": $val, 
+            "params": (if ($k | type == "object") then ($k.params[0].params // []) else [] end)
           }
         ]
       }
@@ -135,125 +122,8 @@ def get_as_holdtap: {
       {"value": "&trans", "params": []}
     end
   ]
-)
-
-# Final result is the modified root object
-script = """
-# -------------------------------------------------------------------------
-# ZMK UNICODE MACRO GENERATOR (Protocol v5.2)
-# -------------------------------------------------------------------------
-# Purpose: Automatically generates complex ZMK macros for Unicode symbols.
-# Features:
-#   1. OS-Agnostic: Handles Windows (Alt Codes + Surrogates), macOS, and Linux.
-#   2. Hex Math: Converts Unicode points (U+1F525) to Decimal and back to Hex.
-#   3. Null-Safe: Works on any ZMK JSON layout file structure.
-# -------------------------------------------------------------------------
-
-# --- CONFIGURATION ---
-"linux" as $target_os |  # Options: "windows", "macos", "linux"
-
-# --- HELPER FUNCTIONS (The "Engine Room") ---
-
-# 1. to_hex($len): Converts a decimal number to a Hex string padded to $len
-#    Example: 65 -> "0041"
-def to_hex($len):
-  "0123456789ABCDEF" as $chars |
-  [ . as $n | recurse(if . >= 16 then ./16|floor else empty end) | . % 16 ]
-  | reverse
-  | map($chars[.:.+1])
-  | join("")
-  | (if length < $len then "0" * ($len - length) + . else . end);
-
-# 2. mk_obj($v): Creates a standard ZMK Binding Object
-#    Example: mk_obj("&kp") -> {"value": "&kp", "params": []}
-def mk_obj($v): { "value": $v, "params": [] };
-
-# 3. mk_kp($code): Wraps a keycode in a &kp object structure
-#    Example: mk_kp("A") -> {"value": "&kp", "params": [{"value": "A", "params": []}]}
-def mk_kp($code):
-  { "value": "&kp", "params": [ mk_obj($code) ] };
-
-# 4. mk_action($type; $code): Wraps a key in a macro action (press/release/tap)
-#    Example: mk_action("&macro_press"; "LALT")
-def mk_action($type; $code):
-  { "value": $type, "params": [ mk_kp($code) ] };
-
-# --- CORE LOGIC ---
-
-# Root Wrapper: Safely finds the layout root (keymap or top-level)
-(if .keymap then .keymap else . end) |= (
-
-  # --- KNOWLEDGE BASE ---
-  {
-    "windows": { "mods": ["LALT"], "leader": "KP_PLUS", "suffix": [], "wait": 30 },
-    "macos":   { "mods": ["LALT"], "leader": null, "suffix": [], "wait": 30 },
-    "linux":   { "mods": ["LCTRL","LSHFT"], "leader": "U", "suffix": ["SPACE"], "wait": 30 }
-  } as $os_registry |
-
-  # --- UNICODE DEFINITIONS ---
-  [
-    { "name": "heart", "u": "2764", "symb": "❤" },
-    { "name": "sparkle", "u": "2728", "symb": "✨" },
-    { "name": "fire", "u": "1F525", "symb": "🔥" }
-  ] as $macro_data |
-
-  ($os_registry[$target_os]) as $cfg |
-
-  # --- GENERATION LOOP ---
-  reduce $macro_data[] as $item (.
-
-    # STEP A: HEX & SURROGATE MATH
-    ("0123456789ABCDEF" as $h |
-     $item.u | ascii_upcase | split("") | reverse |
-     reduce range(0; length) as $i (
-       0;
-       . + ($h | index($item.u[$i:$i+1] | ascii_upcase)) * pow(16; $i)
-     )
-    ) as $dec |
-
-    # Windows surrogate handling
-    (if $target_os == "windows" and $dec > 65535 then
-        ((($dec - 65536) / 1024 | floor) + 55296) as $hi |
-        ((($dec - 65536) % 1024) + 56320) as $lo |
-        [ ($hi | to_hex(4)), ($lo | to_hex(4)) ]
-     else
-        [ $item.u ]
-     end) as $hex_list |
-
-    # STEP B: BUILD MACRO BINDINGS
-    ([
-      ($cfg.mods[] | mk_action("&macro_press"; .)),
-
-      (if $cfg.leader then mk_action("&macro_tap"; $cfg.leader) else empty end),
-
-      ($hex_list[] | split("")[] |
-        (if . >= "0" and . <= "9" then "KP_N" + . else . end) as $key |
-        mk_action("&macro_tap"; $key)
-      ),
-
-      ($cfg.mods[] | mk_action("&macro_release"; .)),
-
-      ($cfg.suffix[] | mk_action("&macro_tap"; .))
-    ]) as $bindings |
-
-    # STEP C: MACRO OBJECT
-    {
-      "name": "&\($target_os)_\($item.name)",
-      "description": "Unicode \($item.symb) \($item.name) (\($target_os))",
-      "compatible": "zmk,behavior-macro",
-      "config": { "wait-ms": $cfg.wait, "tap-ms": $cfg.wait },
-      "bindings": $bindings,
-      "params": []
-    } as $new_macro |
-
-    # STEP D: INTELLIGENT INJECTION
-    .macros |= (
-      if . == null then [] else . end |
-      (map(.name | endswith("_\($item.name)")) | index(true)) as $idx |
-      if $idx then .[$idx] = $new_macro else . + [$new_macro] end
-    )
-  )
-)
+) 
+# The final result is the modified root object, containing layout, env, and config.
 """
 [manifest]
 author = "moosyresearch"
