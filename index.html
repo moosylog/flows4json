@@ -23,6 +23,7 @@
             --radius-md: 10px;
             --radius-sm: 6px;
             --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
         }
 
         * { box-sizing: border-box; font-family: var(--font-stack); -webkit-font-smoothing: antialiased; }
@@ -87,17 +88,17 @@
         .view.active { display: block; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- LIBRARY VIEW (MAC APP STORE STYLE) --- */
+        /* --- LIBRARY VIEW --- */
         .library-content { padding: 40px; max-width: 1200px; margin: 0 auto; }
         .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
         
         .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         
         .app-card {
-            display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: var(--radius-lg);
-            background: transparent; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: flex-start; gap: 16px; padding: 16px; border-radius: var(--radius-lg);
+            background: transparent; cursor: pointer; transition: 0.2s; border: 1px solid transparent;
         }
-        .app-card:hover { background: var(--bg-card); }
+        .app-card:hover { background: var(--bg-card); border-color: rgba(255,255,255,0.05); }
         
         .app-icon {
             width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0;
@@ -105,12 +106,17 @@
             display: flex; align-items: center; justify-content: center; font-size: 24px; color: white;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .app-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
-        .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .app-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; padding-top: 2px;}
+        .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
         .app-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .app-author { font-size: 11px; color: var(--text-secondary); opacity: 0.7; }
         
-        .app-action { flex-shrink: 0; }
+        /* Hardware Tags */
+        .app-tags { display: flex; gap: 6px; margin-top: 6px; }
+        .device-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; border: 1px solid var(--border); color: var(--text-secondary); background: rgba(255,255,255,0.05); }
+        .device-tag.glove80 { color: #d2a8ff; background: rgba(163, 113, 247, 0.15); border-color: rgba(163, 113, 247, 0.3); }
+        .device-tag.go60 { color: #82aaff; background: rgba(130, 170, 255, 0.15); border-color: rgba(130, 170, 255, 0.3); }
+        
+        .app-action { flex-shrink: 0; padding-top: 10px; }
         .app-action button { background: rgba(255,255,255,0.1); color: var(--accent-blue); padding: 5px 14px; font-size: 12px; border-radius: 14px; }
         .app-card:hover .app-action button { background: var(--accent-blue); color: white; }
 
@@ -138,7 +144,6 @@
         .product-subtitle { font-size: 16px; color: var(--text-secondary); }
         .product-developer { font-size: 13px; color: var(--text-secondary); opacity: 0.7; margin-top: 4px; }
         
-        /* The Wizard Area */
         .wizard-area {
             background: var(--bg-card); padding: 16px 20px; border-radius: var(--radius-md);
             margin-top: 16px; display: flex; align-items: center; justify-content: space-between;
@@ -152,30 +157,36 @@
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
 
-        /* Configuration Table */
         .config-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden;}
         .config-table th, .config-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
         .config-table tr:last-child th, .config-table tr:last-child td { border-bottom: none; }
         .config-table th { color: var(--text-secondary); width: 160px; font-weight: 500; }
-        .config-table td { color: var(--text-primary); font-family: monospace; }
+        .config-table td { color: var(--text-primary); font-family: var(--font-mono); }
 
-        /* --- DEVELOPER MODE TRAY --- */
+        /* --- DEVELOPER MODE TRAY (IDE STYLE) --- */
         .dev-toggle-wrapper { padding: 40px; text-align: center; border-top: 1px solid var(--border); margin-top: auto; }
         .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
         .dev-toggle:hover { color: white; text-decoration: underline; }
 
-        .dev-tray { display: none; flex-direction: column; background: #121212; border-top: 1px solid var(--border); height: 400px; flex-shrink: 0;}
+        .dev-tray { display: none; flex-direction: column; background: #181818; border-top: 1px solid var(--border); height: 400px; flex-shrink: 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.5);}
         .dev-tray.active { display: flex; }
-        .dev-tray-header { padding: 8px 16px; background: rgba(255,255,255,0.05); font-size: 11px; text-transform: uppercase; color: var(--text-secondary); display: flex; justify-content: space-between; border-bottom: 1px solid var(--border);}
+        .dev-tray-header { padding: 8px 16px; background: #222222; font-size: 11px; font-weight: 600; color: #a0a0a0; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;}
         .dev-tray-content { display: flex; flex-grow: 1; overflow: hidden; }
-        .dev-pane { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+        .dev-pane { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #333; background: #1e1e1e; }
+        .dev-pane:last-child { border-right: none; }
         
-        textarea { flex-grow: 1; background: #000; color: #a371f7; border: none; padding: 16px; font-family: 'SF Mono', 'Courier New', monospace; font-size: 12px; resize: none; outline: none; }
-        .log-panel { flex-grow: 1; background: #0a0c10; padding: 12px; overflow-y: auto; font-family: 'SF Mono', 'Courier New', monospace; font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
-        .log-entry { padding: 4px 8px; border-radius: 4px; line-height: 1.4; white-space: pre-wrap; }
-        .log-success { color: var(--accent-green); }
-        .log-danger { color: var(--accent-red); }
-        .log-info { color: var(--accent-blue); }
+        textarea { flex-grow: 1; background: #1e1e1e; color: #d4d4d4; border: none; padding: 16px; font-family: var(--font-mono); font-size: 13px; line-height: 1.5; resize: none; outline: none; }
+        textarea:focus { box-shadow: inset 0 0 0 1px var(--accent-blue); }
+        
+        /* Professional Log Terminal */
+        .log-panel { flex-grow: 1; background: #181818; padding: 12px; overflow-y: auto; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
+        .log-entry { padding: 6px 10px; border-radius: 4px; border-left: 3px solid transparent; line-height: 1.4; white-space: pre-wrap; background: rgba(255,255,255,0.02); color: #cccccc;}
+        .log-time { color: #666666; margin-right: 8px; font-size: 11px; }
+        
+        .log-success { border-left-color: var(--accent-green); background: rgba(48, 209, 88, 0.05); }
+        .log-danger { border-left-color: var(--accent-red); background: rgba(255, 69, 58, 0.05); }
+        .log-info { border-left-color: var(--accent-blue); }
+        .log-warning { border-left-color: #ffd60a; background: rgba(255, 214, 10, 0.05); }
     </style>
 </head>
 <body>
@@ -184,11 +195,11 @@
         <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON</div>
         
         <div>
-            <input type="text" id="searchInput" class="search-box" placeholder="Search...">
+            <input type="text" id="searchInput" class="search-box" placeholder="Search automations...">
         </div>
 
         <div>
-            <div class="sidebar-section-title">Hardware Match</div>
+            <div class="sidebar-section-title">Hardware Support</div>
             <div class="segmented-control">
                 <input type="radio" id="dev-all" name="device" value="all" checked>
                 <label for="dev-all">All</label>
@@ -252,25 +263,25 @@
                 </div>
 
                 <div class="dev-toggle-wrapper">
-                    <button class="dev-toggle" onclick="app.toggleDevTray()">{" "} Toggle Developer Console</button>
+                    <button class="dev-toggle" onclick="app.toggleDevTray()">{" "} Toggle Developer IDE</button>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <div class="dev-tray" id="devTray" style="position: absolute; bottom: 0; width: calc(100% - 260px); right: 0;">
+    <div class="dev-tray" id="devTray">
         <div class="dev-tray-header">
-            <span>Developer Tools</span>
-            <button style="padding: 2px 8px; font-size: 10px; border-radius: 4px;" onclick="app.toggleDevTray()">Close</button>
+            <span>Developer IDE</span>
+            <button style="padding: 2px 8px; font-size: 10px; border-radius: 4px;" onclick="app.toggleDevTray()">Close Drawer</button>
         </div>
         <div class="dev-tray-content">
             <div class="dev-pane">
-                <div style="padding: 6px 12px; font-size: 10px; color: #888; background: #000; border-bottom: 1px solid var(--border);">Source JQ Script</div>
-                <textarea id="jqInput"></textarea>
+                <div style="padding: 6px 12px; font-size: 10px; color: #888; background: #181818; border-bottom: 1px solid #333;">flow_script.jq</div>
+                <textarea id="jqInput" spellcheck="false"></textarea>
             </div>
             <div class="dev-pane">
-                <div style="padding: 6px 12px; font-size: 10px; color: #888; background: #000; border-bottom: 1px solid var(--border);">Terminal</div>
+                <div style="padding: 6px 12px; font-size: 10px; color: #888; background: #181818; border-bottom: 1px solid #333;">Terminal Output</div>
                 <div class="log-panel" id="logPanel"></div>
             </div>
         </div>
@@ -280,14 +291,15 @@
 
     <script>
         // ==========================================
-        // UI HELPERS & LOGGING
+        // IDE LOGGER
         // ==========================================
         class Logger {
             constructor(panelId) { this.panel = document.getElementById(panelId); }
             print(msg, type = "info") {
                 const entry = document.createElement('div');
                 entry.className = `log-entry log-${type}`;
-                entry.innerText = `> ${msg}`;
+                const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+                entry.innerHTML = `<span class="log-time">[${time}]</span> ${msg}`;
                 this.panel.appendChild(entry);
                 this.panel.scrollTop = this.panel.scrollHeight;
             }
@@ -323,12 +335,11 @@
                 this.catalog = [];
                 this.activeCategory = 'All';
                 
-                // State
                 this.activeFlow = null;
                 this.sourceAST = null;
                 this.outputAST = null;
                 this.fileName = "compiled_layout.json";
-                this.wizardState = "upload"; // upload, loading, ready, error, success
+                this.wizardState = "upload"; 
 
                 this.bindEvents();
                 this.fetchCatalog();
@@ -412,7 +423,7 @@
                 } else if (this.wizardState === "error") {
                     box.innerHTML = `
                         <div class="wizard-status">
-                            <span class="wizard-status-title" style="color: var(--accent-red);">Error</span>
+                            <span class="wizard-status-title" style="color: var(--accent-red);">Parse Error</span>
                             <span class="wizard-status-desc">${this.wizardError || 'Something went wrong.'}</span>
                         </div>
                         <button onclick="document.getElementById('layoutFile').click()">Try Again</button>
@@ -423,7 +434,7 @@
                             <span class="wizard-status-title" style="color: var(--accent-blue);">Layout Loaded</span>
                             <span class="wizard-status-desc">${this.fileName} is ready.</span>
                         </div>
-                        <button class="accent" onclick="app.runFlow()">Apply Flow</button>
+                        <button class="accent" onclick="app.runFlow()">Apply Mod</button>
                     `;
                 } else if (this.wizardState === "success") {
                     box.innerHTML = `
@@ -537,12 +548,20 @@
 
                     const bg = getGradient(flow.title);
                     const emoji = getEmoji(flow.category);
+                    
+                    // Generate Hardware Tags
+                    const tagsHtml = flow.devices.map(d => {
+                        let type = d.toLowerCase();
+                        if (type === 'go60' || type === 'glove80') return `<span class="device-tag ${type}">${d}</span>`;
+                        return `<span class="device-tag">${d}</span>`;
+                    }).join('');
 
                     card.innerHTML = `
                         <div class="app-icon" style="background: ${bg};">${emoji}</div>
                         <div class="app-info">
                             <div class="app-title">${flow.title}</div>
                             <div class="app-sub">${flow.subtitle || flow.category}</div>
+                            <div class="app-tags">${tagsHtml}</div>
                         </div>
                         <div class="app-action"><button>View</button></div>
                     `;
@@ -558,6 +577,7 @@
                 
                 this.wizardState = "loading";
                 this.renderWizard();
+                terminal.print(`Reading file: ${file.name}...`, "info");
 
                 const reader = new FileReader();
                 reader.onload = async (event) => {
@@ -573,12 +593,13 @@
                         
                         this.wizardState = "ready";
                         this.renderWizard();
-                        terminal.print(`Loaded target JSON: ${file.name}`, "info");
+                        terminal.print(`AST structure normalized and mapped successfully.`, "success");
                     } catch (err) { 
                         this.wizardState = "error";
-                        this.wizardError = "Invalid JSON file.";
+                        this.wizardError = "Invalid JSON structure.";
                         this.renderWizard();
                         terminal.print(`Parse Error: ${err.message}`, "danger");
+                        document.getElementById('devTray').classList.add('active'); // Auto-open logs on error
                     }
                 };
                 reader.readAsText(file);
@@ -590,14 +611,14 @@
                 
                 this.wizardState = "loading";
                 this.renderWizard();
-                terminal.print("Executing Flow Script...", "info");
+                terminal.print("Initiating jq.wasm bridge execution...", "info");
 
                 try {
                     const result = await jq.json(this.sourceAST, script);
                     if (!result) throw new Error("Script execution evaluated to null.");
                     
                     this.outputAST = result;
-                    terminal.print(`Execution Successful. Output stored in memory.`, "success");
+                    terminal.print(`Execution Successful. Target memory updated.`, "success");
                     
                     this.wizardState = "success";
                     this.renderWizard();
@@ -606,9 +627,7 @@
                     this.wizardError = "Script execution failed.";
                     this.renderWizard();
                     terminal.print(`Execution Error: ${error.message}`, "danger");
-                    
-                    // Auto-open dev tray so user can see error
-                    document.getElementById('devTray').classList.add('active');
+                    document.getElementById('devTray').classList.add('active'); // Auto-open logs on error
                 }
             }
 
@@ -622,7 +641,7 @@
                     const a = document.createElement('a');
                     a.href = dataStr; a.download = this.fileName; a.click();
                     
-                    terminal.print(`File downloaded: ${this.fileName}`, "success");
+                    terminal.print(`Sanitized output downloaded as ${this.fileName}`, "success");
                 } catch (err) { terminal.print(`Save Error: ${err.message}`, "danger"); }
             }
         }
