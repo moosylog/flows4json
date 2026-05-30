@@ -1,0 +1,19 @@
+uid = "os_remap"
+type = "mutation"
+language = "us"
+title = "OS Remap"
+subtitle = "OS Layout Remap: Windows → macOS"
+description = """
+Automatically remaps Ctrl and Cmd modifiers across all layers while preserving essential shortcuts like Copy, Paste, Undo, and Redo.
+All modifiers are swapped, including behavior modifiers, on all layers, and the redo exception is built in.
+
+"""
+script = """
+
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+[config]
+foo = "Beginners"
+num = 123
