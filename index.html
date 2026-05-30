@@ -3,231 +3,482 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flows4JSON - Flow Store</title>
+    <title>Flows4JSON - App Store</title>
     <script src="https://cdn.jsdelivr.net/npm/jq-web@0.5.1/jq.wasm.js"></script>
     <style>
+        /* MAC APP STORE DESIGN SYSTEM */
         :root {
-            --bg: #0d1117; --surface: #161b22; --surface-hover: #21262d;
-            --text: #c9d1d9; --text-muted: #8b949e; --primary: #58a6ff;
-            --success: #3fb950; --danger: #f85149; --warning: #d29922; --border: #30363d;
-            --glove: #a371f7; --go60: #d2a8ff;
+            --bg-window: #1e1e1e;
+            --bg-sidebar: #252525;
+            --bg-card: #2c2c2e;
+            --bg-card-hover: #3a3a3c;
+            --text-primary: #ffffff;
+            --text-secondary: #98989d;
+            --accent-blue: #0a84ff;
+            --accent-blue-hover: #0071e3;
+            --accent-green: #30d158;
+            --accent-red: #ff453a;
+            --border: rgba(255, 255, 255, 0.08);
+            --radius-lg: 14px;
+            --radius-md: 10px;
+            --radius-sm: 6px;
+            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
         }
-        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        /* Global Navigation */
-        .topbar { padding: 12px 20px; background: #010409; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-        .brand { font-size: 18px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; cursor: pointer;}
-        .nav-actions { display: flex; gap: 15px; align-items: center; }
-        
-        button { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
-        button:hover:not(:disabled) { background: var(--border); }
-        button.primary { background: var(--success); color: white; border-color: var(--success); }
-        button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-        /* View Containers */
-        .view { display: none; flex-grow: 1; overflow: hidden; }
-        .view.active { display: flex; }
+        * { box-sizing: border-box; font-family: var(--font-stack); -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        h1, h2, h3, h4, p { margin: 0; }
 
-        /* --- LIBRARY VIEW --- */
-        .library-view { display: flex; width: 100%; height: 100%; }
-        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto;}
-        .sidebar h3 { margin: 0 0 10px 0; font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .search-box { width: 100%; background: var(--bg); border: 1px solid var(--border); color: white; padding: 10px; border-radius: 6px; outline: none; }
+        /* BUTTONS */
+        button {
+            background: rgba(255,255,255,0.1); color: var(--text-primary); border: none;
+            padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 600;
+            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+        button:active:not(:disabled) { transform: scale(0.96); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
         
-        .category-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
-        .category-item { padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text); display: flex; justify-content: space-between; align-items: center; }
-        .category-item:hover { background: var(--surface-hover); }
-        .category-item.active { background: rgba(88, 166, 255, 0.1); color: var(--primary); font-weight: bold; }
-        .category-count { background: var(--border); font-size: 11px; padding: 2px 8px; border-radius: 10px; color: var(--text-muted); }
+        button.primary { background: var(--text-primary); color: black; }
+        button.primary:hover:not(:disabled) { background: #e0e0e0; }
+        
+        button.accent { background: var(--accent-blue); color: white; }
+        button.accent:hover:not(:disabled) { background: var(--accent-blue-hover); }
 
-        .catalog-grid { flex-grow: 1; padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; align-content: start; }
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
+            padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10;
+        }
+        .brand { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 8px; cursor: pointer;}
         
-        /* Flow Card */
-        .flow-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; gap: 10px; }
-        .flow-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
-        .card-title { font-size: 16px; font-weight: bold; color: white; margin: 0; }
-        .card-category { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(88, 166, 255, 0.1); color: var(--primary); font-weight: bold; text-transform: uppercase; }
-        .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1;}
-        .card-footer { display: flex; gap: 8px; margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--border); }
-        .device-badge { font-size: 11px; padding: 3px 8px; border-radius: 12px; font-weight: bold; border: 1px solid var(--border); }
-        .device-go60 { color: var(--go60); border-color: rgba(210, 168, 255, 0.3); background: rgba(210, 168, 255, 0.1); }
-        .device-glove80 { color: var(--glove); border-color: rgba(163, 113, 247, 0.3); background: rgba(163, 113, 247, 0.1); }
+        .search-box {
+            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white;
+            padding: 8px 12px; border-radius: var(--radius-sm); outline: none; font-size: 13px;
+        }
+        .search-box:focus { border-color: var(--accent-blue); background: rgba(0,0,0,0.4); }
 
-        /* --- STUDIO VIEW --- */
-        .studio-view { display: flex; width: 100%; height: 100%; }
-        .panel { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
-        .panel-header { padding: 10px 15px; background: var(--surface-hover); border-bottom: 1px solid var(--border); font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .sidebar-section-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 8px; }
         
-        .script-meta { padding: 15px; background: #010409; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-        .script-meta h2 { margin: 0 0 5px 0; color: white; font-size: 18px; }
-        .script-meta p { margin: 0; font-size: 13px; color: var(--text-muted); }
+        /* APPLE SEGMENTED CONTROL */
+        .segmented-control {
+            display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .segmented-control label {
+            flex: 1; text-align: center; padding: 5px 0; font-size: 12px; font-weight: 500;
+            color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: 0.2s;
+        }
+        .segmented-control input[type="radio"] { display: none; }
+        .segmented-control input[type="radio"]:checked + label {
+            background: #4a4a4c; color: white; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+        }
+
+        .category-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+        .category-item {
+            padding: 8px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-secondary);
+            display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500;
+        }
+        .category-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .category-item.active { background: var(--accent-blue); color: white; }
+
+        /* VIEWS */
+        .view-container { flex-grow: 1; position: relative; background: var(--bg-window); }
+        .view { display: none; width: 100%; height: 100%; overflow-y: auto; animation: fade 0.2s ease; }
+        .view.active { display: block; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- LIBRARY VIEW (MAC APP STORE STYLE) --- */
+        .library-content { padding: 40px; max-width: 1200px; margin: 0 auto; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
         
-        textarea { flex-grow: 1; background: #010409; color: var(--text); border: none; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 13px; resize: none; outline: none; white-space: pre; }
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
         
-        .log-panel { height: 40%; background: #0a0c10; border-top: 1px solid var(--border); padding: 10px; overflow-y: auto; font-family: 'Courier New', Courier, monospace; font-size: 12px; display: flex; flex-direction: column; gap: 4px; }
-        .log-entry { padding: 6px 10px; border-radius: 4px; border-left: 3px solid transparent; background: rgba(255,255,255,0.02); line-height: 1.4; white-space: pre-wrap; }
-        .log-success { border-left-color: var(--success); color: var(--success); }
-        .log-danger { border-left-color: var(--danger); color: var(--danger); }
-        .log-warning { border-left-color: var(--warning); color: var(--warning); }
-        .log-info { border-left-color: var(--primary); color: var(--text); }
-        .log-verbose { border-left-color: #a371f7; color: #a371f7; }
+        .app-card {
+            display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: var(--radius-lg);
+            background: transparent; cursor: pointer; transition: 0.2s;
+        }
+        .app-card:hover { background: var(--bg-card); }
+        
+        .app-icon {
+            width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0;
+            background: linear-gradient(135deg, #43CBFF 10%, #9708CC 100%);
+            display: flex; align-items: center; justify-content: center; font-size: 24px; color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .app-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; }
+        .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .app-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .app-author { font-size: 11px; color: var(--text-secondary); opacity: 0.7; }
+        
+        .app-action { flex-shrink: 0; }
+        .app-action button { background: rgba(255,255,255,0.1); color: var(--accent-blue); padding: 5px 14px; font-size: 12px; border-radius: 14px; }
+        .app-card:hover .app-action button { background: var(--accent-blue); color: white; }
+
+        /* --- PRODUCT PAGE (STUDIO) --- */
+        .product-page { padding: 0; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; min-height: 100%; }
+        
+        .nav-back {
+            padding: 20px 40px; display: flex; align-items: center; gap: 8px;
+            color: var(--accent-blue); cursor: pointer; font-size: 14px; font-weight: 500;
+        }
+        .nav-back:hover { text-decoration: underline; }
+
+        .product-header {
+            padding: 20px 40px 40px 40px; display: flex; gap: 30px; align-items: flex-start;
+            border-bottom: 1px solid var(--border);
+        }
+        .product-icon-large {
+            width: 120px; height: 120px; border-radius: 28px; flex-shrink: 0;
+            background: linear-gradient(135deg, #43CBFF 10%, #9708CC 100%);
+            display: flex; align-items: center; justify-content: center; font-size: 48px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .product-header-info { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; padding-top: 10px;}
+        .product-title { font-size: 28px; font-weight: 700; line-height: 1.1; }
+        .product-subtitle { font-size: 16px; color: var(--text-secondary); }
+        .product-developer { font-size: 13px; color: var(--text-secondary); opacity: 0.7; margin-top: 4px; }
+        
+        /* The Wizard Area */
+        .wizard-area {
+            background: var(--bg-card); padding: 16px 20px; border-radius: var(--radius-md);
+            margin-top: 16px; display: flex; align-items: center; justify-content: space-between;
+            border: 1px solid var(--border);
+        }
+        .wizard-status { display: flex; flex-direction: column; gap: 4px; }
+        .wizard-status-title { font-size: 14px; font-weight: 600; }
+        .wizard-status-desc { font-size: 12px; color: var(--text-secondary); }
+
+        .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; }
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+        .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+
+        /* Configuration Table */
+        .config-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden;}
+        .config-table th, .config-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+        .config-table tr:last-child th, .config-table tr:last-child td { border-bottom: none; }
+        .config-table th { color: var(--text-secondary); width: 160px; font-weight: 500; }
+        .config-table td { color: var(--text-primary); font-family: monospace; }
+
+        /* --- DEVELOPER MODE TRAY --- */
+        .dev-toggle-wrapper { padding: 40px; text-align: center; border-top: 1px solid var(--border); margin-top: auto; }
+        .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
+        .dev-toggle:hover { color: white; text-decoration: underline; }
+
+        .dev-tray { display: none; flex-direction: column; background: #121212; border-top: 1px solid var(--border); height: 400px; flex-shrink: 0;}
+        .dev-tray.active { display: flex; }
+        .dev-tray-header { padding: 8px 16px; background: rgba(255,255,255,0.05); font-size: 11px; text-transform: uppercase; color: var(--text-secondary); display: flex; justify-content: space-between; border-bottom: 1px solid var(--border);}
+        .dev-tray-content { display: flex; flex-grow: 1; overflow: hidden; }
+        .dev-pane { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+        
+        textarea { flex-grow: 1; background: #000; color: #a371f7; border: none; padding: 16px; font-family: 'SF Mono', 'Courier New', monospace; font-size: 12px; resize: none; outline: none; }
+        .log-panel { flex-grow: 1; background: #0a0c10; padding: 12px; overflow-y: auto; font-family: 'SF Mono', 'Courier New', monospace; font-size: 11px; display: flex; flex-direction: column; gap: 4px; }
+        .log-entry { padding: 4px 8px; border-radius: 4px; line-height: 1.4; white-space: pre-wrap; }
+        .log-success { color: var(--accent-green); }
+        .log-danger { color: var(--accent-red); }
+        .log-info { color: var(--accent-blue); }
     </style>
 </head>
 <body>
 
-    <div class="topbar">
-        <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON <span style="font-weight: 300; font-size: 14px; color: var(--text-muted);">App Store</span></div>
-        <div class="nav-actions">
-            <input type="file" id="layoutFile" accept=".json" style="display: none;">
-            <button onclick="document.getElementById('layoutFile').click()">📂 Load Target JSON</button>
-            <span id="targetStatus" style="font-size: 12px; color: var(--warning); font-weight: bold; padding: 0 10px;">Target: None</span>
-            <div style="width: 1px; height: 20px; background: var(--border);"></div>
-            <button id="btnBackLibrary" style="display: none;" onclick="app.showLibrary()">🔙 Back to Store</button>
-            <button id="execBtn" class="primary" style="display: none;" disabled>▶ Run Flow</button>
-            <button id="saveBtn" style="display: none;" disabled>💾 Save JSON</button>
+    <div class="sidebar">
+        <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON</div>
+        
+        <div>
+            <input type="text" id="searchInput" class="search-box" placeholder="Search...">
         </div>
+
+        <div>
+            <div class="sidebar-section-title">Hardware Match</div>
+            <div class="segmented-control">
+                <input type="radio" id="dev-all" name="device" value="all" checked>
+                <label for="dev-all">All</label>
+                
+                <input type="radio" id="dev-go60" name="device" value="go60">
+                <label for="dev-go60">Go60</label>
+                
+                <input type="radio" id="dev-glove" name="device" value="glove80">
+                <label for="dev-glove">Glove80</label>
+            </div>
+        </div>
+
+        <div>
+            <div class="sidebar-section-title">Categories</div>
+            <ul id="categoryList" class="category-list"></ul>
+        </div>
+        
+        <div style="flex-grow: 1;"></div>
+        <button onclick="app.fetchCatalog()" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border);">↻ Refresh Store</button>
     </div>
 
-    <div id="viewLibrary" class="view active library-view">
-        <div class="sidebar">
-            <div>
-                <input type="text" id="searchInput" class="search-box" placeholder="Search flows...">
+    <div class="view-container">
+        
+        <div id="viewLibrary" class="view active">
+            <div class="library-content">
+                <h1 class="page-title">Discover Automations</h1>
+                <div id="catalogGrid" class="app-grid">
+                    </div>
             </div>
-            <div>
-                <h3>Categories</h3>
-                <ul id="categoryList" class="category-list">
-                    </ul>
-            </div>
-            <div style="flex-grow: 1;"></div>
-            <button onclick="app.fetchCatalog()">🔄 Refresh Catalog</button>
         </div>
-        <div id="catalogGrid" class="catalog-grid">
-            </div>
-    </div>
 
-    <div id="viewStudio" class="view studio-view">
-        <div class="panel">
-            <div class="panel-header"><span style="color: var(--primary);">Flow Editor</span></div>
-            <div class="script-meta" id="studioMeta">
+        <div id="viewStudio" class="view">
+            <div class="product-page">
+                <div class="nav-back" onclick="app.showLibrary()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                    Store
                 </div>
-            <textarea id="jqInput"></textarea>
+                
+                <div class="product-header">
+                    <div class="product-icon-large" id="studioIcon">⚡</div>
+                    <div class="product-header-info">
+                        <h1 class="product-title" id="studioTitle">Flow Title</h1>
+                        <p class="product-subtitle" id="studioSub">Subtitle goes here</p>
+                        <p class="product-developer" id="studioAuthor">moosyresearch</p>
+                        
+                        <div class="wizard-area" id="wizardBox">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="product-body">
+                    <div>
+                        <h3 class="section-title">Description</h3>
+                        <div class="product-desc" id="studioDesc"></div>
+                    </div>
+                    
+                    <div id="configSection" style="display: none;">
+                        <h3 class="section-title">Configuration Parameters</h3>
+                        <table class="config-table" id="studioConfig"></table>
+                    </div>
+                </div>
+
+                <div class="dev-toggle-wrapper">
+                    <button class="dev-toggle" onclick="app.toggleDevTray()">{" "} Toggle Developer Console</button>
+                </div>
+            </div>
         </div>
-        <div class="panel">
-            <div class="panel-header"><span style="color: var(--primary);">Target AST (Output)</span></div>
-            <textarea id="jsonOutput" readonly placeholder="Output will appear here..."></textarea>
-            
-            <div class="panel-header" style="border-top: 1px solid var(--border);"><span style="color: var(--primary);">Console</span></div>
-            <div class="log-panel" id="logPanel"></div>
+
+    </div>
+
+    <div class="dev-tray" id="devTray" style="position: absolute; bottom: 0; width: calc(100% - 260px); right: 0;">
+        <div class="dev-tray-header">
+            <span>Developer Tools</span>
+            <button style="padding: 2px 8px; font-size: 10px; border-radius: 4px;" onclick="app.toggleDevTray()">Close</button>
+        </div>
+        <div class="dev-tray-content">
+            <div class="dev-pane">
+                <div style="padding: 6px 12px; font-size: 10px; color: #888; background: #000; border-bottom: 1px solid var(--border);">Source JQ Script</div>
+                <textarea id="jqInput"></textarea>
+            </div>
+            <div class="dev-pane">
+                <div style="padding: 6px 12px; font-size: 10px; color: #888; background: #000; border-bottom: 1px solid var(--border);">Terminal</div>
+                <div class="log-panel" id="logPanel"></div>
+            </div>
         </div>
     </div>
+
+    <input type="file" id="layoutFile" accept=".json" style="display: none;">
 
     <script>
+        // ==========================================
+        // UI HELPERS & LOGGING
+        // ==========================================
         class Logger {
             constructor(panelId) { this.panel = document.getElementById(panelId); }
             print(msg, type = "info") {
                 const entry = document.createElement('div');
                 entry.className = `log-entry log-${type}`;
-                entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                entry.innerText = `> ${msg}`;
                 this.panel.appendChild(entry);
                 this.panel.scrollTop = this.panel.scrollHeight;
             }
-            verbose(msg) { this.print(msg, "verbose"); }
             clear() { this.panel.innerHTML = ''; }
         }
-
         const terminal = new Logger('logPanel');
 
-        // =================================================================
-        // MAIN APPLICATION CLASS
-        // =================================================================
+        // Simple gradient generator based on string
+        function getGradient(str) {
+            const colors = [
+                ['#FF3B30', '#FF9500'], ['#34C759', '#30D158'], 
+                ['#007AFF', '#5AC8FA'], ['#AF52DE', '#FF2D55'], 
+                ['#FF9500', '#FFCC00'], ['#5856D6', '#AF52DE']
+            ];
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            const pair = colors[Math.abs(hash) % colors.length];
+            return `linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
+        }
+
+        function getEmoji(category) {
+            const map = { 'colemak': '⌨️', 'automation': '⚡', 'gaming': '🎮', 'mac': '🍎', 'windows': '🪟' };
+            for (let key in map) if (category.toLowerCase().includes(key)) return map[key];
+            return '✨';
+        }
+
+        // ==========================================
+        // MAIN APP ENGINE
+        // ==========================================
         class FlowsStoreApp {
             constructor() {
-                this.repoPath = "moosylog/flows4json"; 
-                this.apiUrl = `https://api.github.com/repos/${this.repoPath}/contents/`;
+                this.apiUrl = `https://api.github.com/repos/moosylog/flows4json/contents/`;
                 this.catalog = [];
                 this.activeCategory = 'All';
                 
-                // Execution State
+                // State
+                this.activeFlow = null;
                 this.sourceAST = null;
                 this.outputAST = null;
                 this.fileName = "compiled_layout.json";
+                this.wizardState = "upload"; // upload, loading, ready, error, success
 
                 this.bindEvents();
                 this.fetchCatalog();
             }
 
             bindEvents() {
-                document.getElementById('searchInput').addEventListener('input', (e) => this.renderGrid(e.target.value));
+                document.getElementById('searchInput').addEventListener('input', () => this.renderGrid());
+                document.querySelectorAll('input[name="device"]').forEach(r => r.addEventListener('change', () => this.renderGrid()));
                 document.getElementById('layoutFile').addEventListener('change', (e) => this.loadTargetJSON(e));
-                document.getElementById('execBtn').addEventListener('click', () => this.runFlow());
-                document.getElementById('saveBtn').addEventListener('click', () => this.saveJSON());
             }
 
-            // --- VIEW ROUTING ---
+            toggleDevTray() {
+                document.getElementById('devTray').classList.toggle('active');
+            }
+
+            // --- ROUTING ---
             showLibrary() {
                 document.getElementById('viewStudio').classList.remove('active');
                 document.getElementById('viewLibrary').classList.add('active');
-                document.getElementById('btnBackLibrary').style.display = 'none';
-                document.getElementById('execBtn').style.display = 'none';
-                document.getElementById('saveBtn').style.display = 'none';
+                this.activeFlow = null;
+                this.sourceAST = null;
+                document.getElementById('devTray').classList.remove('active');
             }
 
             showStudio(flowData) {
+                this.activeFlow = flowData;
+                this.wizardState = "upload";
+                this.sourceAST = null;
+
                 document.getElementById('viewLibrary').classList.remove('active');
                 document.getElementById('viewStudio').classList.add('active');
-                document.getElementById('btnBackLibrary').style.display = 'block';
-                document.getElementById('execBtn').style.display = 'block';
-                document.getElementById('saveBtn').style.display = 'block';
 
-                // Populate Studio
-                document.getElementById('jqInput').value = flowData.script;
-                document.getElementById('studioMeta').innerHTML = `
-                    <h2>${flowData.title}</h2>
-                    <p>${flowData.subtitle || flowData.category}</p>
-                `;
+                // Populate Product Page
+                document.getElementById('studioIcon').style.background = getGradient(flowData.title);
+                document.getElementById('studioIcon').innerText = getEmoji(flowData.category);
                 
-                terminal.print(`Opened Studio: ${flowData.title}`, "info");
+                document.getElementById('studioTitle').innerText = flowData.title;
+                document.getElementById('studioSub').innerText = flowData.subtitle || flowData.category;
+                document.getElementById('studioAuthor').innerText = `Developer: ${flowData.author || 'moosyresearch'}`;
+                document.getElementById('studioDesc').innerText = flowData.description || 'No detailed description provided.';
+                
+                // Config Table
+                const configSec = document.getElementById('configSection');
+                const configTable = document.getElementById('studioConfig');
+                if (Object.keys(flowData.config).length > 0) {
+                    configSec.style.display = 'block';
+                    configTable.innerHTML = '';
+                    for (let [k, v] of Object.entries(flowData.config)) {
+                        configTable.innerHTML += `<tr><th>${k}</th><td>${v}</td></tr>`;
+                    }
+                } else {
+                    configSec.style.display = 'none';
+                }
+
+                // Dev Tray
+                document.getElementById('jqInput').value = flowData.script;
+                terminal.clear();
+                
+                this.renderWizard();
             }
 
-            // --- CATALOG PARSING & FETCHING ---
+            // --- WIZARD UI ---
+            renderWizard() {
+                const box = document.getElementById('wizardBox');
+                if (this.wizardState === "upload") {
+                    box.innerHTML = `
+                        <div class="wizard-status">
+                            <span class="wizard-status-title">Ready to Install</span>
+                            <span class="wizard-status-desc">Provide your current JSON layout to begin.</span>
+                        </div>
+                        <button class="primary" onclick="document.getElementById('layoutFile').click()">Choose File</button>
+                    `;
+                } else if (this.wizardState === "loading") {
+                    box.innerHTML = `
+                        <div class="wizard-status">
+                            <span class="wizard-status-title">Processing...</span>
+                            <span class="wizard-status-desc">Parsing JSON structure.</span>
+                        </div>
+                        <button disabled>Please Wait</button>
+                    `;
+                } else if (this.wizardState === "error") {
+                    box.innerHTML = `
+                        <div class="wizard-status">
+                            <span class="wizard-status-title" style="color: var(--accent-red);">Error</span>
+                            <span class="wizard-status-desc">${this.wizardError || 'Something went wrong.'}</span>
+                        </div>
+                        <button onclick="document.getElementById('layoutFile').click()">Try Again</button>
+                    `;
+                } else if (this.wizardState === "ready") {
+                    box.innerHTML = `
+                        <div class="wizard-status">
+                            <span class="wizard-status-title" style="color: var(--accent-blue);">Layout Loaded</span>
+                            <span class="wizard-status-desc">${this.fileName} is ready.</span>
+                        </div>
+                        <button class="accent" onclick="app.runFlow()">Apply Flow</button>
+                    `;
+                } else if (this.wizardState === "success") {
+                    box.innerHTML = `
+                        <div class="wizard-status">
+                            <span class="wizard-status-title" style="color: var(--accent-green);">Success</span>
+                            <span class="wizard-status-desc">Modifications applied cleanly.</span>
+                        </div>
+                        <button class="primary" style="background: var(--accent-green); color: black;" onclick="app.saveJSON()">Download Layout</button>
+                    `;
+                }
+            }
+
+            // --- CATALOG LOGIC ---
             parseFlowFile(content) {
                 const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
                 const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
+                const extCat = () => { const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
                 
-                // CRITICAL: Extract config.foo as Category
-                const extractCategory = () => {
-                    const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/);
-                    return m ? m[1] : 'Uncategorized';
+                const extConfig = () => {
+                    let cfg = {};
+                    const m = content.match(/\[config\]([\s\S]*?)(?:\[|$)/);
+                    if (m) {
+                        m[1].split('\n').forEach(l => {
+                            const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
+                            if (kv) {
+                                let v = kv[2].trim();
+                                if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1);
+                                cfg[kv[1]] = v;
+                            }
+                        });
+                    }
+                    return cfg;
                 };
 
-                const extractDevices = () => {
+                const extDev = () => {
                     const m = content.match(/keyboards\s*=\s*\[(.*?)\]/);
                     if (!m) return [];
                     return m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean);
                 };
 
                 return {
-                    uid: extVal("uid"),
-                    title: extVal("title") || "Untitled Flow",
-                    subtitle: extVal("subtitle"),
-                    description: extMulti("description"),
-                    script: extMulti("script") || "# Empty Script",
-                    category: extractCategory(),
-                    devices: extractDevices()
+                    uid: extVal("uid"), title: extVal("title") || "Untitled", subtitle: extVal("subtitle"),
+                    description: extMulti("description"), script: extMulti("script"), category: extCat(),
+                    author: extVal("author"), devices: extDev(), config: extConfig()
                 };
             }
 
             async fetchCatalog() {
                 const grid = document.getElementById('catalogGrid');
-                grid.innerHTML = '<p style="color:var(--text-muted);">Fetching App Store catalog from GitHub...</p>';
+                grid.innerHTML = '<p style="color:var(--text-secondary);">Connecting to App Store...</p>';
                 this.catalog = [];
 
                 try {
                     const response = await fetch(this.apiUrl);
-                    if (!response.ok) throw new Error("API Limit Reached or Repo Not Found");
-                    
+                    if (!response.ok) throw new Error("API Limit Reached");
                     const files = await response.json();
                     const flowFiles = files.filter(f => f.name.endsWith('.flows'));
 
@@ -235,21 +486,14 @@
                         const raw = await (await fetch(file.download_url)).text();
                         this.catalog.push(this.parseFlowFile(raw));
                     }
-                    
                     this.renderCategories();
                     this.renderGrid();
-                } catch (err) {
-                    grid.innerHTML = `<p style="color:var(--danger);">Error: ${err.message}</p>`;
-                }
+                } catch (err) { grid.innerHTML = `<p style="color:var(--accent-red);">Error: ${err.message}</p>`; }
             }
 
-            // --- RENDERING ---
             renderCategories() {
                 const counts = { 'All': this.catalog.length };
-                this.catalog.forEach(f => {
-                    counts[f.category] = (counts[f.category] || 0) + 1;
-                });
-
+                this.catalog.forEach(f => { counts[f.category] = (counts[f.category] || 0) + 1; });
                 const list = document.getElementById('categoryList');
                 list.innerHTML = '';
                 
@@ -257,79 +501,85 @@
                     const li = document.createElement('li');
                     li.className = `category-item ${this.activeCategory === cat ? 'active' : ''}`;
                     li.innerHTML = `<span>${cat}</span> <span class="category-count">${counts[cat]}</span>`;
-                    li.onclick = () => {
-                        this.activeCategory = cat;
-                        this.renderCategories();
-                        this.renderGrid();
-                    };
+                    li.onclick = () => { this.activeCategory = cat; this.renderCategories(); this.renderGrid(); };
                     list.appendChild(li);
                 });
             }
 
-            renderGrid(searchQuery = '') {
+            renderGrid() {
                 const grid = document.getElementById('catalogGrid');
+                const searchQ = document.getElementById('searchInput').value.toLowerCase();
+                const activeDevice = document.querySelector('input[name="device"]:checked').value.toLowerCase();
+                
                 grid.innerHTML = '';
-
                 let filtered = this.catalog.filter(f => {
                     const matchesCat = this.activeCategory === 'All' || f.category === this.activeCategory;
-                    const matchesSearch = f.title.toLowerCase().includes(searchQuery.toLowerCase()) || f.description.toLowerCase().includes(searchQuery.toLowerCase());
-                    return matchesCat && matchesSearch;
+                    const matchesSearch = f.title.toLowerCase().includes(searchQ) || f.description.toLowerCase().includes(searchQ);
+                    
+                    let matchesDevice = true;
+                    if (activeDevice !== 'all') {
+                        const flowDevs = f.devices.map(d => d.toLowerCase());
+                        matchesDevice = flowDevs.includes(activeDevice);
+                    }
+                    
+                    return matchesCat && matchesSearch && matchesDevice;
                 });
 
                 if (filtered.length === 0) {
-                    grid.innerHTML = '<p style="color:var(--text-muted);">No flows found matching your criteria.</p>';
+                    grid.innerHTML = '<p style="color:var(--text-secondary);">No automations found matching filters.</p>';
                     return;
                 }
 
                 filtered.forEach(flow => {
                     const card = document.createElement('div');
-                    card.className = 'flow-card';
-                    
-                    let devicesHtml = flow.devices.map(d => {
-                        let c = d.toLowerCase() === 'go60' ? 'device-go60' : d.toLowerCase() === 'glove80' ? 'device-glove80' : '';
-                        return `<span class="device-badge ${c}">${d}</span>`;
-                    }).join('');
+                    card.className = 'app-card';
+                    card.onclick = () => this.showStudio(flow);
+
+                    const bg = getGradient(flow.title);
+                    const emoji = getEmoji(flow.category);
 
                     card.innerHTML = `
-                        <div class="card-header">
-                            <h3 class="card-title">${flow.title}</h3>
-                            <span class="card-category">${flow.category}</span>
+                        <div class="app-icon" style="background: ${bg};">${emoji}</div>
+                        <div class="app-info">
+                            <div class="app-title">${flow.title}</div>
+                            <div class="app-sub">${flow.subtitle || flow.category}</div>
                         </div>
-                        <div class="card-desc">${flow.description || 'No description provided.'}</div>
-                        <div class="card-footer">${devicesHtml}</div>
+                        <div class="app-action"><button>View</button></div>
                     `;
-                    card.onclick = () => this.showStudio(flow);
                     grid.appendChild(card);
                 });
             }
 
-            // --- EXECUTION ENGINE (Retained from previous build) ---
+            // --- EXECUTION ENGINE ---
             async loadTargetJSON(e) {
                 const file = e.target.files[0];
                 if (!file) return;
+                e.target.value = ''; // Reset input to allow re-uploading same file
+                
+                this.wizardState = "loading";
+                this.renderWizard();
+
                 const reader = new FileReader();
                 reader.onload = async (event) => {
                     try {
                         let rawAST = JSON.parse(event.target.result);
-                        this.fileName = `flows_${file.name}`;
+                        this.fileName = `${this.activeFlow.uid || 'flow'}_${file.name}`;
                         
-                        // Hardware Prologue (Hoist matrix)
-                        const prologue = `
-                            (if .keymap != null then .keymap else . end) |= (
-                            .layout = (if .layout != null and .layout.keys != null and (.layout.keys | length) > 0 then .layout elif .keymap != null and .keymap.layout != null and (.keymap.layout.keys | length) > 0 then .keymap.layout else {"keys": [ range(0; 60) as $i | { "i": $i, "label": (if $i < 30 then "L_C" else "R_C" end) } ]} end)
-                            )
-                        `;
+                        // Internal setup logic
+                        const prologue = `(.keymap // .) |= (.layout = (if .layout != null and .layout.keys != null and (.layout.keys | length) > 0 then .layout elif .keymap != null and .keymap.layout != null and (.keymap.layout.keys | length) > 0 then .keymap.layout else {"keys": [ range(0; 60) as $i | { "i": $i, "label": (if $i < 30 then "L_C" else "R_C" end) } ]} end))`;
+                        
+                        if (typeof jq === 'undefined') throw new Error("JQ Engine not loaded. Check internet connection.");
                         this.sourceAST = await jq.json(rawAST, prologue);
-                        this.outputAST = this.sourceAST;
                         
-                        document.getElementById('targetStatus').innerText = `Target: ${file.name}`;
-                        document.getElementById('targetStatus').style.color = "var(--success)";
-                        document.getElementById('jsonOutput').value = JSON.stringify(this.sourceAST, null, 2);
-                        document.getElementById('execBtn').disabled = false;
-                        document.getElementById('saveBtn').disabled = false;
-                        
-                        terminal.print("Target JSON loaded and structure normalized.", "success");
-                    } catch (err) { terminal.print(`Parse Error: ${err.message}`, "danger"); }
+                        this.wizardState = "ready";
+                        this.renderWizard();
+                        terminal.print(`Loaded target JSON: ${file.name}`, "info");
+                    } catch (err) { 
+                        this.wizardState = "error";
+                        this.wizardError = "Invalid JSON file.";
+                        this.renderWizard();
+                        terminal.print(`Parse Error: ${err.message}`, "danger");
+                    }
                 };
                 reader.readAsText(file);
             }
@@ -337,33 +587,46 @@
             async runFlow() {
                 if (!this.sourceAST) return;
                 const script = document.getElementById('jqInput').value.trim();
-                terminal.clear();
-                terminal.print("Executing Flow...", "info");
                 
+                this.wizardState = "loading";
+                this.renderWizard();
+                terminal.print("Executing Flow Script...", "info");
+
                 try {
-                    const t0 = performance.now();
                     const result = await jq.json(this.sourceAST, script);
-                    if (!result) throw new Error("Script evaluated to null.");
+                    if (!result) throw new Error("Script execution evaluated to null.");
                     
                     this.outputAST = result;
-                    document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
+                    terminal.print(`Execution Successful. Output stored in memory.`, "success");
                     
-                    terminal.print(`Flow complete in ${(performance.now() - t0).toFixed(2)}ms. AST updated.`, "success");
-                    this.sourceAST = JSON.parse(JSON.stringify(this.outputAST));
+                    this.wizardState = "success";
+                    this.renderWizard();
                 } catch (error) {
-                    terminal.print(`Execution Error:\n${error.message}`, "danger");
+                    this.wizardState = "error";
+                    this.wizardError = "Script execution failed.";
+                    this.renderWizard();
+                    terminal.print(`Execution Error: ${error.message}`, "danger");
+                    
+                    // Auto-open dev tray so user can see error
+                    document.getElementById('devTray').classList.add('active');
                 }
             }
 
             async saveJSON() {
                 if (!this.outputAST) return;
-                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.outputAST, null, 2));
-                const a = document.createElement('a');
-                a.href = dataStr; a.download = this.fileName; a.click();
+                try {
+                    const filter = `(.keymap // .) |= ((if (.holdTaps | type == "array" and length == 0) then del(.holdTaps) else . end) | (if (.macros | type == "array" and length == 0) then del(.macros) else . end) | (if (.combos | type == "array" and length == 0) then del(.combos) else . end) | (if (.behaviors | type == "array" and length == 0) then del(.behaviors) else . end))`;
+                    let cleanAST = await jq.json(this.outputAST, filter);
+                    
+                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanAST, null, 2));
+                    const a = document.createElement('a');
+                    a.href = dataStr; a.download = this.fileName; a.click();
+                    
+                    terminal.print(`File downloaded: ${this.fileName}`, "success");
+                } catch (err) { terminal.print(`Save Error: ${err.message}`, "danger"); }
             }
         }
 
-        // Boot
         const app = new FlowsStoreApp();
     </script>
 </body>
