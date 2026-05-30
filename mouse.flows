@@ -1,8 +1,8 @@
-uid = "gaming60"
+uid = "mouse"
 type = "mutation"
 language = "us"
-title = "🎮 Gaming Layer"
-subtitle = "Adds a Gaming Layer"
+title = "🖱️ Mouse Emulation"
+subtitle = "Adds Mouse Emulation Layers"
 description = """
 Adds a mouse emulation layer and input listener behaviors to your layout.
 ✔️ Go60
