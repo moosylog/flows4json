@@ -4,7 +4,7 @@ language = "us"
 title = "Unicode Macro"
 subtitle = "Macro: Create Unicode Character Macros"
 description = """
-🤖  Macro: Create Unicode Character Macros
+🤖  Creates Unicode Character Macros
 Create and inject Unicode macros that work on any keyboard layout
 
 Set OS in the script
