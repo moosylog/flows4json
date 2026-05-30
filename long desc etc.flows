@@ -1,0 +1,244 @@
+uid = "alphaswap"
+type = "mutation"
+language = "jq"
+title = "AlphaSwap Colemak-DH"
+subtitle = "Alpha Swap: Colemak-DH"
+description = """
+Highlights:
+
+Multiple Alternative Layouts: Supports multiple alternative keyboard layouts (e.g., Colemak-DH, Aptmak Blue, Enthium) with simple configuration-based switching.
+
+Multi-Layer Support: The all_layers option enables remapping across all alpha layers. 
+
+Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
+
+ Thumb: Letters on the thumb are not supported due to the risk of overwriting.
+ BHRM:  TailorKey bilateral HRM is not supported, and the macros must be updated manually.
+
+"""
+script = """
+# ==============================================================================
+
+# 1. HELPERS & SAFETY SHIELDS
+
+# ==============================================================================
+
+
+
+# Check if a key is a valid candidate for AutoShift (A-Z or N0-N9)
+
+def is_autoshift_candidate($val):
+
+  ($val | type == "string") and (
+
+    ($val | test("^[A-Z]$")) or      # Alpha keys
+
+    ($val | test("^N[0-9]$"))        # Number row (N1, N2, etc.)
+
+  );
+
+
+
+# Safely extracts the base key code regardless of nesting depth
+
+def get_char_node:
+
+  if type == "object" then
+
+    (.params[1] // .params[0] // { "value": "NONE", "params": [] })
+
+  elif type == "string" then
+
+    { "value": ., "params": [] }
+
+  else
+
+    { "value": "NONE", "params": [] }
+
+  end;
+
+
+
+# ==============================================================================
+
+# 2. BEHAVIOR DEFINITIONS
+
+# ==============================================================================
+
+
+
+def get_as_macros: [
+
+  {
+
+    "name": "&AS_Shifted_v1_TKZ",
+
+    "description": "AutoShift: Shifted State",
+
+    "bindings": [
+
+      {"value":"&macro_press","params":[]},
+
+      {"value":"&kp","params":[{"value":"LSHFT","params":[]}]},
+
+      {"value":"&macro_tap","params":[]},
+
+      {"value":"&macro_param_1to1","params":[]},
+
+      {"value":"&kp","params":[{"value":"N1","params":[]}]},
+
+      {"value":"&macro_release","params":[]},
+
+      {"value":"&kp","params":[{"value":"LSHFT","params":[]}]}
+
+    ],
+
+    "params": ["code"]
+
+  },
+
+  {
+
+    "name": "&AS_v1_TKZ",
+
+    "description": "AutoShift: Main Entry",
+
+    "waitMs": 10, "tapMs": 10,
+
+    "bindings": [
+
+      {"value":"&macro_press","params":[]},
+
+      {"value":"&macro_param_1to1","params":[]},
+
+      {"value":"&macro_param_1to2","params":[]},
+
+      {"value":"&AS_HT_v2_TKZ","params":[{"value":"A","params":[]},{"value":"A","params":[]}]},
+
+      {"value":"&macro_pause_for_release","params":[]},
+
+      {"value":"&macro_release","params":[]},
+
+      {"value":"&macro_param_1to1","params":[]},
+
+      {"value":"&macro_param_1to2","params":[]},
+
+      {"value":"&AS_HT_v2_TKZ","params":[{"value":"A","params":[]},{"value":"A","params":[]}]}
+
+    ],
+
+    "params": ["code"]
+
+  }
+
+];
+
+
+
+def get_as_holdtap: {
+
+  "name": "&AS_HT_v2_TKZ",
+
+  "description": "AutoShift: Engine",
+
+  "bindings": ["&AS_Shifted_v1_TKZ", "&kp"],
+
+  "tappingTermMs": 190,
+
+  "flavor": "tap-preferred"
+
+};
+
+
+
+# ==============================================================================
+
+# 3. MAIN ENGINE (Root Object Context)
+
+# ==============================================================================
+
+
+
+# Step 1: Capture base layer info from the root
+
+(.keymap.layers[0] // .layers[0]) as $base_layer |
+
+($base_layer | length) as $key_count |
+
+
+
+# Step 2: Perform transformation on the keymap branch
+
+(.keymap // .) |= (
+
+  
+
+  # Inject Behaviors
+
+  .macros = ([.macros // [], get_as_macros] | flatten | unique_by(.name)) |
+
+  .holdTaps = ([.holdTaps // [], [get_as_holdtap]] | flatten | unique_by(.name)) |
+
+
+
+  # Identify/Create Autoshift Layer
+
+  (.layer_names | index("Autoshift") // (. | length)) as $as_idx |
+
+  .layer_names[$as_idx] = "Autoshift" |
+
+  .creator = "moosy" |
+
+
+
+  # Build the layer mapping
+
+  .layers[$as_idx] = [
+
+    range($key_count) as $i |
+
+    $base_layer[$i] as $k |
+
+    (if ($k | type == "object") then ($k.params[0].value // "") else ($k | tostring) end) as $val |
+
+
+
+    if ($k.value == "&kp" or ($k | type == "string" and startswith("&kp "))) and is_autoshift_candidate($val) then
+
+      {
+
+        "value": "&AS_v1_TKZ",
+
+        "params": [
+
+          {
+
+            "value": $val, 
+
+            "params": (if ($k | type == "object") then ($k.params[0].params // []) else [] end)
+
+          }
+
+        ]
+
+      }
+
+    else
+
+      {"value": "&trans", "params": []}
+
+    end
+
+  ]
+
+) 
+
+# The final result is the modified root object, containing layout, env, and config.
+
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60"]
+[config]
+foo = "bar"
+num = 123
