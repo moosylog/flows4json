@@ -156,5 +156,5 @@ def keyboards: {
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "Alt Layout"
+foo = "Alt.Layout"
 num = 123
