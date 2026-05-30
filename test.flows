@@ -1,25 +1,20 @@
 uid = "testalphaswap"
 type = "mutation"
 language = "jq"
-title = "AlphaSwap Colemak-DH"
-subtitle = "Alpha Swap: Colemak-DH"
+title = "Test title"
+subtitle = "Subtitle"
 description = """
-Highlights:
+This is a different desc
 
-Multiple Alternative Layouts: Supports multiple alternative keyboard layouts (e.g., Colemak-DH, Aptmak Blue, Enthium) with simple configuration-based switching.
-
-Multi-Layer Support: The all_layers option enables remapping across all alpha layers. 
-
-Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
-
- Thumb: Letters on the thumb are not supported due to the risk of overwriting.
- BHRM:  TailorKey bilateral HRM is not supported, and the macros must be updated manually.
+oinaoinaohinoainsth
+oantshoainrtshion
+rsrthnaosatohn sthoanths
 
 """
 script = """
 # ==============================================================================
 
-# 1. HELPERS & SAFETY SHIELDS
+# 1. oaintsrtahnisrthoainsthr
 
 # ==============================================================================
 
@@ -240,5 +235,5 @@ def get_as_holdtap: {
 author = "moosyresearch"
 keyboards = ["go60"]
 [config]
-foo = "advanced"
+foo = "Beginners"
 num = 123
