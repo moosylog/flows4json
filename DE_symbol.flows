@@ -11,7 +11,7 @@ This script maps your Symbol layer’s US-coded bindings to the specific scan co
 
 
 """
-
+script = """
 # DYNAMIC METADATA DISCOVERY (v18.0 - Robust Index Lookup)
 
 (
