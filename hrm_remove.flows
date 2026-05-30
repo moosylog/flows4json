@@ -8,6 +8,7 @@ Removes all types of home-row mods, including TailorKey Bilateral HRM layers
 NOTE: This is the ultimate HRM removal and also removes the TailorKey Bilateral HRM
 
 """
+script = """
 # ==============================================================================
 # 1. HARDWARE ABSTRACTION LAYER (HAL)
 # ==============================================================================
