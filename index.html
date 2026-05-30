@@ -1,1 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flows4JSON - Flow Store</title>
+    <script src="https://cdn.jsdelivr.net/npm/jq-web@0.5.1/jq.wasm.js"></script>
+    <style>
+        :root {
+            --bg: #0d1117; --surface: #161b22; --surface-hover: #21262d;
+            --text: #c9d1d9; --text-muted: #8b949e; --primary: #58a6ff;
+            --success: #3fb950; --danger: #f85149; --warning: #d29922; --border: #30363d;
+            --glove: #a371f7; --go60: #d2a8ff;
+        }
+        * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        
+        /* Global Navigation */
+        .topbar { padding: 12px 20px; background: #010409; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+        .brand { font-size: 18px; font-weight: 700; color: white; display: flex; align-items: center; gap: 8px; cursor: pointer;}
+        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        
+        button { background: var(--surface-hover); color: var(--text); border: 1px solid var(--border); padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        button:hover:not(:disabled) { background: var(--border); }
+        button.primary { background: var(--success); color: white; border-color: var(--success); }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
 
+        /* View Containers */
+        .view { display: none; flex-grow: 1; overflow: hidden; }
+        .view.active { display: flex; }
+
+        /* --- LIBRARY VIEW --- */
+        .library-view { display: flex; width: 100%; height: 100%; }
+        .sidebar { width: 260px; background: var(--surface); border-right: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; gap: 20px; overflow-y: auto;}
+        .sidebar h3 { margin: 0 0 10px 0; font-size: 14px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .search-box { width: 100%; background: var(--bg); border: 1px solid var(--border); color: white; padding: 10px; border-radius: 6px; outline: none; }
+        
+        .category-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 5px; }
+        .category-item { padding: 8px 12px; border-radius: 6px; cursor: pointer; color: var(--text); display: flex; justify-content: space-between; align-items: center; }
+        .category-item:hover { background: var(--surface-hover); }
+        .category-item.active { background: rgba(88, 166, 255, 0.1); color: var(--primary); font-weight: bold; }
+        .category-count { background: var(--border); font-size: 11px; padding: 2px 8px; border-radius: 10px; color: var(--text-muted); }
+
+        .catalog-grid { flex-grow: 1; padding: 30px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; align-content: start; }
+        
+        /* Flow Card */
+        .flow-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; gap: 10px; }
+        .flow-card:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .card-title { font-size: 16px; font-weight: bold; color: white; margin: 0; }
+        .card-category { font-size: 11px; padding: 3px 8px; border-radius: 4px; background: rgba(88, 166, 255, 0.1); color: var(--primary); font-weight: bold; text-transform: uppercase; }
+        .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; flex-grow: 1;}
+        .card-footer { display: flex; gap: 8px; margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .device-badge { font-size: 11px; padding: 3px 8px; border-radius: 12px; font-weight: bold; border: 1px solid var(--border); }
+        .device-go60 { color: var(--go60); border-color: rgba(210, 168, 255, 0.3); background: rgba(210, 168, 255, 0.1); }
+        .device-glove80 { color: var(--glove); border-color: rgba(163, 113, 247, 0.3); background: rgba(163, 113, 247, 0.1); }
+
+        /* --- STUDIO VIEW --- */
+        .studio-view { display: flex; width: 100%; height: 100%; }
+        .panel { flex: 1; display: flex; flex-direction: column; border-right: 1px solid var(--border); }
+        .panel-header { padding: 10px 15px; background: var(--surface-hover); border-bottom: 1px solid var(--border); font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        
+        .script-meta { padding: 15px; background: #010409; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+        .script-meta h2 { margin: 0 0 5px 0; color: white; font-size: 18px; }
+        .script-meta p { margin: 0; font-size: 13px; color: var(--text-muted); }
+        
+        textarea { flex-grow: 1; background: #010409; color: var(--text); border: none; padding: 15px; font-family: 'Courier New', Courier, monospace; font-size: 13px; resize: none; outline: none; white-space: pre; }
+        
+        .log-panel { height: 40%; background: #0a0c10; border-top: 1px solid var(--border); padding: 10px; overflow-y: auto; font-family: 'Courier New', Courier, monospace; font-size: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .log-entry { padding: 6px 10px; border-radius: 4px; border-left: 3px solid transparent; background: rgba(255,255,255,0.02); line-height: 1.4; white-space: pre-wrap; }
+        .log-success { border-left-color: var(--success); color: var(--success); }
+        .log-danger { border-left-color: var(--danger); color: var(--danger); }
+        .log-warning { border-left-color: var(--warning); color: var(--warning); }
+        .log-info { border-left-color: var(--primary); color: var(--text); }
+        .log-verbose { border-left-color: #a371f7; color: #a371f7; }
+    </style>
+</head>
+<body>
+
+    <div class="topbar">
+        <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON <span style="font-weight: 300; font-size: 14px; color: var(--text-muted);">App Store</span></div>
+        <div class="nav-actions">
+            <input type="file" id="layoutFile" accept=".json" style="display: none;">
+            <button onclick="document.getElementById('layoutFile').click()">📂 Load Target JSON</button>
+            <span id="targetStatus" style="font-size: 12px; color: var(--warning); font-weight: bold; padding: 0 10px;">Target: None</span>
+            <div style="width: 1px; height: 20px; background: var(--border);"></div>
+            <button id="btnBackLibrary" style="display: none;" onclick="app.showLibrary()">🔙 Back to Store</button>
+            <button id="execBtn" class="primary" style="display: none;" disabled>▶ Run Flow</button>
+            <button id="saveBtn" style="display: none;" disabled>💾 Save JSON</button>
+        </div>
+    </div>
+
+    <div id="viewLibrary" class="view active library-view">
+        <div class="sidebar">
+            <div>
+                <input type="text" id="searchInput" class="search-box" placeholder="Search flows...">
+            </div>
+            <div>
+                <h3>Categories</h3>
+                <ul id="categoryList" class="category-list">
+                    </ul>
+            </div>
+            <div style="flex-grow: 1;"></div>
+            <button onclick="app.fetchCatalog()">🔄 Refresh Catalog</button>
+        </div>
+        <div id="catalogGrid" class="catalog-grid">
+            </div>
+    </div>
+
+    <div id="viewStudio" class="view studio-view">
+        <div class="panel">
+            <div class="panel-header"><span style="color: var(--primary);">Flow Editor</span></div>
+            <div class="script-meta" id="studioMeta">
+                </div>
+            <textarea id="jqInput"></textarea>
+        </div>
+        <div class="panel">
+            <div class="panel-header"><span style="color: var(--primary);">Target AST (Output)</span></div>
+            <textarea id="jsonOutput" readonly placeholder="Output will appear here..."></textarea>
+            
+            <div class="panel-header" style="border-top: 1px solid var(--border);"><span style="color: var(--primary);">Console</span></div>
+            <div class="log-panel" id="logPanel"></div>
+        </div>
+    </div>
+
+    <script>
+        class Logger {
+            constructor(panelId) { this.panel = document.getElementById(panelId); }
+            print(msg, type = "info") {
+                const entry = document.createElement('div');
+                entry.className = `log-entry log-${type}`;
+                entry.innerText = `[${new Date().toLocaleTimeString()}] ${msg}`;
+                this.panel.appendChild(entry);
+                this.panel.scrollTop = this.panel.scrollHeight;
+            }
+            verbose(msg) { this.print(msg, "verbose"); }
+            clear() { this.panel.innerHTML = ''; }
+        }
+
+        const terminal = new Logger('logPanel');
+
+        // =================================================================
+        // MAIN APPLICATION CLASS
+        // =================================================================
+        class FlowsStoreApp {
+            constructor() {
+                this.repoPath = "moosylog/flows4json"; 
+                this.apiUrl = `https://api.github.com/repos/${this.repoPath}/contents/`;
+                this.catalog = [];
+                this.activeCategory = 'All';
+                
+                // Execution State
+                this.sourceAST = null;
+                this.outputAST = null;
+                this.fileName = "compiled_layout.json";
+
+                this.bindEvents();
+                this.fetchCatalog();
+            }
+
+            bindEvents() {
+                document.getElementById('searchInput').addEventListener('input', (e) => this.renderGrid(e.target.value));
+                document.getElementById('layoutFile').addEventListener('change', (e) => this.loadTargetJSON(e));
+                document.getElementById('execBtn').addEventListener('click', () => this.runFlow());
+                document.getElementById('saveBtn').addEventListener('click', () => this.saveJSON());
+            }
+
+            // --- VIEW ROUTING ---
+            showLibrary() {
+                document.getElementById('viewStudio').classList.remove('active');
+                document.getElementById('viewLibrary').classList.add('active');
+                document.getElementById('btnBackLibrary').style.display = 'none';
+                document.getElementById('execBtn').style.display = 'none';
+                document.getElementById('saveBtn').style.display = 'none';
+            }
+
+            showStudio(flowData) {
+                document.getElementById('viewLibrary').classList.remove('active');
+                document.getElementById('viewStudio').classList.add('active');
+                document.getElementById('btnBackLibrary').style.display = 'block';
+                document.getElementById('execBtn').style.display = 'block';
+                document.getElementById('saveBtn').style.display = 'block';
+
+                // Populate Studio
+                document.getElementById('jqInput').value = flowData.script;
+                document.getElementById('studioMeta').innerHTML = `
+                    <h2>${flowData.title}</h2>
+                    <p>${flowData.subtitle || flowData.category}</p>
+                `;
+                
+                terminal.print(`Opened Studio: ${flowData.title}`, "info");
+            }
+
+            // --- CATALOG PARSING & FETCHING ---
+            parseFlowFile(content) {
+                const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
+                const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
+                
+                // CRITICAL: Extract config.foo as Category
+                const extractCategory = () => {
+                    const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/);
+                    return m ? m[1] : 'Uncategorized';
+                };
+
+                const extractDevices = () => {
+                    const m = content.match(/keyboards\s*=\s*\[(.*?)\]/);
+                    if (!m) return [];
+                    return m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean);
+                };
+
+                return {
+                    uid: extVal("uid"),
+                    title: extVal("title") || "Untitled Flow",
+                    subtitle: extVal("subtitle"),
+                    description: extMulti("description"),
+                    script: extMulti("script") || "# Empty Script",
+                    category: extractCategory(),
+                    devices: extractDevices()
+                };
+            }
+
+            async fetchCatalog() {
+                const grid = document.getElementById('catalogGrid');
+                grid.innerHTML = '<p style="color:var(--text-muted);">Fetching App Store catalog from GitHub...</p>';
+                this.catalog = [];
+
+                try {
+                    const response = await fetch(this.apiUrl);
+                    if (!response.ok) throw new Error("API Limit Reached or Repo Not Found");
+                    
+                    const files = await response.json();
+                    const flowFiles = files.filter(f => f.name.endsWith('.flows'));
+
+                    for (let file of flowFiles) {
+                        const raw = await (await fetch(file.download_url)).text();
+                        this.catalog.push(this.parseFlowFile(raw));
+                    }
+                    
+                    this.renderCategories();
+                    this.renderGrid();
+                } catch (err) {
+                    grid.innerHTML = `<p style="color:var(--danger);">Error: ${err.message}</p>`;
+                }
+            }
+
+            // --- RENDERING ---
+            renderCategories() {
+                const counts = { 'All': this.catalog.length };
+                this.catalog.forEach(f => {
+                    counts[f.category] = (counts[f.category] || 0) + 1;
+                });
+
+                const list = document.getElementById('categoryList');
+                list.innerHTML = '';
+                
+                Object.keys(counts).sort().forEach(cat => {
+                    const li = document.createElement('li');
+                    li.className = `category-item ${this.activeCategory === cat ? 'active' : ''}`;
+                    li.innerHTML = `<span>${cat}</span> <span class="category-count">${counts[cat]}</span>`;
+                    li.onclick = () => {
+                        this.activeCategory = cat;
+                        this.renderCategories();
+                        this.renderGrid();
+                    };
+                    list.appendChild(li);
+                });
+            }
+
+            renderGrid(searchQuery = '') {
+                const grid = document.getElementById('catalogGrid');
+                grid.innerHTML = '';
+
+                let filtered = this.catalog.filter(f => {
+                    const matchesCat = this.activeCategory === 'All' || f.category === this.activeCategory;
+                    const matchesSearch = f.title.toLowerCase().includes(searchQuery.toLowerCase()) || f.description.toLowerCase().includes(searchQuery.toLowerCase());
+                    return matchesCat && matchesSearch;
+                });
+
+                if (filtered.length === 0) {
+                    grid.innerHTML = '<p style="color:var(--text-muted);">No flows found matching your criteria.</p>';
+                    return;
+                }
+
+                filtered.forEach(flow => {
+                    const card = document.createElement('div');
+                    card.className = 'flow-card';
+                    
+                    let devicesHtml = flow.devices.map(d => {
+                        let c = d.toLowerCase() === 'go60' ? 'device-go60' : d.toLowerCase() === 'glove80' ? 'device-glove80' : '';
+                        return `<span class="device-badge ${c}">${d}</span>`;
+                    }).join('');
+
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <h3 class="card-title">${flow.title}</h3>
+                            <span class="card-category">${flow.category}</span>
+                        </div>
+                        <div class="card-desc">${flow.description || 'No description provided.'}</div>
+                        <div class="card-footer">${devicesHtml}</div>
+                    `;
+                    card.onclick = () => this.showStudio(flow);
+                    grid.appendChild(card);
+                });
+            }
+
+            // --- EXECUTION ENGINE (Retained from previous build) ---
+            async loadTargetJSON(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    try {
+                        let rawAST = JSON.parse(event.target.result);
+                        this.fileName = `flows_${file.name}`;
+                        
+                        // Hardware Prologue (Hoist matrix)
+                        const prologue = `
+                            (if .keymap != null then .keymap else . end) |= (
+                            .layout = (if .layout != null and .layout.keys != null and (.layout.keys | length) > 0 then .layout elif .keymap != null and .keymap.layout != null and (.keymap.layout.keys | length) > 0 then .keymap.layout else {"keys": [ range(0; 60) as $i | { "i": $i, "label": (if $i < 30 then "L_C" else "R_C" end) } ]} end)
+                            )
+                        `;
+                        this.sourceAST = await jq.json(rawAST, prologue);
+                        this.outputAST = this.sourceAST;
+                        
+                        document.getElementById('targetStatus').innerText = `Target: ${file.name}`;
+                        document.getElementById('targetStatus').style.color = "var(--success)";
+                        document.getElementById('jsonOutput').value = JSON.stringify(this.sourceAST, null, 2);
+                        document.getElementById('execBtn').disabled = false;
+                        document.getElementById('saveBtn').disabled = false;
+                        
+                        terminal.print("Target JSON loaded and structure normalized.", "success");
+                    } catch (err) { terminal.print(`Parse Error: ${err.message}`, "danger"); }
+                };
+                reader.readAsText(file);
+            }
+
+            async runFlow() {
+                if (!this.sourceAST) return;
+                const script = document.getElementById('jqInput').value.trim();
+                terminal.clear();
+                terminal.print("Executing Flow...", "info");
+                
+                try {
+                    const t0 = performance.now();
+                    const result = await jq.json(this.sourceAST, script);
+                    if (!result) throw new Error("Script evaluated to null.");
+                    
+                    this.outputAST = result;
+                    document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
+                    
+                    terminal.print(`Flow complete in ${(performance.now() - t0).toFixed(2)}ms. AST updated.`, "success");
+                    this.sourceAST = JSON.parse(JSON.stringify(this.outputAST));
+                } catch (error) {
+                    terminal.print(`Execution Error:\n${error.message}`, "danger");
+                }
+            }
+
+            async saveJSON() {
+                if (!this.outputAST) return;
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.outputAST, null, 2));
+                const a = document.createElement('a');
+                a.href = dataStr; a.download = this.fileName; a.click();
+            }
+        }
+
+        // Boot
+        const app = new FlowsStoreApp();
+    </script>
+</body>
+</html>
