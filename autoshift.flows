@@ -1,13 +1,12 @@
 uid = "autoshift"
 type = "mutation"
 language = "us"
-title = "Adds an Autoshift Layer"
-subtitle = "Alternative to HRM"
+title = "Autoshift"
+subtitle = "Adds the Autoshift Layer"
 description = """
 Autoshift lets one key type two characters based on how long you press it.
 Tap the key to type the normal character (like a).
 Hold the key a bit longer to type the shifted character (like A).
-
 
 How it works:
 Autoshift does nothing until you switch to the Autoshift layer.
