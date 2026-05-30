@@ -4,10 +4,10 @@ language = "us"
 title = "Unicode Macro"
 subtitle = "Macro: Create Unicode Character Macros"
 description = """
-🤖  Creates Unicode Character Macros
+🤖  Creates these 3  ❤ ✨🔥 Unicode Sample Macros
 Create and inject Unicode macros that work on any keyboard layout
 
-Set OS in the script
+🚩 You can specify your OS in the first line of the script!
 """
 script = """
 # -------------------------------------------------------------------------
@@ -21,7 +21,7 @@ script = """
 # -------------------------------------------------------------------------
 
 # --- CONFIGURATION ---
-"linux" as $target_os |  # Options: "windows", "macos", "linux"
+"windows" as $target_os |  # Options: "windows", "macos", "linux"
 
 # --- HELPER FUNCTIONS (The "Engine Room") ---
 
