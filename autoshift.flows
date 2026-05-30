@@ -259,5 +259,5 @@ def mk_action($type; $code):
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "Advanced"
+foo = "ZZ Advanced"
 num = 123
