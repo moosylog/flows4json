@@ -1,0 +1,220 @@
+uid = "gaming60"
+type = "mutation"
+language = "us"
+title = "🎮 Gaming Layer"
+subtitle = "Adds a Gaming Layer"
+description = """
+Adds a mouse emulation layer and input listener behaviors to your layout.
+✔️ Go60
+❌ Glove80
+This creates a Mouse Emulation Layers on Go60.
+📢 You need to add the layer toggle yourself manually!
+
+"""
+# ZMK Autonomous Injection Script (V5.1) - "The Full Listener Engine"
+# Strategy: Dynamic Creation + Comprehensive Listener Injection
+
+(if .keymap then .keymap else . end) |= (
+
+  # --- STEP 1: INITIALIZE NAMES & LAYERS ---
+  ["Mouse", "MouseSlow", "MouseFast", "MouseWarp"] as $required |
+
+  .layer_names |= (if . == null then [] else . end) |
+  .layers |= (if . == null then [] else . end) |
+
+  reduce $required[] as $name (.;
+    if (.layer_names | index($name) == null) then
+      .layer_names += [$name] |
+      .layers += [[range(60) | {"value": "&trans", "params": []}]]
+    else .
+    end
+  ) |
+
+  # --- STEP 2: RESOLVE DYNAMIC INDICES ---
+  (.layer_names | index("Mouse")) as $idx_mouse |
+  (.layer_names | index("MouseSlow")) as $idx_slow |
+  (.layer_names | index("MouseFast")) as $idx_fast |
+  (.layer_names | index("MouseWarp")) as $idx_warp |
+
+  # --- STEP 3: KEYMAP INJECTION ---
+  .layers[0][58] = {
+    "value": "&lt",
+    "params": [
+      {"value": $idx_mouse, "params": []},
+      {"value": "SPACE", "params": []}
+    ]
+  } |
+
+  reduce [
+    [14, "&msc", "SCRL_LEFT"],
+    [15, "&mmv", "MOVE_UP"],
+    [16, "&msc", "SCRL_RIGHT"],
+
+    [31, "&mo", $idx_warp],
+    [32, "&mo", $idx_fast],
+    [33, "&mo", $idx_slow],
+
+    [38, "&mo", $idx_slow],
+    [39, "&mo", $idx_fast],
+    [40, "&mo", $idx_warp],
+
+    [51, "&mkp", "LCLK"],
+    [52, "&mkp", "RCLK"],
+    [57, "&mkp", "LCLK"],
+    [58, "&mkp", "RCLK"]
+  ][] as $b (.;
+    .layers[$idx_mouse][$b[0]] = {
+      "value": $b[1],
+      "params": [
+        {"value": $b[2], "params": []}
+      ]
+    }
+  ) |
+
+  # --- STEP 4: COMPREHENSIVE INPUT LISTENERS ---
+  .inputListeners = [
+
+    {
+      "code": "&mmv_input_listener",
+      "inputProcessors": [],
+      "nodes": [
+        {
+          "code": "slow",
+          "layers": [$idx_slow],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [1, 9]}
+          ]
+        },
+        {
+          "code": "fast",
+          "layers": [$idx_fast],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [3, 1]}
+          ]
+        },
+        {
+          "code": "warp",
+          "layers": [$idx_warp],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [12, 1]}
+          ]
+        }
+      ]
+    },
+
+    {
+      "code": "&msc_input_listener",
+      "inputProcessors": [],
+      "nodes": [
+        {
+          "code": "slow",
+          "layers": [$idx_slow],
+          "inputProcessors": [
+            {"code": "&zip_scroll_scaler", "params": [1, 9]}
+          ]
+        },
+        {
+          "code": "fast",
+          "layers": [$idx_fast],
+          "inputProcessors": [
+            {"code": "&zip_scroll_scaler", "params": [3, 1]}
+          ]
+        },
+        {
+          "code": "warp",
+          "layers": [$idx_warp],
+          "inputProcessors": [
+            {"code": "&zip_scroll_scaler", "params": [12, 1]}
+          ]
+        }
+      ]
+    },
+
+    {
+      "code": "&cirque_lh_listener",
+      "inputProcessors": [
+        {"code": "&zip_xy_scaler", "params": [11, 12]},
+        {"code": "&zip_xy_transform", "params": [["INPUT_TRANSFORM_Y_INVERT"]]},
+        {"code": "&zip_xy_to_scroll_mapper", "params": []},
+        {"code": "&zip_click_to_right_click_mapper", "params": []},
+        {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+      ],
+      "nodes": [
+        {
+          "code": "slow",
+          "layers": [$idx_slow],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [5, 14]},
+            {"code": "&zip_xy_transform", "params": [["INPUT_TRANSFORM_Y_INVERT"]]},
+            {"code": "&zip_xy_to_scroll_mapper", "params": []},
+            {"code": "&zip_click_to_right_click_mapper", "params": []},
+            {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+          ]
+        },
+        {
+          "code": "fast",
+          "layers": [$idx_fast],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [3, 2]},
+            {"code": "&zip_xy_transform", "params": [["INPUT_TRANSFORM_Y_INVERT"]]},
+            {"code": "&zip_xy_to_scroll_mapper", "params": []},
+            {"code": "&zip_click_to_right_click_mapper", "params": []},
+            {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+          ]
+        },
+        {
+          "code": "warp",
+          "layers": [$idx_warp],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [13, 3]},
+            {"code": "&zip_xy_transform", "params": [["INPUT_TRANSFORM_Y_INVERT"]]},
+            {"code": "&zip_xy_to_scroll_mapper", "params": []},
+            {"code": "&zip_click_to_right_click_mapper", "params": []},
+            {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+          ]
+        }
+      ]
+    },
+
+    {
+      "code": "&cirque_rh_listener",
+      "inputProcessors": [
+        {"code": "&zip_xy_scaler", "params": [5, 2]},
+        {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+      ],
+      "nodes": [
+        {
+          "code": "slow",
+          "layers": [$idx_slow],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [1, 1]},
+            {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+          ]
+        },
+        {
+          "code": "fast",
+          "layers": [$idx_fast],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [4, 1]},
+            {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+          ]
+        },
+        {
+          "code": "warp",
+          "layers": [$idx_warp],
+          "inputProcessors": [
+            {"code": "&zip_xy_scaler", "params": [7, 1]},
+            {"code": "&zip_temp_layer", "params": [$idx_mouse, 2000]}
+          ]
+        }
+      ]
+    }
+  ]
+)
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60"]
+[config]
+foo = "Advanced"
+num = 123
