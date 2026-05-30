@@ -8,7 +8,8 @@ Adds a mouse emulation layer and input listener behaviors to your layout.
 ✔️ Go60
 ❌ Glove80
 This creates a Mouse Emulation Layers on Go60.
-📢 You need to add the layer toggle yourself manually!
+
+🚩 To turn it on, you manually add a layer switch using &to or &tog or &layer.
 
 """
 script = """
