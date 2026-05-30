@@ -1,8 +1,8 @@
 uid = "gaming60"
 type = "mutation"
 language = "us"
-title = "🎮 Gaming Layer"
-subtitle = "Adds a Gaming Layer"
+title = "🎮 TK Gaming Layer"
+subtitle = "Adds the TK Gaming Layer"
 description = """
 Adds a dedicated gaming layer to your layout for optimized gameplay controls.
 ✔️ Go60
@@ -107,5 +107,5 @@ This creates a Gaming Layer on Go60, similar to copy layer.
 author = "moosyresearch"
 keyboards = ["go60"]
 [config]
-foo = "Beginners"
+foo = "Gaming"
 num = 123
