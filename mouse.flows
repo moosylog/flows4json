@@ -216,5 +216,5 @@ This creates a Mouse Emulation Layers on Go60.
 author = "moosyresearch"
 keyboards = ["go60"]
 [config]
-foo = "Advanced"
+foo = "ZZ Advanced"
 num = 123
