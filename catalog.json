@@ -196,6 +196,24 @@
     "mediaUrl": null
   },
   {
+    "uid": "macro_string",
+    "title": "Sample: String macro",
+    "subtitle": "Macro: Create a string❓",
+    "description": "This is an example to create a string macros.\n\n🚩 You can set your string in the first line of the script! Toggle Developer Console to see the script.",
+    "script": "# 1. Set your configuration variables (keeps the AST root context clean)\n\"my_macro_string\" as $macro_id |\n\"Helloworld@!1\" as $macro_string |\n\n# 2. Generate the new macro object\n(\n  {\n    \"name\": \"&\\($macro_id)\",\n    \"description\": \"Print \\\"\\($macro_string)\\\"\",\n    \"bindings\": (\n      $macro_string | split(\"\") | map(\n        if test(\"^[A-Z]$\") then\n          {\n            \"value\": \"&kp\",\n            \"params\": [\n              {\n                \"value\": \"LS\",\n                \"params\": [\n                  {\n                    \"value\": .,\n                    \"params\": []\n                  }\n                ]\n              }\n            ]\n          }\n        elif test(\"^[0-9]$\") then\n          {\n            \"value\": \"&kp\",\n            \"params\": [\n              {\n                \"value\": (\"N\" + .),\n                \"params\": []\n              }\n            ]\n          }\n        else\n          {\n            \"value\": \"&kp\",\n            \"params\": [\n              {\n                \"value\": (. | ascii_upcase),\n                \"params\": []\n              }\n            ]\n          }\n        end\n      )\n    ),\n    \"params\": []\n  }\n) as $new_macro |\n\n# 3. Safely inject into the AST\n\"&\\($macro_id)\" as $macro_name |\n\n# Safely grab the macros array, defaulting to an empty array if it doesn't exist yet\n(.keymap.macros // []) as $existing_macros |\n($existing_macros | map(.name) | index($macro_name)) as $idx |\n\n# Update if it exists, append if it's new\nif $idx != null then\n  .keymap.macros[$idx] = $new_macro\nelse\n  .keymap.macros = $existing_macros + [$new_macro]\nend",
+    "category": "Languages & Symbols",
+    "author": "moosyresearch",
+    "devices": [
+      "go60",
+      "glove80"
+    ],
+    "config": {
+      "foo": "Languages & Symbols",
+      "num": "123"
+    },
+    "mediaUrl": null
+  },
+  {
     "uid": "mouse",
     "title": "🖱️ Mouse Emulation",
     "subtitle": "Adds Mouse Emulation Layers",
