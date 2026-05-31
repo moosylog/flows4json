@@ -18,7 +18,7 @@
     "mediaUrl": null
   },
   {
-    "uid": "combos",
+    "uid": "Fn_combos",
     "title": "🎹 Adds Fn keys",
     "subtitle": "Function key combos on Go60",
     "description": "Adds easy-to-reach F1–F12 keys to your Go60 using simple vertical key combos.\nPress a number key together with the key directly below it to trigger function keys instantly.\nKeeps your layout compact while giving you fast access to shortcuts, media controls, IDE commands, and more.\nPerfect for users who want full function-row power without sacrificing desk space or portability.",
