@@ -6,7 +6,9 @@ subtitle = "Macro: Create Unicode Character Macros"
 description = """
 Generates ready-to-use Unicode macros for your keyboard, letting you type emojis and symbols instantly.
 Includes popular characters like ❤️ ✨ ⭐ 🔥 😂 👍 mapped into simple, reusable shortcuts.
-Works across Windows, macOS, and Linux with automatic OS-aware handling.
+
+Works across Windows, macOS, and Linux with settings per in the script per OS (see 🚩)
+
 Injects macros directly into your layout so you can type Unicode without copying or searching.
 Supports both basic and advanced Unicode characters, including full emoji range.
 Automatically adapts input method depending on your operating system.
