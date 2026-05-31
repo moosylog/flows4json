@@ -80,5 +80,5 @@ script = """
 author = "moosyresearch"
 keyboards = ["go60"]
 [config]
-foo = "Beginners"
+foo = "Smart Typing"
 num = 123
