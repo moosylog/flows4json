@@ -2,7 +2,7 @@ uid = "alphaswap"
 type = "mutation"
 language = "us"
 title = "AlphaSwap Colemak-DH"
-subtitle = "Or any other Alt.Layouts"
+subtitle = "Or any other alt.layouts"
 description = """
 This helps you switch your keyboard layout to a another alpha layer. 
 
