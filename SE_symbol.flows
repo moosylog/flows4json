@@ -32,7 +32,7 @@ def get_full_value:
 {
   "GRAVE": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}],
   "SEMI": [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}],
-  "LS(N4)": [{"value": "LS", "params": [{"value": "RA(N4)", "params": []}]}],
+  "LS(N4)": [{"value": "RA", "params": [{"value": "N4", "params": []}]}],
   "LS(N9)": [{"value": "LS", "params": [{"value": "N8", "params": []}]}],
   "LS(N0)": [{"value": "LS", "params": [{"value": "N9", "params": []}]}],
   "LBKT": [{"value": "RA", "params": [{"value": "N8", "params": []}]}],
