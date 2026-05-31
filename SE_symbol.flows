@@ -12,7 +12,6 @@ Works directly on your Symbol layer without requiring manual remapping or editin
 Ideal for users switching between US and Swedish keyboard standards.
 Preserves your muscle memory while fixing layout differences automatically.
 Designed for smooth multilingual typing across environments and devices.
-
 """
 script = """
 # DYNAMIC METADATA DISCOVERY (v18.3 - Swedish SE Fixed from File)
