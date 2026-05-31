@@ -97,5 +97,5 @@ This script maps your Symbol layer’s US-coded bindings to the specific scan co
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "International"
+foo = "Languages & Symbols"
 num = 123
