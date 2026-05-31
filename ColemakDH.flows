@@ -1,7 +1,7 @@
 uid = "alphaswap"
 type = "mutation"
 language = "jq"
-title = "Adapt to Colemak-DH"
+title = "Remap to Colemak-DH"
 subtitle = "Base layer to Colemak-DH (simple)"
 description = """
 Converts your base layer from QWERTY to the Colemak-DH.
