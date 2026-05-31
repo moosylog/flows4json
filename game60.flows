@@ -4,12 +4,15 @@ language = "us"
 title = "🎮 TK Gaming Layer"
 subtitle = "Adds the TK Gaming Layer"
 description = """
-Adds a dedicated gaming layer to your layout for optimized gameplay controls.
-✔️ Go60
-❌ Glove80
-This creates a Gaming Layer on Go60, similar to copy layer.  
-📢 You need to add the layer toggle yourself manually!
-
+Adds a dedicated Gaming Layer to your Go60 for faster, cleaner in-game controls.
+Optimizes key placement so movement, actions, and modifiers feel more natural during gameplay.
+Automatically builds a full layer mapped for gaming comfort and responsiveness.
+Includes a complete ready-to-use layout while keeping your existing layers untouched.
+Designed specifically for Go60 to ensure perfect compatibility and performance.
+Lets you switch into a focused gaming mode instantly with a single layer toggle.
+Built for competitive play, casual gaming, and everything in between.
+Keeps essential controls close so you can react faster and play smoother.
+📢 Note: layer toggle must be assigned manually for activation.
 """
 script = """
 # ==============================================================================
