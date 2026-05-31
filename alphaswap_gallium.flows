@@ -1,0 +1,159 @@
+uid = "alphaswap"
+type = "mutation"
+language = "us"
+title = "Remap to Gallium"
+subtitle = "Or any other alt.layouts"
+description = """
+This helps you switch your keyboard layout to a another alpha layer. 
+
+Highlights:
+Multiple Alternative Layouts: Supports multiple alternative keyboard layouts (e.g., Colemak-DH, Aptmak Blue, Enthium) with simple configuration-based switching.
+Multi-Layer Support: The all_layers option enables remapping across all alpha layers. 
+
+Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
+
+⚠️ Thumb: Letters on the thumb are not supported due to the risk of overwriting.
+⚠️ BHRM:  TailorKey bilateral HRM is not supported, and the macros must be updated manually.
+
+🚩 Configure alpha layer and layers to include or exclude in the first lines of the script
+"""
+script = """
+# ==========================================
+# SETTINGS
+# ==========================================
+
+"gallium" as $layout_name |
+true as $all_layers |
+["Gaming","Numbers","Navigation","Media","Keypad","Mouse","Magic"] as $excluded |
+
+############################################
+# 1. DATA DEFINITIONS
+############################################
+
+def layouts: 
+{
+  "aptmak": ["", "V", "W", "F", "P", "B", "J", "L", "U", "Y", "SQT", "", "", "R", "S", "T", "H", "K", "X", "N", "A", "I", "O", "", "", "C", "G", "D", "M", "COMMA", "DOT", "FSLH", "SEMI", "Z", "Q", ""],
+  "aptmak_blue": ["", "Q", "J", "U", "L", "SEMI", "B", "P", "F", "W", "X", "BSLH", "ESC", "A", "O", "I", "N", "Y", "K", "H", "T", "S", "R", "SQT", "", "Z", "DOT", "COMMA", "M", "E", "V", "D", "G", "C", "FSLH", ""],
+  "azerty": ["", "A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P", "", "", "Q", "S", "D", "F", "G", "H", "J", "K", "L", "M", "", "", "W", "X", "C", "V", "B", "N", "M", "COMMA", "DOT", "FSLH", ""],
+  "canary": ["", "W", "L", "Y", "P", "B", "Z", "F", "O", "U", "SQT", "", "", "C", "R", "S", "T", "G", "M", "N", "E", "I", "A", "", "", "Q", "J", "V", "D", "K", "X", "H", "FSLH", "COMMA", "DOT", ""],
+  "colemak-dh": ["", "Q", "W", "F", "P", "B", "J", "L", "U", "Y", "SEMI", "", "", "A", "R", "S", "T", "G", "M", "N", "E", "I", "O", "", "", "Z", "X", "C", "D", "V", "K", "H", "COMMA", "DOT", "FSLH", ""],
+  "dvorak": ["", "SQT", "COMMA", "DOT", "P", "Y", "F", "G", "C", "R", "L", "", "", "A", "O", "E", "U", "I", "D", "H", "T", "N", "S", "", "", "SEMI", "Q", "J", "K", "X", "B", "M", "W", "V", "Z", ""],
+  "engram": ["", "B", "Y", "O", "U", "SQT", "DQT", "L", "D", "W", "V", "Z", "", "C", "I", "E", "A", "COMMA", "DOT", "H", "T", "S", "N", "Q", "", "G", "X", "J", "K", "MINUS", "QMARK", "R", "M", "F", "P", ""],
+  "engrammer": ["", "B", "Y", "O", "U", "SQT", "SEMI", "L", "D", "W", "V", "Z", "", "C", "I", "E", "A", "COMMA", "DOT", "H", "T", "S", "N", "Q", "", "G", "X", "J", "K", "MINUS", "FSLH", "R", "M", "F", "P", ""],
+  "enthium_v13": ["", "Q", "Y", "O", "U", "EQUAL", "X", "L", "D", "P", "Z", "", "B", "C", "I", "E", "A", "MINUS", "K", "H", "T", "N", "S", "W", "", "SQT", "COMMA", "DOT", "FSLH", "SEMI", "J", "M", "G", "F", "V", ""],
+  "enthium_v14": ["", "Q", "Y", "O", "U", "EQUAL", "X", "L", "D", "P", "Z", "", "B", "C", "I", "A", "E", "MINUS", "K", "H", "T", "N", "S", "W", "", "SQT", "COMMA", "DOT", "SEMI", "FSLH", "J", "M", "G", "F", "V", ""],
+  "gallium": ["", "B", "L", "D", "C", "V", "J", "F", "O", "U", "COMMA", "", "", "N", "R", "T", "S", "G", "Y", "H", "A", "E", "I", "", "", "X", "Q", "M", "W", "Z", "K", "P", "SQT", "SEMI", "DOT", ""],
+  "graphite": ["", "B", "L", "D", "W", "Z", "SQT", "F", "O", "U", "J", "", "", "N", "R", "T", "S", "G", "Y", "H", "A", "E", "I", "", "", "Q", "X", "M", "C", "V", "K", "P", "DOT", "COMMA", "FSLH", ""],
+  "hands-down-neu": ["", "W", "F", "M", "P", "V", "FSLH", "DOT", "Q", "DQT", "SQT", "Z", "", "R", "S", "N", "T", "B", "COMMA", "A", "E", "I", "H", "J", "", "X", "C", "L", "D", "G", "MINUS", "U", "O", "Y", "K", ""],
+  "maltron": ["", "Q", "P", "Y", "C", "B", "V", "M", "U", "Z", "L", "", "", "A", "N", "S", "I", "F", "D", "T", "H", "O", "R", "", "", "COMMA", "DOT", "J", "G", "SEMI", "FSLH", "W", "K", "MINUS", "X", ""],
+  "qwerty": ["", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "", "", "A", "S", "D", "F", "G", "H", "J", "K", "L", "SEMI", "", "", "Z", "X", "C", "V", "B", "N", "M", "COMMA", "DOT", "FSLH", ""],
+  "workman": ["", "Q", "D", "R", "W", "B", "J", "F", "U", "P", "SEMI", "", "", "A", "S", "H", "T", "G", "Y", "N", "E", "O", "I", "", "", "Z", "X", "M", "C", "V", "K", "L", "COMMA", "DOT", "FSLH", ""]
+};
+
+def keyboards: {
+  "glove80": {
+    "ids": [
+      "22","23","24","25","26","27","28","29","30","31","32","33",
+      "34","35","36","37","38","39","40","41","42","43","44","45",
+      "46","47","48","49","50","51","58","59","60","61","62","63"
+    ],
+    "hrm": ["34","35","36","37","38","39","40","41","42","43","44","45"]
+  },
+
+  "go60": {
+    "ids": [
+      "12","13","14","15","16","17","18","19","20","21","22","23",
+      "24","25","26","27","28","29","30","31","32","33","34","35",
+      "36","37","38","39","40","41","42","43","44","45","46","47"
+    ],
+    "hrm": ["25","26","27","28","31","32","33","34"]
+  }
+};
+
+############################################
+# 2. PREPARATION
+############################################
+
+# Determine Keyboard Type
+((.keymap.layers[0] // .layers[0]) | if type == "array" then length else .bindings | length end) as $count |
+(if .keyboard then .keyboard elif $count > 70 then "glove80" else "go60" end) as $kb_type |
+(keyboards[$kb_type]) as $cfg |
+
+# Load Selected Layout
+(layouts[$layout_name]) as $layout |
+
+# Build the Remap Dictionary (ID -> New Key)
+(]
+  reduce range(0;36) as $i (
+    {};
+    if ($layout[$i] != "" and $cfg.ids[$i] != null)
+    then . + {($cfg.ids[$i]): $layout[$i]}
+    else . end
+  )
+) as $remap |
+
+# Identify layers to skip based on $excluded list
+(
+  (.layer_names // .keymap.layer_names // []) |
+  to_entries |
+  map(select(.value as $v | $excluded | map(ascii_downcase) | contains([$v | ascii_downcase]))) |
+  map(.key)
+) as $skip_list |
+
+############################################
+# 3. PROCESSING
+############################################
+
+(.keymap.layers // .layers) |= (
+  to_entries | map(
+    .key as $idx | .value as $layer |
+
+    # Check if layer is eligible for remapping
+    ($idx == 0 or ($all_layers and ([$skip_list[] == $idx] | any | not))) as $eligible |
+
+    if $eligible then
+
+      ($layer | if type == "array" then . else .bindings end) as $bindings |
+
+      # Determine if layer is Alpha-Heavy (2+ alphas on HRM positions)
+      ([
+        $bindings | to_entries[] |
+        select(.key|tostring as $k | $cfg.hrm | contains([$k])) |
+        .value | .. | strings? | select(test("^[A-Z]$"))
+      ] | length >= 2) as $is_alpha_layer |
+
+      if ($idx == 0 or $is_alpha_layer) then
+
+        # Internal function to perform the swap per key position
+        def do_swap($pos):
+          $remap[$pos|tostring] as $new_val |
+          if $new_val then
+            walk(
+              if type == "string" and
+                 (test("^[A-Z]$") or test("EQUAL|MINUS|SQT|FSLH|SEMI|COMMA|DOT|LBKT|RBKT|GRAVE|BSLH")) and
+                 (test("LSHIFT|RSHIFT|LCTRL|RCTRL|LALT|RALT|LGUI|RGUI") | not)
+              then $new_val
+              else .
+              end
+            )
+          else .
+          end;
+
+        # Apply swap to array or object-based bindings
+        if ($layer | type == "array") then
+          [ range(0;$layer|length) as $i | $layer[$i] | do_swap($i) ]
+        else
+          $layer | .bindings |= [ range(0;. | length) as $i | .[$i] | do_swap($i) ]
+        end
+
+      else $layer end
+    else $layer end
+  )
+)
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+[config]
+foo = "Base Setup"
+num = 123
