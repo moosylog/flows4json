@@ -1,0 +1,84 @@
+uid = "macro_string"
+type = "mutation"
+language = "us"
+title = "Sample: String macro"
+subtitle = "Macro: Create a string❓"
+description = """
+This is an example to create a string macros.
+
+🚩 You can set your string in the first line of the script! Toggle Developer Console to see the script.
+"""
+script = """
+# 1. Set your configuration variables (keeps the AST root context clean)
+"my_macro_string" as $macro_id |
+"Helloworld@!1" as $macro_string |
+
+# 2. Generate the new macro object
+(
+  {
+    "name": "&\($macro_id)",
+    "description": "Print \"\($macro_string)\"",
+    "bindings": (
+      $macro_string | split("") | map(
+        if test("^[A-Z]$") then
+          {
+            "value": "&kp",
+            "params": [
+              {
+                "value": "LS",
+                "params": [
+                  {
+                    "value": .,
+                    "params": []
+                  }
+                ]
+              }
+            ]
+          }
+        elif test("^[0-9]$") then
+          {
+            "value": "&kp",
+            "params": [
+              {
+                "value": ("N" + .),
+                "params": []
+              }
+            ]
+          }
+        else
+          {
+            "value": "&kp",
+            "params": [
+              {
+                "value": (. | ascii_upcase),
+                "params": []
+              }
+            ]
+          }
+        end
+      )
+    ),
+    "params": []
+  }
+) as $new_macro |
+
+# 3. Safely inject into the AST
+"&\($macro_id)" as $macro_name |
+
+# Safely grab the macros array, defaulting to an empty array if it doesn't exist yet
+(.keymap.macros // []) as $existing_macros |
+($existing_macros | map(.name) | index($macro_name)) as $idx |
+
+# Update if it exists, append if it's new
+if $idx != null then
+  .keymap.macros[$idx] = $new_macro
+else
+  .keymap.macros = $existing_macros + [$new_macro]
+end
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+[config]
+foo = "Languages & Symbols"
+num = 123
