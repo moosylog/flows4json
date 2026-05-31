@@ -14,7 +14,8 @@ Designed for creators, developers, and anyone who uses symbols in everyday commu
 Keeps everything consistent across layouts while removing the need for manual Unicode entry.
 Lets you express yourself faster with one-keystroke emoji and symbol insertion.
 A universal shortcut system for modern typing.
-🚩 You can specify your OS in the first line of the script!
+
+🚩 You can set your OS in the first line of the script! Toggle Developer Console to see the script.
 """
 script = """
 # -------------------------------------------------------------------------
