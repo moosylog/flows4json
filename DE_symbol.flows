@@ -2,7 +2,7 @@ uid = "de_symbol"
 type = "mutation"
 language = "us"
 title = "🌍 German Symbols"
-subtitle = "Symbol Layer Adjustments"
+subtitle = "Symbol Layer Adjustments❓"
 description = """
 Automatically adapts your symbol layer for German keyboard layouts with precise, system-aware mappings.
 Converts US-style symbols into their correct German equivalents, including AltGr and shifted combinations.
