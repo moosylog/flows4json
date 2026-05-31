@@ -1,8 +1,8 @@
 uid = "alphaswap"
 type = "mutation"
 language = "us"
-title = "Adapt to Enthium V14"
-subtitle = "Any Alternative Layouts"
+title = "AlphaSwap Enthium V14"
+subtitle = "Or any other alt.layouts"
 description = """
 This helps you switch your keyboard layout to a another alpha layer. 
 
