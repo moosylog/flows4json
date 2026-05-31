@@ -4,12 +4,14 @@ language = "us"
 title = "🌍 German Symbols"
 subtitle = "Symbol Layer Adjustments"
 description = """
-🌍 International Symbol Layer Adjustments — German  ⭐⭐
-
-Adjusts symbol layers for German locale compatibility.
-This script maps your Symbol layer’s US-coded bindings to the specific scan codes and modifiers required for a German OS layout. It preserves your custom symbol placement by translating keypresses like [ and @ into the correct AltGr or Shift combinations used in Germany.
-
-
+Automatically adapts your symbol layer for German keyboard layouts with precise, system-aware mappings.
+Converts US-style symbols into their correct German equivalents, including AltGr and shifted combinations.
+Keeps your custom layout intact while ensuring characters like brackets, slashes, and special symbols behave correctly.
+Works directly on your Symbol layer without breaking your existing key structure.
+Designed for seamless switching between US and German keyboard conventions.
+Perfect for bilingual users, developers, and anyone working across different keyboard standards.
+Preserves muscle memory while fixing locale-specific symbol differences.
+No manual remapping needed — just run and your layout becomes German-ready.
 """
 script = """
 # DYNAMIC METADATA DISCOVERY (v18.0 - Robust Index Lookup)
