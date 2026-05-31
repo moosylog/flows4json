@@ -218,5 +218,5 @@ script = """
 author = "moosyresearch"
 keyboards = ["go60"]
 [config]
-foo = "ZZ Advanced"
+foo = "Smart Controls"
 num = 123
