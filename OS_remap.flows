@@ -4,9 +4,10 @@ language = "us"
 title = "🍏 Switch to/from macOS"
 subtitle = "Swap modifier: macOS/Win"
 description = """
-Automatically remaps Ctrl and Cmd modifiers across all layers while preserving essential shortcuts like Copy, Paste, Undo, and Redo.
-All modifiers are swapped, including behavior modifiers, on all layers, and the redo exception is built in.
-
+Instantly swap Ctrl and Cmd across your entire keyboard layout for a seamless Mac ↔ Windows experience.
+Keeps familiar shortcuts like Copy, Paste, Undo, and Redo working exactly as expected.
+Works automatically across all layers and custom key behaviors, so you can switch platforms without relearning muscle memory.
+Perfect for users who move between macOS and Windows and want their keyboard to feel natural everywhere.
 """
 script = """
 # 1. The Bi-directional Swap Map
