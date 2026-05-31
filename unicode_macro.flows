@@ -11,117 +11,114 @@ Create and inject Unicode macros that work on any keyboard layout
 """
 script = """
 # -------------------------------------------------------------------------
-# ZMK UNICODE MACRO GENERATOR (Protocol v5.2)
+# ZMK UNICODE MACRO GENERATOR (Protocol v5.3)
 # -------------------------------------------------------------------------
 # Purpose: Automatically generates complex ZMK macros for Unicode symbols.
-# Features:
+# Features: 
 #   1. OS-Agnostic: Handles Windows (Alt Codes + Surrogates), macOS, and Linux.
 #   2. Hex Math: Converts Unicode points (U+1F525) to Decimal and back to Hex.
-#   3. Null-Safe: Works on any ZMK JSON layout file structure.
+#   3. Loop Safe: Overwrites existing macros of the same name.
 # -------------------------------------------------------------------------
 
-# --- CONFIGURATION ---
-"windows" as $target_os |  # Options: "windows", "macos", "linux"
+# =========================================================================
+# --- 1. CONFIGURATION & UNICODE DATA (USER EDITABLE) ---
+# =========================================================================
 
-# --- HELPER FUNCTIONS (The "Engine Room") ---
+"windows" as $target_os | # Options: "windows", "macos", "linux"
 
-# 1. to_hex($len): Converts a decimal number to a Hex string padded to $len
-#    Example: 65 -> "0041"
-def to_hex($len):
-  "0123456789ABCDEF" as $chars |
-  [ . as $n | recurse(if . >= 16 then ./16|floor else empty end) | . % 16 ]
-  | reverse
-  | map($chars[.:.+1])
-  | join("")
-  | (if length < $len then "0" * ($len - length) + . else . end);
+[
+  # --- BMP (Basic Multilingual Plane) ---
+  { "name": "red_heart",     "u": "2764",  "symb": "❤️" }, 
+  { "name": "sparkle",       "u": "2728",  "symb": "✨" }, 
+  { "name": "star",          "u": "2B50",  "symb": "⭐" }, 
 
-# 2. mk_obj($v): Creates a standard ZMK Binding Object
-#    Example: mk_obj("&kp") -> {"value": "&kp", "params": []}
-def mk_obj($v): { "value": $v, "params": [] };
+  # --- Astral Plane (SMP - Supplementary Multilingual Plane) ---
+  { "name": "fire",          "u": "1F525", "symb": "🔥" }, 
+  { "name": "tears_of_joy",  "u": "1F602", "symb": "😂" }, 
+  { "name": "thumbs_up",     "u": "1F44D", "symb": "👍" }
+] as $macro_data |
 
-# 3. mk_kp($code): Wraps a keycode in a &kp object structure
-#    Example: mk_kp("A") -> {"value": "&kp", "params": [{"value": "A", "params": []}]}
-def mk_kp($code):
-  { "value": "&kp", "params": [ mk_obj($code) ] };
+# =========================================================================
+# --- 2. CORE ENGINE (DO NOT EDIT BELOW THIS LINE) ---
+# =========================================================================
 
-# 4. mk_action($type; $code): Wraps a key in a macro action (press/release/tap)
-#    Example: mk_action("&macro_press"; "LALT")
-def mk_action($type; $code):
-  { "value": $type, "params": [ mk_kp($code) ] };
+(
+  # --- HELPER FUNCTIONS ---
+  def to_hex($len):
+    "0123456789ABCDEF" as $chars |
+    [ . as $n | recurse(if . >= 16 then ./16|floor else empty end) | . % 16 ] 
+    | reverse | map($chars[.:.+1]) | join("") 
+    | (if length < $len then "0" * ($len - length) + . else . end);
 
-# --- CORE LOGIC ---
+  def mk_obj($v): { "value": $v, "params": [] };
 
-# Root Wrapper: Safely finds the layout root (keymap or top-level)
-(if .keymap then .keymap else . end) |= (
+  def mk_kp($code): 
+    { "value": "&kp", "params": [ mk_obj($code) ] };
 
-  # --- KNOWLEDGE BASE ---
-  {
-    "windows": { "mods": ["LALT"], "leader": "KP_PLUS", "suffix": [], "wait": 30 },
-    "macos":   { "mods": ["LALT"], "leader": null, "suffix": [], "wait": 30 },
-    "linux":   { "mods": ["LCTRL","LSHFT"], "leader": "U", "suffix": ["SPACE"], "wait": 30 }
-  } as $os_registry |
+  def mk_action($type; $code):
+    { "value": $type, "params": [ mk_kp($code) ] };
 
-  # --- UNICODE DEFINITIONS ---
-  [
-    { "name": "heart", "u": "2764", "symb": "❤" },
-    { "name": "sparkle", "u": "2728", "symb": "✨" },
-    { "name": "fire", "u": "1F525", "symb": "🔥" }
-  ] as $macro_data |
-
-  ($os_registry[$target_os]) as $cfg |
-
-  # --- GENERATION LOOP ---
-  reduce $macro_data[] as $item (.
-
-    # STEP A: HEX & SURROGATE MATH
-    ("0123456789ABCDEF" as $h |
-     $item.u | ascii_upcase | split("") | reverse |
-     reduce range(0; length) as $i (
-       0;
-       . + ($h | index($item.u[$i:$i+1] | ascii_upcase)) * pow(16; $i)
-     )
-    ) as $dec |
-
-    # Windows surrogate handling
-    (if $target_os == "windows" and $dec > 65535 then
-        ((($dec - 65536) / 1024 | floor) + 55296) as $hi |
-        ((($dec - 65536) % 1024) + 56320) as $lo |
-        [ ($hi | to_hex(4)), ($lo | to_hex(4)) ]
-     else
-        [ $item.u ]
-     end) as $hex_list |
-
-    # STEP B: BUILD MACRO BINDINGS
-    ([
-      ($cfg.mods[] | mk_action("&macro_press"; .)),
-
-      (if $cfg.leader then mk_action("&macro_tap"; $cfg.leader) else empty end),
-
-      ($hex_list[] | split("")[] |
-        (if . >= "0" and . <= "9" then "KP_N" + . else . end) as $key |
-        mk_action("&macro_tap"; $key)
-      ),
-
-      ($cfg.mods[] | mk_action("&macro_release"; .)),
-
-      ($cfg.suffix[] | mk_action("&macro_tap"; .))
-    ]) as $bindings |
-
-    # STEP C: MACRO OBJECT
+  # --- MAIN LOGIC ---
+  (if .keymap then .keymap else . end) |= (
+    
+    # --- KNOWLEDGE BASE ---
     {
-      "name": "&\($target_os)_\($item.name)",
-      "description": "Unicode \($item.symb) \($item.name) (\($target_os))",
-      "compatible": "zmk,behavior-macro",
-      "config": { "wait-ms": $cfg.wait, "tap-ms": $cfg.wait },
-      "bindings": $bindings,
-      "params": []
-    } as $new_macro |
+      "windows": { "mods": ["LALT"], "leader": "KP_PLUS", "suffix": [],      "wait": 30 },
+      "macos":   { "mods": ["LALT"], "leader": null,      "suffix": [],      "wait": 30 },
+      "linux":   { "mods": ["LCTRL", "LSHFT"], "leader": "U", "suffix": ["SPACE"], "wait": 30 }
+    } as $os_registry |
+    
+    ($os_registry[$target_os]) as $cfg |
 
-    # STEP D: INTELLIGENT INJECTION
-    .macros |= (
-      if . == null then [] else . end |
-      (map(.name | endswith("_\($item.name)")) | index(true)) as $idx |
-      if $idx then .[$idx] = $new_macro else . + [$new_macro] end
+    # --- GENERATION LOOP ---
+    reduce $macro_data[] as $item (.;
+      
+      # STEP A: HEX & SURROGATE MATH
+      ( reduce ($item.u | ascii_upcase | split("") | .[]) as $char 
+        (0; . * 16 + ("0123456789ABCDEF" | index($char))) 
+      ) as $dec |
+
+      # Windows Logic: If > 0xFFFF (65535), calculate "Surrogate Pairs"
+      (if $target_os == "windows" and $dec > 65535 then
+         ((($dec - 65536) / 1024 | floor) + 55296) as $hi |
+         ((($dec - 65536) % 1024) + 56320) as $lo |
+         [ ($hi | to_hex(4)), ($lo | to_hex(4)) ]
+       else 
+         [ $item.u ] 
+       end) as $hex_list |
+
+      # STEP B: BUILD THE MACRO BINDINGS (Now with isolated loops for Surrogates)
+      ([
+        ( $hex_list[] | . as $hex_code | 
+            ($cfg.mods[] | mk_action("&macro_press"; .)),
+            (if $cfg.leader then mk_kp($cfg.leader) else empty end),
+            ($hex_code | split("")[] | 
+               (if . >= "0" and . <= "9" then 
+                  (if $target_os == "windows" then "KP_N" + . else "N" + . end) 
+                else . end) as $key |
+               mk_kp($key)
+            ),
+            ($cfg.mods[] | mk_action("&macro_release"; .))
+        ),
+        ($cfg.suffix[] | mk_kp(.))
+      ]) as $bindings |
+
+      # STEP C: CONSTRUCT THE MACRO OBJECT
+      {
+          "name": "&UC_\($item.name)_\($target_os)",
+          "description": "Unicode \($item.symb) \($item.name) (\($target_os))",
+          "compatible": "zmk,behavior-macro",
+          "config": { "wait-ms": $cfg.wait, "tap-ms": $cfg.wait },
+          "bindings": $bindings,
+          "params": []
+      } as $new_macro |
+
+      # STEP D: INTELLIGENT INJECTION (Overwrite & Append)
+      .macros |= (
+          if . == null then [] else . end |
+          map(select(.name != "&UC_\($item.name)_\($target_os)")) |
+          . + [$new_macro]
+      )
     )
   )
 )
