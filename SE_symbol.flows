@@ -4,11 +4,14 @@ language = "us"
 title = "🌍 Swedish Symbols"
 subtitle = "Symbol Layer Adjustments"
 description = """
-🌍 International Symbol Layer Adjustments — Swedish  ⭐⭐
-
-Adjusts symbol layers for Swedish locale compatibility.
-This script maps your Symbol layer’s US-coded bindings to the specific scan codes and modifiers required for a Swedish OS layout. It preserves your custom symbol placement by translating keypresses like [ and @ into the correct AltGr or Shift combinations used in Germany.
-
+Seamlessly adapts your symbol layer for Swedish keyboard layouts with accurate locale-specific mappings.
+Translates US-style symbols into their correct Swedish equivalents, including AltGr and shifted key combinations.
+Ensures characters like brackets, quotes, slashes, and special symbols behave as expected on Swedish systems.
+Keeps your existing layout structure intact while applying precise regional adjustments.
+Works directly on your Symbol layer without requiring manual remapping or editing.
+Ideal for users switching between US and Swedish keyboard standards.
+Preserves your muscle memory while fixing layout differences automatically.
+Designed for smooth multilingual typing across environments and devices.
 
 """
 
