@@ -1,23 +1,5 @@
 [
   {
-    "uid": "alphaswap",
-    "title": "Remap to Colemak-DH",
-    "subtitle": "Base layer to Colemak-DH (simple)",
-    "description": "Converts your base layer from QWERTY to the Colemak-DH.\nSimple, for more advanced version see the other 'app icon'",
-    "script": "############################################\n# 1. Colemak-DH layout (row-based, readable)\n############################################\n\ndef colemak_rows:\n{\n  R1: [\"Q\",\"W\",\"F\",\"P\",\"B\",\"J\",\"L\",\"U\",\"Y\",\"SEMI\"],\n  R2: [\"A\",\"R\",\"S\",\"T\",\"G\",\"M\",\"N\",\"E\",\"I\",\"O\"],\n  R3: [\"Z\",\"X\",\"C\",\"D\",\"V\",\"K\",\"H\",\"COMMA\",\"DOT\",\"FSLH\"]\n};\n\n# Normalize to original Rn_m key format (single source of truth)\ndef normalize_layout(rows):\n  rows\n  | to_entries\n  | map(\n      .key as $row\n      | .value\n      | to_entries\n      | map({\n          key: \"\\($row)_\\(.key + 1)\",\n          value: .value\n        })\n    )\n  | flatten\n  | from_entries;\n\nnormalize_layout(colemak_rows) as $colemak |\n\n############################################\n# 2. Keyboard position helpers\n############################################\n\ndef make_pos(start1; start2; start3):\n(\n  [range(0;10) | {key:\"R1_\\(.+1)\", value:(start1 + .)}] +\n  [range(0;10) | {key:\"R2_\\(.+1)\", value:(start2 + .)}] +\n  [range(0;10) | {key:\"R3_\\(.+1)\", value:(start3 + .)}]\n)\n| from_entries\n| with_entries(.value |= tostring);\n\n############################################\n# 3. Keyboard selection\n############################################\n\n(\n  if .keyboard == \"glove80\" then\n    {\n      pos: make_pos(23; 35; 47),\n      hrm: [\"35\",\"36\",\"37\",\"38\",\"41\",\"42\",\"43\",\"44\"],\n      val: [\"36\",\"37\",\"38\",\"41\",\"42\",\"43\"]\n    }\n  else\n    {\n      pos: make_pos(13; 25; 37),\n      hrm: [\"25\",\"26\",\"27\",\"28\",\"31\",\"32\",\"33\",\"34\"],\n      val: [\"26\",\"27\",\"28\",\"31\",\"32\",\"33\"]\n    }\n  end\n) as $kb |\n\n############################################\n# 4. Build dynamic keycode mapping\n############################################\n\n(\n  $colemak\n  | with_entries(\n      .key as $k\n      | .key = $kb.pos[$k]\n    )\n) as $mapping |\n\n############################################\n# 5. Process layers (unchanged logic)\n############################################\n\n(.keymap.layers // .layers) |= map(\n  if type == \"array\" then\n\n    (\n      [\n        to_entries[]\n        | select(.key | tostring | IN($kb.val[]))\n        | .value | .. | strings?\n        | select(test(\"^[A-Z]$\"))\n      ]\n      | length\n    ) as $found_alphas\n    |\n\n    if $found_alphas >= 3 then\n      to_entries\n      | map(\n          (.key | tostring) as $idx\n          | .value as $key\n\n          | if $mapping[$idx] and ($key | type == \"object\") then\n              if ($idx | IN($kb.hrm[])) and ($key.value != \"&kp\") then\n                $key | .params[1] = {value:$mapping[$idx], params:[]}\n              elif $key.value == \"&kp\" then\n                $key | .params[0] = {value:$mapping[$idx], params:[]}\n              elif ($key.params | length) > 1 then\n                $key | .params[1] = {value:$mapping[$idx], params:[]}\n              else\n                $key | .params[0] = {value:$mapping[$idx], params:[]}\n              end\n            else\n              $key\n            end\n        )\n    else . end\n  else . end\n)",
-    "category": "Base Setup",
-    "author": "moosyresearch",
-    "devices": [
-      "go60",
-      "glove80"
-    ],
-    "config": {
-      "foo": "Base Setup",
-      "num": "123"
-    },
-    "mediaUrl": "https://moosylog.github.io/flows4json/ColemakDH.png"
-  },
-  {
     "uid": "de_symbol",
     "title": "🌍 German Symbols",
     "subtitle": "Symbol Layer Adjustments",
