@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flows4JSON - App Store</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jq-web@0.5.1/jq.wasm.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jq.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+    <style>
+        /* MAC APP STORE & VS CODE DESIGN SYSTEM */
+        :root {
+            --bg-window: #1e1e1e;
+            --bg-sidebar: #252525;
+            --bg-card: #2c2c2e;
+            --text-primary: #ffffff;
+            --text-secondary: #98989d;
+            --accent-blue: #0a84ff;
+            --accent-green: #30d158;
+            --accent-red: #ff453a;
+            --border: rgba(255, 255, 255, 0.08);
+            
+            /* VS Code IDE Colors */
+            --ide-bg: #1e1e1e;
+            --ide-panel: #252526;
+            --ide-border: #3c3c3c;
+            --ide-dim: #858585;
+            --ide-resizer: #333333;
+
+            --radius-lg: 14px; --radius-md: 10px; --radius-sm: 6px;
+            --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "SF Mono", "Fira Code", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+        }
+
+        * { box-sizing: border-box; font-family: var(--font-stack); -webkit-font-smoothing: antialiased; }
+        body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        h1, h2, h3, h4, p { margin: 0; }
+
+        /* BUTTONS */
+        button {
+            background: rgba(255,255,255,0.1); color: var(--text-primary); border: none;
+            padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 600;
+            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
+        button:active:not(:disabled) { transform: scale(0.96); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.primary { background: var(--text-primary); color: black; }
+        button.primary:hover:not(:disabled) { background: #e0e0e0; }
+        button.accent { background: var(--accent-blue); color: white; }
+        button.accent:hover:not(:disabled) { background: #0071e3; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
+            padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10;
+        }
+        .brand { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 8px; cursor: pointer;}
+        
+        .search-box {
+            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white;
+            padding: 8px 12px; border-radius: var(--radius-sm); outline: none; font-size: 13px; transition: 0.2s;
+        }
+        .search-box:focus { border-color: var(--accent-blue); background: rgba(0,0,0,0.4); box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.2); }
+
+        .sidebar-section-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 8px; }
+        
+        .segmented-control { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 8px; border: 1px solid var(--border); }
+        .segmented-control label { flex: 1; text-align: center; padding: 5px 0; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: 0.2s; }
+        .segmented-control input[type="radio"] { display: none; }
+        .segmented-control input[type="radio"]:checked + label { background: #4a4a4c; color: white; box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+
+        .category-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 2px; }
+        .category-item { padding: 8px; border-radius: var(--radius-sm); cursor: pointer; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; }
+        .category-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+        .category-item.active { background: var(--accent-blue); color: white; }
+
+        /* VIEWS */
+        .view-container { flex-grow: 1; position: relative; background: var(--bg-window); display: flex; flex-direction: column; }
+        .view { display: none; width: 100%; height: 100%; flex-direction: column; animation: fade 0.2s ease; overflow: hidden; }
+        .view.active { display: flex; }
+        @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+        /* --- LIBRARY VIEW --- */
+        .library-scroll { flex-grow: 1; overflow-y: auto; padding: 40px; }
+        .library-content { max-width: 1200px; margin: 0 auto; }
+        .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
+        
+        .app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .app-card { display: flex; align-items: flex-start; gap: 16px; padding: 16px; border-radius: var(--radius-lg); background: transparent; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
+        .app-card:hover { background: var(--bg-card); border-color: rgba(255,255,255,0.05); }
+        
+        .app-icon { width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0; background: linear-gradient(135deg, #43CBFF 10%, #9708CC 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .app-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; padding-top: 2px;}
+        .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
+        .app-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .app-tags { display: flex; gap: 6px; margin-top: 6px; }
+        .device-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; border: 1px solid var(--border); color: var(--text-secondary); background: rgba(255,255,255,0.05); }
+        .device-tag.glove80 { color: #d2a8ff; background: rgba(163, 113, 247, 0.15); border-color: rgba(163, 113, 247, 0.3); }
+        .device-tag.go60 { color: #82aaff; background: rgba(130, 170, 255, 0.15); border-color: rgba(130, 170, 255, 0.3); }
+
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
+        .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+
+        /* --- PRODUCT PAGE (TOP HALF) --- */
+        .product-scroll { flex: 1; overflow-y: auto; background: var(--bg-window); }
+        .product-page { padding: 0; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; }
+        
+        .nav-back { padding: 20px 40px; display: flex; align-items: center; gap: 8px; color: var(--accent-blue); cursor: pointer; font-size: 14px; font-weight: 500; }
+        .nav-back:hover { text-decoration: underline; }
+
+        .product-header { padding: 0 40px 40px 40px; display: flex; gap: 30px; align-items: flex-start; border-bottom: 1px solid var(--border); }
+        .product-icon-large { width: 120px; height: 120px; border-radius: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 48px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
+        .product-header-info { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; padding-top: 10px;}
+        .product-title { font-size: 28px; font-weight: 700; line-height: 1.1; }
+        .product-developer { font-size: 13px; color: var(--text-secondary); opacity: 0.7; }
+        
+        .wizard-area { background: var(--bg-card); padding: 16px 20px; border-radius: var(--radius-md); margin-top: 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
+        .wizard-status { display: flex; flex-direction: column; gap: 4px; }
+        .wizard-status-title { font-size: 14px; font-weight: 600; }
+        .wizard-status-desc { font-size: 12px; color: var(--text-secondary); }
+
+        .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; }
+        
+        /* App Store Style Media Hero (Screenshot/GIF) */
+        .product-media { 
+            width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #111; display: none; 
+            justify-content: center; align-items: center; margin-bottom: -10px;
+        }
+        .product-media img { max-width: 100%; max-height: 320px; object-fit: contain; display: block; }
+
+        .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+        .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
+
+        .dev-toggle-wrapper { padding: 20px 40px 40px 40px; text-align: center; }
+        .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
+        .dev-toggle:hover { color: white; text-decoration: underline; }
+
+        /* --- RESIZABLE IDE & SYNTAX HIGHLIGHTING (BOTTOM HALF) --- */
+        .resizer-h { height: 6px; background: var(--ide-bg); border-top: 1px solid var(--ide-border); border-bottom: 1px solid var(--ide-border); cursor: ns-resize; display: none; z-index: 50; transition: 0.2s; }
+        .resizer-h:hover, .resizer-h.dragging { background: var(--accent-blue); }
+
+        .dev-ide-pane { display: none; height: 350px; background: var(--ide-bg); flex-direction: column; flex-shrink: 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.3); }
+        .dev-ide-pane.active { display: flex; }
+        .resizer-h.active { display: block; }
+
+        .ide-toolbar { display: flex; background: var(--ide-panel); padding: 0 16px; border-bottom: 1px solid var(--ide-border); height: 35px; align-items: center; justify-content: space-between; }
+        .ide-tab { padding: 0 16px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .ide-grid { display: grid; flex-grow: 1; grid-template-columns: var(--col1, 33.3%) 6px var(--col2, 33.3%) 6px var(--col3, 33.3%); overflow: hidden; }
+        .resizer-v { background: var(--ide-resizer); cursor: ew-resize; transition: 0.2s; z-index: 10;}
+        .resizer-v:hover, .resizer-v.dragging { background: var(--accent-blue); }
+
+        .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5;}
+        
+        .code-matrix { position: relative; flex-grow: 1; overflow: hidden; background: var(--ide-bg); }
+        .code-matrix textarea, .code-matrix pre {
+            margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; font-family: var(--font-mono); font-size: 13px; line-height: 1.6;
+            position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2;
+        }
+        .code-matrix textarea { color: transparent; background: transparent; caret-color: #fff; z-index: 2; resize: none; outline: none;}
+        .code-matrix pre { z-index: 1; pointer-events: none; }
+        .code-matrix code { font-family: var(--font-mono); text-shadow: none; }
+
+        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: auto; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
+        .log-entry { padding: 4px 8px; line-height: 1.5; white-space: pre-wrap; color: #cccccc; word-wrap: break-word;}
+        .log-time { color: var(--ide-dim); margin-right: 8px; font-size: 11px; }
+        .log-success { color: var(--accent-green); }
+        .log-danger { color: var(--accent-red); background: rgba(255, 69, 58, 0.1); border-radius: 4px;}
+        .log-info { color: var(--ide-blue); }
+        .log-verbose { color: #dcdcaa; opacity: 0.8;}
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON</div>
+        <div><input type="text" id="searchInput" class="search-box" placeholder="Search automations..."></div>
+        <div>
+            <div class="sidebar-section-title">Hardware Support</div>
+            <div class="segmented-control">
+                <input type="radio" id="dev-all" name="device" value="all" checked>
+                <label for="dev-all">All</label>
+                <input type="radio" id="dev-go60" name="device" value="go60">
+                <label for="dev-go60">Go60</label>
+                <input type="radio" id="dev-glove" name="device" value="glove80">
+                <label for="dev-glove">Glove80</label>
+            </div>
+        </div>
+        <div>
+            <div class="sidebar-section-title">Categories</div>
+            <ul id="categoryList" class="category-list"></ul>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <button onclick="app.fetchCatalog()" style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border);">↻ Refresh Store</button>
+    </div>
+
+    <div class="view-container">
+        
+        <div id="viewLibrary" class="view active">
+            <div class="library-scroll">
+                <div class="library-content">
+                    <h1 class="page-title">Discover Automations</h1>
+                    <div id="catalogGrid" class="app-grid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="viewStudio" class="view">
+            <div class="product-scroll">
+                <div class="product-page">
+                    <div class="nav-back" onclick="app.showLibrary()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+                        App Store
+                    </div>
+                    
+                    <div class="product-header">
+                        <div class="product-icon-large" id="studioIcon">⚡</div>
+                        <div class="product-header-info">
+                            <h1 class="product-title" id="studioTitle">Flow Title</h1>
+                            <p class="product-subtitle" id="studioSub">Subtitle goes here</p>
+                            <p class="product-developer" id="studioAuthor">Developer: moosyresearch</p>
+                            
+                            <div class="app-tags" id="studioTags" style="margin-top: 8px; margin-bottom: 8px;"></div>
+                            
+                            <div class="wizard-area" id="wizardBox"></div>
+                        </div>
+                    </div>
+
+                    <div class="product-body">
+                        <div class="product-media" id="studioMediaContainer">
+                            <img id="studioMedia" src="" alt="App Preview">
+                        </div>
+
+                        <div>
+                            <h3 class="section-title">Description</h3>
+                            <div class="product-desc" id="studioDesc"></div>
+                        </div>
+                    </div>
+                    <div class="dev-toggle-wrapper">
+                        <button class="dev-toggle" onclick="app.toggleDevIDE()">{" "} Toggle Developer Console</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="resizer-h" id="resizerH"></div>
+
+            <div class="dev-ide-pane" id="devPane">
+                <div class="ide-toolbar">
+                    <div class="ide-tab">Flows IDE Studio</div>
+                    <button style="padding: 2px 8px; font-size: 10px; border-radius: 4px; background: transparent; color: var(--ide-dim);" onclick="app.toggleDevIDE()">✕ Close</button>
+                </div>
+                
+                <div class="ide-grid" id="ideGrid">
+                    <div class="ide-editor">
+                        <div class="ide-editor-header">source_flow.jq</div>
+                        <div class="code-matrix">
+                            <textarea id="jqInput" spellcheck="false" oninput="app.updateJQSyntax()" onscroll="app.syncScroll('jqInput', 'jqPre')"></textarea>
+                            <pre id="jqPre" aria-hidden="true"><code class="language-jq" id="jqHighlight"></code></pre>
+                        </div>
+                    </div>
+                    <div class="resizer-v" id="resizerV1"></div>
+                    
+                    <div class="ide-editor">
+                        <div class="ide-editor-header">target_output.json</div>
+                        <div class="code-matrix" style="background: #141414;">
+                            <pre id="jsonPre"><code class="language-json" id="jsonHighlight">// AST will stream here...</code></pre>
+                        </div>
+                    </div>
+                    <div class="resizer-v" id="resizerV2"></div>
+
+                    <div class="ide-editor">
+                        <div class="ide-editor-header">Terminal / Build Trace</div>
+                        <div class="log-panel" id="logPanel"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="layoutFile" accept=".json" style="display: none;">
+
+    <script>
+        // ==========================================
+        // IDE RESIZERS
+        // ==========================================
+        const resizerH = document.getElementById('resizerH');
+        const devPane = document.getElementById('devPane');
+        const ideGrid = document.getElementById('ideGrid');
+        
+        let isResizingH = false;
+        resizerH.addEventListener('mousedown', (e) => { isResizingH = true; resizerH.classList.add('dragging'); document.body.style.cursor = 'ns-resize'; e.preventDefault(); });
+        
+        let isResizingV1 = false, isResizingV2 = false;
+        let c1 = 33.3, c2 = 33.3, c3 = 33.4;
+
+        document.getElementById('resizerV1').addEventListener('mousedown', (e) => { isResizingV1 = true; document.body.style.cursor = 'ew-resize'; e.preventDefault(); });
+        document.getElementById('resizerV2').addEventListener('mousedown', (e) => { isResizingV2 = true; document.body.style.cursor = 'ew-resize'; e.preventDefault(); });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isResizingH) {
+                const containerHeight = document.querySelector('.view-container').offsetHeight;
+                const newHeight = containerHeight - e.clientY;
+                if (newHeight > 100 && newHeight < containerHeight - 50) devPane.style.height = `${newHeight}px`;
+            }
+            if (isResizingV1 || isResizingV2) {
+                const gridRect = ideGrid.getBoundingClientRect();
+                const totalWidth = gridRect.width - 12; 
+                if (isResizingV1) {
+                    const newC1 = ((e.clientX - gridRect.left) / totalWidth) * 100;
+                    if (newC1 > 5 && (c2 + c1 - newC1) > 5) { c2 = c2 + (c1 - newC1); c1 = newC1; }
+                } else if (isResizingV2) {
+                    const newC12 = ((e.clientX - gridRect.left - 6) / totalWidth) * 100;
+                    const newC2 = newC12 - c1;
+                    if (newC2 > 5 && (c3 + c2 - newC2) > 5) { c3 = c3 + (c2 - newC2); c2 = newC2; }
+                }
+                ideGrid.style.setProperty('--col1', `${c1}%`);
+                ideGrid.style.setProperty('--col2', `${c2}%`);
+                ideGrid.style.setProperty('--col3', `${c3}%`);
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isResizingH = isResizingV1 = isResizingV2 = false;
+            resizerH.classList.remove('dragging');
+            document.body.style.cursor = '';
+        });
+
+        // ==========================================
+        // LOGGER
+        // ==========================================
+        class Logger {
+            constructor(panelId) { this.panel = document.getElementById(panelId); }
+            print(msg, type = "info") {
+                const entry = document.createElement('div'); entry.className = `log-entry log-${type}`;
+                const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+                entry.innerHTML = `<span class="log-time">[${time}]</span>${msg}`;
+                this.panel.appendChild(entry); this.panel.scrollTop = this.panel.scrollHeight;
+            }
+            verbose(msg) { this.print(msg, "verbose"); }
+            clear() { this.panel.innerHTML = ''; }
+        }
+        const terminal = new Logger('logPanel');
+
+        // Helpers
+        function getGradient(str) {
+            const colors = [ ['#FF3B30', '#FF9500'], ['#34C759', '#30D158'], ['#007AFF', '#5AC8FA'], ['#AF52DE', '#FF2D55'], ['#FF9500', '#FFCC00'] ];
+            let hash = 0; for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            const pair = colors[Math.abs(hash) % colors.length];
+            return `linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
+        }
+        function getEmoji(cat) {
+            const map = { 'colemak': '⌨️', 'automation': '⚡', 'gaming': '🎮', 'mac': '🍎', 'windows': '🪟' };
+            for (let k in map) if (cat.toLowerCase().includes(k)) return map[k];
+            return '✨';
+        }
+
+        // ==========================================
+        // MAIN APP ENGINE
+        // ==========================================
+        class FlowsStoreApp {
+            constructor() {
+                this.apiUrl = `https://api.github.com/repos/moosylog/flows4json/contents/`;
+                this.catalog = [];
+                this.activeCategory = 'All';
+                
+                this.activeFlow = null;
+                this.sourceAST = null;
+                this.outputAST = null;
+                this.fileName = "compiled_layout.json";
+                this.wizardState = "upload"; 
+
+                this.bindEvents();
+                this.fetchCatalog();
+            }
+
+            bindEvents() {
+                const handleSidebarNav = () => { this.interceptSidebarNav(); this.renderGrid(); };
+                document.getElementById('searchInput').addEventListener('input', handleSidebarNav);
+                document.querySelectorAll('input[name="device"]').forEach(r => r.addEventListener('change', handleSidebarNav));
+                document.getElementById('layoutFile').addEventListener('change', (e) => this.loadTargetJSON(e));
+            }
+
+            interceptSidebarNav() {
+                if (document.getElementById('viewStudio').classList.contains('active')) this.showLibrary();
+            }
+
+            toggleDevIDE() {
+                document.getElementById('devPane').classList.toggle('active');
+                document.getElementById('resizerH').classList.toggle('active');
+            }
+
+            // --- SYNTAX HIGHLIGHTING ---
+            updateJQSyntax() {
+                const text = document.getElementById('jqInput').value;
+                document.getElementById('jqHighlight').innerHTML = Prism.highlight(text, Prism.languages.jq, 'jq');
+            }
+            updateJSONSyntax(jsonStr) {
+                document.getElementById('jsonHighlight').innerHTML = Prism.highlight(jsonStr, Prism.languages.json, 'json');
+            }
+            syncScroll(textareaId, preId) {
+                const ta = document.getElementById(textareaId);
+                const pre = document.getElementById(preId);
+                pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft;
+            }
+
+            // --- ROUTING ---
+            showLibrary() {
+                document.getElementById('viewStudio').classList.remove('active');
+                document.getElementById('viewLibrary').classList.add('active');
+                this.activeFlow = null; this.sourceAST = null;
+                document.getElementById('devPane').classList.remove('active');
+                document.getElementById('resizerH').classList.remove('active');
+            }
+
+            showStudio(flowData) {
+                this.activeFlow = flowData;
+                this.wizardState = "upload";
+                this.sourceAST = null;
+
+                document.getElementById('viewLibrary').classList.remove('active');
+                document.getElementById('viewStudio').classList.add('active');
+
+                // Populate Info
+                document.getElementById('studioIcon').style.background = getGradient(flowData.title);
+                document.getElementById('studioIcon').innerText = getEmoji(flowData.category);
+                document.getElementById('studioTitle').innerText = flowData.title;
+                document.getElementById('studioSub').innerText = flowData.subtitle || flowData.category;
+                document.getElementById('studioAuthor').innerText = `Developer: ${flowData.author || 'moosyresearch'}`;
+                document.getElementById('studioDesc').innerText = flowData.description || 'No detailed description provided.';
+                
+                // Hardware Tags
+                const tagsHtml = flowData.devices.map(d => {
+                    let type = d.toLowerCase();
+                    return `<span class="device-tag ${type === 'go60' || type === 'glove80' ? type : ''}">${d}</span>`;
+                }).join('');
+                document.getElementById('studioTags').innerHTML = tagsHtml;
+
+                // Screenshot / GIF Display Logic
+                const mediaContainer = document.getElementById('studioMediaContainer');
+                const mediaImg = document.getElementById('studioMedia');
+                if (flowData.mediaUrl) {
+                    mediaImg.src = flowData.mediaUrl;
+                    mediaContainer.style.display = 'flex';
+                } else {
+                    mediaImg.src = '';
+                    mediaContainer.style.display = 'none';
+                }
+
+                // Reset IDE
+                document.getElementById('jqInput').value = flowData.script;
+                this.updateJQSyntax();
+                document.getElementById('jsonHighlight').innerHTML = '// AST will stream here...';
+                terminal.clear();
+                terminal.print(`Studio Sandbox mounted for: ${flowData.uid}.flows`, "info");
+                
+                this.renderWizard();
+            }
+
+            // --- WIZARD UI ---
+            renderWizard() {
+                const box = document.getElementById('wizardBox');
+                if (this.wizardState === "upload") {
+                    box.innerHTML = `
+                        <div class="wizard-status"><span class="wizard-status-title">Ready to Install</span><span class="wizard-status-desc">Provide your current JSON layout to begin.</span></div>
+                        <button class="primary" onclick="document.getElementById('layoutFile').click()">Choose File</button>
+                    `;
+                } else if (this.wizardState === "loading") {
+                    box.innerHTML = `
+                        <div class="wizard-status"><span class="wizard-status-title">Processing...</span><span class="wizard-status-desc">Parsing JSON structure.</span></div>
+                        <button disabled>Please Wait</button>
+                    `;
+                } else if (this.wizardState === "error") {
+                    box.innerHTML = `
+                        <div class="wizard-status"><span class="wizard-status-title" style="color: var(--accent-red);">Parse Error</span><span class="wizard-status-desc">${this.wizardError || 'Check IDE for details.'}</span></div>
+                        <button onclick="document.getElementById('layoutFile').click()">Try Again</button>
+                    `;
+                } else if (this.wizardState === "ready") {
+                    box.innerHTML = `
+                        <div class="wizard-status"><span class="wizard-status-title" style="color: var(--accent-blue);">Layout Loaded</span><span class="wizard-status-desc">${this.fileName} mapped.</span></div>
+                        <button class="accent" onclick="app.runFlow()">Apply Flow</button>
+                    `;
+                } else if (this.wizardState === "success") {
+                    box.innerHTML = `
+                        <div class="wizard-status"><span class="wizard-status-title" style="color: var(--accent-green);">Success</span><span class="wizard-status-desc">Modifications applied cleanly.</span></div>
+                        <button class="primary" style="background: var(--accent-green); color: black;" onclick="app.saveJSON()">Download File</button>
+                    `;
+                }
+            }
+
+            // --- CATALOG LOGIC ---
+            parseFlowFile(content) {
+                const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
+                const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
+                const extCat = () => { const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
+                const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
+
+                return {
+                    uid: extVal("uid"), title: extVal("title") || "Untitled", subtitle: extVal("subtitle"),
+                    description: extMulti("description"), script: extMulti("script"), category: extCat(),
+                    author: extVal("author"), devices: extDev(), mediaUrl: null
+                };
+            }
+
+            async fetchCatalog() {
+                const grid = document.getElementById('catalogGrid');
+                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest automations from GitHub...</p></div>';
+                this.catalog = [];
+
+                try {
+                    const response = await fetch(this.apiUrl);
+                    if (!response.ok) throw new Error("API Rate Limit Reached or Repo Not Found");
+                    const files = await response.json();
+                    
+                    // Separate flows and media
+                    const flowFiles = files.filter(f => f.name.endsWith('.flows'));
+                    const mediaFiles = files.filter(f => f.name.endsWith('.png') || f.name.endsWith('.gif') || f.name.endsWith('.jpg'));
+
+                    for (let file of flowFiles) {
+                        const raw = await (await fetch(file.download_url)).text();
+                        let parsedData = this.parseFlowFile(raw);
+                        
+                        // Check if a screenshot/gif exists with the same exact base filename
+                        const baseName = file.name.substring(0, file.name.lastIndexOf('.'));
+                        const matchingMedia = mediaFiles.find(m => m.name.substring(0, m.name.lastIndexOf('.')) === baseName);
+                        if (matchingMedia) {
+                            parsedData.mediaUrl = matchingMedia.download_url;
+                        }
+
+                        this.catalog.push(parsedData);
+                    }
+                    this.renderCategories();
+                    this.renderGrid();
+                } catch (err) { grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p></div>`; }
+            }
+
+            renderCategories() {
+                const counts = { 'All': this.catalog.length };
+                this.catalog.forEach(f => { counts[f.category] = (counts[f.category] || 0) + 1; });
+                const list = document.getElementById('categoryList');
+                list.innerHTML = '';
+                Object.keys(counts).sort().forEach(cat => {
+                    const li = document.createElement('li'); li.className = `category-item ${this.activeCategory === cat ? 'active' : ''}`;
+                    li.innerHTML = `<span>${cat}</span> <span class="category-count">${counts[cat]}</span>`;
+                    li.onclick = () => { this.activeCategory = cat; this.interceptSidebarNav(); this.renderCategories(); this.renderGrid(); };
+                    list.appendChild(li);
+                });
+            }
+
+            renderGrid() {
+                const grid = document.getElementById('catalogGrid');
+                const searchQ = document.getElementById('searchInput').value.toLowerCase();
+                const activeDevice = document.querySelector('input[name="device"]:checked').value.toLowerCase();
+                
+                grid.innerHTML = '';
+                let filtered = this.catalog.filter(f => {
+                    const matchesCat = this.activeCategory === 'All' || f.category === this.activeCategory;
+                    const matchesSearch = f.title.toLowerCase().includes(searchQ) || f.description.toLowerCase().includes(searchQ);
+                    let matchesDevice = activeDevice === 'all' ? true : f.devices.map(d => d.toLowerCase()).includes(activeDevice);
+                    return matchesCat && matchesSearch && matchesDevice;
+                });
+
+                if (filtered.length === 0) { grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h2>No matches found</h2><p>Try adjusting your filters.</p></div>'; return; }
+
+                filtered.forEach(flow => {
+                    const card = document.createElement('div'); card.className = 'app-card'; card.onclick = () => this.showStudio(flow);
+                    const tagsHtml = flow.devices.map(d => { let type = d.toLowerCase(); return `<span class="device-tag ${type === 'go60' || type === 'glove80' ? type : ''}">${d}</span>`; }).join('');
+                    card.innerHTML = `
+                        <div class="app-icon" style="background: ${getGradient(flow.title)};">${getEmoji(flow.category)}</div>
+                        <div class="app-info"><div class="app-title">${flow.title}</div><div class="app-sub">${flow.subtitle || flow.category}</div><div class="app-tags">${tagsHtml}</div></div>
+                        <div class="app-action"><button>View</button></div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            // --- EXECUTION ENGINE ---
+            async loadTargetJSON(e) {
+                const file = e.target.files[0];
+                if (!file) return; e.target.value = ''; 
+                this.wizardState = "loading"; this.renderWizard();
+                terminal.verbose(`Initiating file stream for: ${file.name}`);
+
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    try {
+                        let rawAST = JSON.parse(event.target.result);
+                        this.fileName = `${this.activeFlow.uid || 'flow'}_${file.name}`;
+                        
+                        terminal.verbose(`AST structure ingested. Running hardware normalizer prologue...`);
+                        const prologue = `(.keymap // .) |= (.layout = (if .layout != null and .layout.keys != null and (.layout.keys | length) > 0 then .layout elif .keymap != null and .keymap.layout != null and (.keymap.layout.keys | length) > 0 then .keymap.layout else {"keys": [ range(0; 60) as $i | { "i": $i, "label": (if $i < 30 then "L_C" else "R_C" end) } ]} end))`;
+                        
+                        if (typeof jq === 'undefined') throw new Error("WASM environment not running.");
+                        this.sourceAST = await jq.json(rawAST, prologue);
+                        
+                        this.updateJSONSyntax(JSON.stringify(this.sourceAST, null, 2));
+                        this.wizardState = "ready"; this.renderWizard();
+                        terminal.print(`Target AST normalized and stored in memory.`, "success");
+                    } catch (err) { 
+                        this.wizardError = "Invalid JSON structure."; this.wizardState = "error"; this.renderWizard();
+                        terminal.print(`Fatal Parse Error: ${err.message}`, "danger");
+                        if(!document.getElementById('devPane').classList.contains('active')) this.toggleDevIDE();
+                    }
+                }; reader.readAsText(file);
+            }
+
+            async runFlow() {
+                if (!this.sourceAST) return;
+                const script = document.getElementById('jqInput').value.trim();
+                
+                this.wizardState = "loading"; this.renderWizard();
+                terminal.verbose("Executing compilation via jq.wasm bridge...");
+
+                try {
+                    const result = await jq.json(this.sourceAST, script);
+                    if (!result) throw new Error("Evaluation returned NULL.");
+                    
+                    this.outputAST = result;
+                    this.updateJSONSyntax(JSON.stringify(this.outputAST, null, 2));
+                    terminal.print(`Compilation complete. Target memory updated cleanly.`, "success");
+                    
+                    this.wizardState = "success"; this.renderWizard();
+                } catch (error) {
+                    this.wizardError = "Script compilation failed."; this.wizardState = "error"; this.renderWizard();
+                    terminal.print(`Compilation Exception: ${error.message}`, "danger");
+                    if(!document.getElementById('devPane').classList.contains('active')) this.toggleDevIDE();
+                }
+            }
+
+            async saveJSON() {
+                if (!this.outputAST) return;
+                try {
+                    terminal.verbose("Applying final sanitization filter...");
+                    const filter = `(.keymap // .) |= ((if (.holdTaps | type == "array" and length == 0) then del(.holdTaps) else . end) | (if (.macros | type == "array" and length == 0) then del(.macros) else . end) | (if (.combos | type == "array" and length == 0) then del(.combos) else . end) | (if (.behaviors | type == "array" and length == 0) then del(.behaviors) else . end))`;
+                    let cleanAST = await jq.json(this.outputAST, filter);
+                    
+                    const a = document.createElement('a');
+                    a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanAST, null, 2));
+                    a.download = this.fileName; a.click();
+                    
+                    terminal.print(`Sanitized blob downloaded: ${this.fileName}`, "success");
+                } catch (err) { terminal.print(`I/O Exception: ${err.message}`, "danger"); }
+            }
+        }
+
+        const app = new FlowsStoreApp();
+    </script>
+</body>
+</html>
