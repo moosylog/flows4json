@@ -130,5 +130,5 @@ def make_pos(start1; start2; start3):
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "Alt.Layout"
+foo = "Base Setup"
 num = 123
