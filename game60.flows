@@ -108,7 +108,7 @@ script = """
 )
 """
 [manifest]
-author = "moosyresearch"
+author = "CasuGregSeries"
 keyboards = ["go60"]
 [config]
 foo = "Gaming"
