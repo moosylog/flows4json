@@ -129,5 +129,5 @@ def get_as_holdtap: {
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "ZZ Advanced"
+foo = "Smart Typing"
 num = 123
