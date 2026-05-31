@@ -1,7 +1,7 @@
 uid = "alphaswap"
 type = "mutation"
 language = "us"
-title = "AlphaSwap Colemak-DH"
+title = "Remap to Colemak-DH"
 subtitle = "Or any other alt.layouts"
 description = """
 This helps you switch your keyboard layout to a another alpha layer. 
