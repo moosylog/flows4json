@@ -195,7 +195,7 @@
 
     <div class="sidebar">
         <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON</div>
-        <div><input type="text" id="searchInput" class="search-box" placeholder="Search automations..."></div>
+        <div><input type="text" id="searchInput" class="search-box" placeholder="Search flows..."></div>
         <div>
             <div class="sidebar-section-title">Hardware Support</div>
             <div class="segmented-control">
@@ -220,7 +220,7 @@
         <div id="viewLibrary" class="view active">
             <div class="library-scroll">
                 <div class="library-content">
-                    <h1 class="page-title">Discover Automations</h1>
+                    <h1 class="page-title">Discover Flows</h1>
                     <div id="catalogGrid" class="app-grid"></div>
                 </div>
             </div>
@@ -358,7 +358,6 @@
 
         document.addEventListener('mousemove', (e) => {
             if (isResizingH) {
-                // Perfected Math: Y relative to window, bounded safely
                 const newHeight = window.innerHeight - e.clientY;
                 if (newHeight > 100 && newHeight < window.innerHeight - 50) devPane.style.height = `${newHeight}px`;
             }
@@ -373,8 +372,6 @@
                     const newC2 = newC12 - c1;
                     if (newC2 > 5 && (c3 + c2 - newC2) > 5) { c3 = c3 + (c2 - newC2); c2 = newC2; }
                 }
-                
-                // Change the '%' to 'fr' here:
                 ideGrid.style.setProperty('--col1', `${c1}fr`);
                 ideGrid.style.setProperty('--col2', `${c2}fr`);
                 ideGrid.style.setProperty('--col3', `${c3}fr`);
@@ -580,7 +577,7 @@
             // --- CATALOG LOGIC ---
             async fetchCatalog() {
                 const grid = document.getElementById('catalogGrid');
-                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest automations...</p></div>';
+                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest flows...</p></div>';
                 
                 try {
                     const response = await fetch(`https://moosylog.github.io/flows4json/catalog.json?t=${new Date().getTime()}`);
