@@ -1,7 +1,7 @@
 uid = "alphaswap"
 type = "mutation"
 language = "us"
-title = "Alphaswap"
+title = "Adapt to Enthium V14"
 subtitle = "Any Alternative Layouts"
 description = """
 This helps you switch your keyboard layout to a another alpha layer. 
@@ -22,7 +22,7 @@ script = """
 # SETTINGS
 # ==========================================
 
-"Enthium_v14" as $layout_name |
+"enthium_v14" as $layout_name |
 true as $all_layers |
 ["Gaming","Numbers","Navigation","Media","Keypad","Mouse","Magic"] as $excluded |
 
