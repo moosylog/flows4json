@@ -1,7 +1,7 @@
 uid = "se_symbol"
 type = "mutation"
 language = "us"
-title = "🌍 Swedish Symbols"
+title = "🌍 Swedish Symbols DRAFT"
 subtitle = "Symbol Layer Adjustments"
 description = """
 Seamlessly adapts your symbol layer for Swedish keyboard layouts with accurate locale-specific mappings.
