@@ -1,0 +1,67 @@
+name: Auto-Build Store Catalog
+
+on:
+  push:
+    branches: [ "main" ] # Runs every time you upload to main
+  workflow_dispatch:     # Allows you to run it manually from the Actions tab
+
+permissions:
+  contents: write        # Gives the robot permission to save the catalog.json file
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Generate catalog.json
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const files = fs.readdirSync('.');
+            const flows = files.filter(f => f.endsWith('.flows'));
+            const media = files.filter(f => f.match(/\.(png|jpg|gif)$/));
+            
+            const catalog = flows.map(file => {
+              const content = fs.readFileSync(file, 'utf8');
+              
+              const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
+              const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
+              const extCat = () => { const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
+              const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
+              
+              let cfg = {};
+              const mCfg = content.match(/\[config\]([\s\S]*?)(?:\[|$)/);
+              if (mCfg) {
+                mCfg[1].split('\n').forEach(l => {
+                  const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
+                  if (kv) {
+                    let v = kv[2].trim();
+                    if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1);
+                    cfg[kv[1]] = v;
+                  }
+                });
+              }
+
+              const baseName = file.substring(0, file.lastIndexOf('.'));
+              const matchingMedia = media.find(m => m.startsWith(baseName + '.'));
+              
+              return {
+                uid: extVal("uid"), title: extVal("title") || "Untitled", subtitle: extVal("subtitle"),
+                description: extMulti("description"), script: extMulti("script"), category: extCat(),
+                author: extVal("author"), devices: extDev(), config: cfg,
+                mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null
+              };
+            });
+            
+            fs.writeFileSync('catalog.json', JSON.stringify(catalog, null, 2));
+
+      - name: Save to Repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add catalog.json
+          git commit -m "Auto-generated store catalog [skip ci]" || echo "No changes"
+          git push
