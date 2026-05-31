@@ -1,4 +1,4 @@
-uid = "combos"
+uid = "Fn_combos"
 type = "mutation"
 language = "us"
 title = "🎹 Adds Fn keys"
