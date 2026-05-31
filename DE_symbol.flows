@@ -126,5 +126,5 @@ script = """
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "International"
+foo = "Languages & Symbols"
 num = 123
