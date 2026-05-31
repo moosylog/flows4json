@@ -69,6 +69,7 @@
 
         .sidebar-section-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 8px; }
         
+        /* APPLE SEGMENTED CONTROL */
         .segmented-control { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 8px; border: 1px solid var(--border); }
         .segmented-control label { flex: 1; text-align: center; padding: 5px 0; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: 0.2s; }
         .segmented-control input[type="radio"] { display: none; }
@@ -99,6 +100,7 @@
         .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
         .app-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
+        /* HARDWARE TAGS */
         .app-tags { display: flex; gap: 6px; margin-top: 6px; }
         .device-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; border: 1px solid var(--border); color: var(--text-secondary); background: rgba(255,255,255,0.05); }
         .device-tag.glove80 { color: #d2a8ff; background: rgba(163, 113, 247, 0.15); border-color: rgba(163, 113, 247, 0.3); }
@@ -116,8 +118,10 @@
 
         .product-header { padding: 0 40px 40px 40px; display: flex; gap: 30px; align-items: flex-start; border-bottom: 1px solid var(--border); }
         .product-icon-large { width: 120px; height: 120px; border-radius: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 48px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
-        .product-header-info { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; padding-top: 10px;}
-        .product-title { font-size: 28px; font-weight: 700; line-height: 1.1; }
+        .product-header-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; justify-content: center; padding-top: 5px;}
+        .product-title { font-size: 28px; font-weight: 700; line-height: 1.1; margin-bottom: 4px;}
+        .product-subtitle { font-size: 16px; color: var(--text-secondary); }
+        .product-developer { font-size: 13px; color: var(--text-secondary); opacity: 0.7; }
         
         .wizard-area { background: var(--bg-card); padding: 16px 20px; border-radius: var(--radius-md); margin-top: 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border); }
         .wizard-status { display: flex; flex-direction: column; gap: 4px; }
@@ -125,14 +129,17 @@
         .wizard-status-desc { font-size: 12px; color: var(--text-secondary); }
 
         .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; }
+        
+        /* App Store Style Media Hero (Screenshot/GIF) */
+        .product-media { 
+            width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #111; display: none; 
+            justify-content: center; align-items: center; margin-bottom: -10px;
+        }
+        .product-media img { max-width: 100%; max-height: 320px; object-fit: contain; display: block; }
+
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
-
-        .config-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden;}
-        .config-table th, .config-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); }
-        .config-table tr:last-child th, .config-table tr:last-child td { border-bottom: none; }
-        .config-table th { color: var(--text-secondary); width: 160px; font-weight: 500; }
-        .config-table td { color: var(--accent-blue); font-family: var(--font-mono); }
 
         .dev-toggle-wrapper { padding: 20px 40px 40px 40px; text-align: center; }
         .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
@@ -156,7 +163,7 @@
         .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; }
         .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5;}
         
-        /* Syntax Overlay Matrix Trick */
+        /* Transparent Matrix for Syntax Highlighting Overlay */
         .code-matrix { position: relative; flex-grow: 1; overflow: hidden; background: var(--ide-bg); }
         .code-matrix textarea, .code-matrix pre {
             margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; font-family: var(--font-mono); font-size: 13px; line-height: 1.6;
@@ -173,7 +180,7 @@
         .log-success { color: var(--accent-green); }
         .log-danger { color: var(--accent-red); background: rgba(255, 69, 58, 0.1); border-radius: 4px;}
         .log-info { color: var(--ide-blue); }
-        .log-verbose { color: #dcdcaa; opacity: 0.8;} /* Yellow trace */
+        .log-verbose { color: #dcdcaa; opacity: 0.8;}
     </style>
 </head>
 <body>
@@ -224,20 +231,24 @@
                         <div class="product-header-info">
                             <h1 class="product-title" id="studioTitle">Flow Title</h1>
                             <p class="product-subtitle" id="studioSub">Subtitle goes here</p>
-                            <p class="product-developer" id="studioAuthor">moosyresearch</p>
+                            <p class="product-developer" id="studioAuthor">Developer: moosyresearch</p>
+                            
+                            <div class="app-tags" id="studioTags" style="margin-top: 8px; margin-bottom: 6px;"></div>
+                            
                             <div class="wizard-area" id="wizardBox"></div>
                         </div>
                     </div>
 
                     <div class="product-body">
+                        <div class="product-media" id="studioMediaContainer">
+                            <img id="studioMedia" src="" alt="App Preview">
+                        </div>
+
                         <div>
                             <h3 class="section-title">Description</h3>
                             <div class="product-desc" id="studioDesc"></div>
                         </div>
-                        <div id="configSection" style="display: none;">
-                            <h3 class="section-title">Configuration Parameters</h3>
-                            <table class="config-table" id="studioConfig"></table>
-                        </div>
+                        
                     </div>
                     <div class="dev-toggle-wrapper">
                         <button class="dev-toggle" onclick="app.toggleDevIDE()">{" "} Toggle Developer Console</button>
@@ -254,6 +265,7 @@
                 </div>
                 
                 <div class="ide-grid" id="ideGrid">
+                    
                     <div class="ide-editor">
                         <div class="ide-editor-header">source_flow.jq</div>
                         <div class="code-matrix">
@@ -267,16 +279,18 @@
                     <div class="ide-editor">
                         <div class="ide-editor-header">target_output.json</div>
                         <div class="code-matrix" style="background: #141414;">
-                            <pre id="jsonPre"><code class="language-json" id="jsonHighlight">// AST will stream here...</code></pre>
+                            <textarea id="jsonOutput" spellcheck="false" readonly onscroll="app.syncScroll('jsonOutput', 'jsonPre')"></textarea>
+                            <pre id="jsonPre" aria-hidden="true"><code class="language-json" id="jsonHighlight">// AST will stream here...</code></pre>
                         </div>
                     </div>
-
+                    
                     <div class="resizer-v" id="resizerV2"></div>
 
                     <div class="ide-editor">
                         <div class="ide-editor-header">Terminal / Build Trace</div>
                         <div class="log-panel" id="logPanel"></div>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -286,19 +300,17 @@
 
     <script>
         // ==========================================
-        // IDE RESIZERS (Horizontal & Vertical)
+        // IDE RESIZERS
         // ==========================================
         const resizerH = document.getElementById('resizerH');
         const devPane = document.getElementById('devPane');
         const ideGrid = document.getElementById('ideGrid');
         
-        // 1. Height Resizer
         let isResizingH = false;
         resizerH.addEventListener('mousedown', (e) => { isResizingH = true; resizerH.classList.add('dragging'); document.body.style.cursor = 'ns-resize'; e.preventDefault(); });
         
-        // 2. Width Resizers (Columns)
         let isResizingV1 = false, isResizingV2 = false;
-        let c1 = 33.3, c2 = 33.3, c3 = 33.4; // Default percentages
+        let c1 = 33.3, c2 = 33.3, c3 = 33.4;
 
         document.getElementById('resizerV1').addEventListener('mousedown', (e) => { isResizingV1 = true; document.body.style.cursor = 'ew-resize'; e.preventDefault(); });
         document.getElementById('resizerV2').addEventListener('mousedown', (e) => { isResizingV2 = true; document.body.style.cursor = 'ew-resize'; e.preventDefault(); });
@@ -311,21 +323,14 @@
             }
             if (isResizingV1 || isResizingV2) {
                 const gridRect = ideGrid.getBoundingClientRect();
-                const totalWidth = gridRect.width - 12; // Minus two 6px resizers
-                
+                const totalWidth = gridRect.width - 12; 
                 if (isResizingV1) {
                     const newC1 = ((e.clientX - gridRect.left) / totalWidth) * 100;
-                    if (newC1 > 5 && (c2 + c1 - newC1) > 5) {
-                        c2 = c2 + (c1 - newC1);
-                        c1 = newC1;
-                    }
+                    if (newC1 > 5 && (c2 + c1 - newC1) > 5) { c2 = c2 + (c1 - newC1); c1 = newC1; }
                 } else if (isResizingV2) {
-                    const newC12 = ((e.clientX - gridRect.left - 6) / totalWidth) * 100; // Account for resizer 1
+                    const newC12 = ((e.clientX - gridRect.left - 6) / totalWidth) * 100;
                     const newC2 = newC12 - c1;
-                    if (newC2 > 5 && (c3 + c2 - newC2) > 5) {
-                        c3 = c3 + (c2 - newC2);
-                        c2 = newC2;
-                    }
+                    if (newC2 > 5 && (c3 + c2 - newC2) > 5) { c3 = c3 + (c2 - newC2); c2 = newC2; }
                 }
                 ideGrid.style.setProperty('--col1', `${c1}%`);
                 ideGrid.style.setProperty('--col2', `${c2}%`);
@@ -340,17 +345,15 @@
         });
 
         // ==========================================
-        // LOGGER (Verbose by Default)
+        // LOGGER
         // ==========================================
         class Logger {
             constructor(panelId) { this.panel = document.getElementById(panelId); }
             print(msg, type = "info") {
-                const entry = document.createElement('div');
-                entry.className = `log-entry log-${type}`;
+                const entry = document.createElement('div'); entry.className = `log-entry log-${type}`;
                 const time = new Date().toLocaleTimeString('en-US', { hour12: false });
                 entry.innerHTML = `<span class="log-time">[${time}]</span>${msg}`;
-                this.panel.appendChild(entry);
-                this.panel.scrollTop = this.panel.scrollHeight;
+                this.panel.appendChild(entry); this.panel.scrollTop = this.panel.scrollHeight;
             }
             verbose(msg) { this.print(msg, "verbose"); }
             clear() { this.panel.innerHTML = ''; }
@@ -410,24 +413,20 @@
                 const text = document.getElementById('jqInput').value;
                 document.getElementById('jqHighlight').innerHTML = Prism.highlight(text, Prism.languages.jq, 'jq');
             }
-            
             updateJSONSyntax(jsonStr) {
                 document.getElementById('jsonHighlight').innerHTML = Prism.highlight(jsonStr, Prism.languages.json, 'json');
             }
-
             syncScroll(textareaId, preId) {
                 const ta = document.getElementById(textareaId);
                 const pre = document.getElementById(preId);
-                pre.scrollTop = ta.scrollTop;
-                pre.scrollLeft = ta.scrollLeft;
+                pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft;
             }
 
             // --- ROUTING ---
             showLibrary() {
                 document.getElementById('viewStudio').classList.remove('active');
                 document.getElementById('viewLibrary').classList.add('active');
-                this.activeFlow = null;
-                this.sourceAST = null;
+                this.activeFlow = null; this.sourceAST = null;
                 document.getElementById('devPane').classList.remove('active');
                 document.getElementById('resizerH').classList.remove('active');
             }
@@ -448,18 +447,28 @@
                 document.getElementById('studioAuthor').innerText = `Developer: ${flowData.author || 'moosyresearch'}`;
                 document.getElementById('studioDesc').innerText = flowData.description || 'No detailed description provided.';
                 
-                // Config Table
-                const configSec = document.getElementById('configSection');
-                const configTable = document.getElementById('studioConfig');
-                if (Object.keys(flowData.config).length > 0) {
-                    configSec.style.display = 'block';
-                    configTable.innerHTML = '';
-                    for (let [k, v] of Object.entries(flowData.config)) configTable.innerHTML += `<tr><th>${k}</th><td>${v}</td></tr>`;
-                } else configSec.style.display = 'none';
+                // Hardware Tags directly beneath Developer
+                const tagsHtml = flowData.devices.map(d => {
+                    let type = d.toLowerCase();
+                    return `<span class="device-tag ${type === 'go60' || type === 'glove80' ? type : ''}">${d}</span>`;
+                }).join('');
+                document.getElementById('studioTags').innerHTML = tagsHtml;
+
+                // Screenshot / GIF Logic
+                const mediaContainer = document.getElementById('studioMediaContainer');
+                const mediaImg = document.getElementById('studioMedia');
+                if (flowData.mediaUrl) {
+                    mediaImg.src = flowData.mediaUrl;
+                    mediaContainer.style.display = 'flex';
+                } else {
+                    mediaImg.src = '';
+                    mediaContainer.style.display = 'none';
+                }
 
                 // Reset IDE
                 document.getElementById('jqInput').value = flowData.script;
                 this.updateJQSyntax();
+                document.getElementById('jsonOutput').value = '';
                 document.getElementById('jsonHighlight').innerHTML = '// AST will stream here...';
                 terminal.clear();
                 terminal.print(`Studio Sandbox mounted for: ${flowData.uid}.flows`, "info");
@@ -503,40 +512,33 @@
                 const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
                 const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
                 const extCat = () => { const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
-                
-                const extConfig = () => {
-                    let cfg = {}; const m = content.match(/\[config\]([\s\S]*?)(?:\[|$)/);
-                    if (m) m[1].split('\n').forEach(l => { const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/); if (kv) { let v = kv[2].trim(); if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1); cfg[kv[1]] = v; } });
-                    return cfg;
-                };
-
                 const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
 
                 return {
                     uid: extVal("uid"), title: extVal("title") || "Untitled", subtitle: extVal("subtitle"),
                     description: extMulti("description"), script: extMulti("script"), category: extCat(),
-                    author: extVal("author"), devices: extDev(), config: extConfig()
+                    author: extVal("author"), devices: extDev(), mediaUrl: null
                 };
             }
 
             async fetchCatalog() {
                 const grid = document.getElementById('catalogGrid');
-                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest automations from GitHub...</p></div>';
-                this.catalog = [];
-
+                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest automations...</p></div>';
+                
                 try {
-                    const response = await fetch(this.apiUrl);
-                    if (!response.ok) throw new Error("API Rate Limit Reached or Repo Not Found");
-                    const files = await response.json();
-                    const flowFiles = files.filter(f => f.name.endsWith('.flows'));
-
-                    for (let file of flowFiles) {
-                        const raw = await (await fetch(file.download_url)).text();
-                        this.catalog.push(this.parseFlowFile(raw));
-                    }
+                    // Fetch directly from your CDN. No rate limits. Instant loading.
+                    // Adding a timestamp query (?t=...) prevents the browser from caching an old version
+                    const response = await fetch(`https://moosylog.github.io/flows4json/catalog.json?t=${new Date().getTime()}`);
+                    
+                    if (!response.ok) throw new Error("Could not reach the App Store server.");
+                    
+                    this.catalog = await response.json();
+                    
                     this.renderCategories();
                     this.renderGrid();
-                } catch (err) { grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p></div>`; }
+                } catch (err) { 
+                    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p><p style="font-size: 12px; margin-top: 10px;">(Make sure GitHub Actions has finished building your catalog.json!)</p></div>`; 
+                }
             }
 
             renderCategories() {
@@ -545,8 +547,7 @@
                 const list = document.getElementById('categoryList');
                 list.innerHTML = '';
                 Object.keys(counts).sort().forEach(cat => {
-                    const li = document.createElement('li');
-                    li.className = `category-item ${this.activeCategory === cat ? 'active' : ''}`;
+                    const li = document.createElement('li'); li.className = `category-item ${this.activeCategory === cat ? 'active' : ''}`;
                     li.innerHTML = `<span>${cat}</span> <span class="category-count">${counts[cat]}</span>`;
                     li.onclick = () => { this.activeCategory = cat; this.interceptSidebarNav(); this.renderCategories(); this.renderGrid(); };
                     list.appendChild(li);
@@ -599,7 +600,9 @@
                         if (typeof jq === 'undefined') throw new Error("WASM environment not running.");
                         this.sourceAST = await jq.json(rawAST, prologue);
                         
-                        this.updateJSONSyntax(JSON.stringify(this.sourceAST, null, 2));
+                        document.getElementById('jsonOutput').value = JSON.stringify(this.sourceAST, null, 2);
+                        this.updateJSONSyntax(document.getElementById('jsonOutput').value);
+                        
                         this.wizardState = "ready"; this.renderWizard();
                         terminal.print(`Target AST normalized and stored in memory.`, "success");
                     } catch (err) { 
@@ -622,9 +625,11 @@
                     if (!result) throw new Error("Evaluation returned NULL.");
                     
                     this.outputAST = result;
-                    this.updateJSONSyntax(JSON.stringify(this.outputAST, null, 2));
-                    terminal.print(`Compilation complete. Target memory updated cleanly.`, "success");
                     
+                    document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
+                    this.updateJSONSyntax(document.getElementById('jsonOutput').value);
+                    
+                    terminal.print(`Compilation complete. Target memory updated cleanly.`, "success");
                     this.wizardState = "success"; this.renderWizard();
                 } catch (error) {
                     this.wizardError = "Script compilation failed."; this.wizardState = "error"; this.renderWizard();
