@@ -4,8 +4,10 @@ language = "us"
 title = "🎹 Adds Fn keys"
 subtitle = "Combos like TK"
 description = """
-🎹 Single-Hand Function keys on Go60 with these combos
-Adds vertical combos to your Go60, triggering F1-F12 by chording the number row with the keys directly below. 
+Adds easy-to-reach F1–F12 keys to your Go60 using simple vertical key combos.
+Press a number key together with the key directly below it to trigger function keys instantly.
+Keeps your layout compact while giving you fast access to shortcuts, media controls, IDE commands, and more.
+Perfect for users who want full function-row power without sacrificing desk space or portability.
 
 """
 script = """
