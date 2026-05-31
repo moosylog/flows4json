@@ -2,7 +2,7 @@ uid = "gaming60"
 type = "mutation"
 language = "us"
 title = "🎮 TK Gaming Layer"
-subtitle = "Adds a Gaming Layer"
+subtitle = "Adds the TK Gaming Layer"
 description = """
 Adds the TailorKey Gaming Layer to your Go60 layout for faster, cleaner in-game controls.
 Optimizes key placement so movement, actions, and modifiers feel more natural during gameplay.
