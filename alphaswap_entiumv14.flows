@@ -30,23 +30,24 @@ true as $all_layers |
 # 1. DATA DEFINITIONS
 ############################################
 
-def layouts: {
-  "aptmak":        ["", "V", "W", "F", "P", "B",     "J", "L", "U", "Y", "SQT", "",     "", "R", "S", "T", "H", "K",      "X", "N", "A", "I", "O", "",      "", "C", "G", "D", "M", "COMMA",  "DOT", "FSLH", "SEMI", "Z", "Q", ""],
-  "aptmak_blue":   ["", "Q", "J", "U", "L", "SEMI",  "B", "P", "F", "W", "X", "BSLH", "ESC", "A", "O", "I", "N", "Y",     "K", "H", "T", "S", "R", "SQT",    "", "Z", "DOT", "COMMA", "M", "E",  "V", "D", "G", "C", "FSLH", ""],
-  "azerty":        ["", "A", "Z", "E", "R", "T",     "Y", "U", "I", "O", "P", "",       "", "Q", "S", "D", "F", "G",      "H", "J", "K", "L", "M", "",      "", "W", "X", "C", "V", "B",      "N", "M", "COMMA", "DOT", "FSLH", ""],
-  "canary":        ["", "W", "L", "Y", "P", "B",     "Z", "F", "O", "U", "SQT", "",     "", "C", "R", "S", "T", "G",      "M", "N", "E", "I", "A", "",      "", "Q", "J", "V", "D", "K",      "X", "H", "FSLH", "COMMA", "DOT", ""],
-  "colemak-dh":    ["", "Q", "W", "F", "P", "B",     "J", "L", "U", "Y", "SEMI", "",    "", "A", "R", "S", "T", "G",     "M", "N", "E", "I", "O",    "",    "", "Z", "X", "C", "D", "V",     "K", "H", "COMMA", "DOT", "FSLH", ""],
-  "dvorak":        ["", "SQT", "COMMA", "DOT", "P", "Y", "F", "G", "C", "R", "L", "",   "", "A", "O", "E", "U", "I",      "D", "H", "T", "N", "S", "",      "", "SEMI", "Q", "J", "K", "X",   "B", "M", "W", "V", "Z", ""],
-  "engram":        ["", "B", "Y", "O", "U", "SQT",   "DQT", "L", "D", "W", "V", "Z",    "", "C", "I", "E", "A", "COMMA",  "DOT", "H", "T", "S", "N", "Q",    "", "G", "X", "J", "K", "MINUS",  "QMARK", "R", "M", "F", "P", ""],
-  "engrammer":     ["", "B", "Y", "O", "U", "SQT",   "SEMI", "L", "D", "W", "V", "Z",   "", "C", "I", "E", "A", "COMMA",  "DOT", "H", "T", "S", "N", "Q",    "", "G", "X", "J", "K", "MINUS",  "FSLH", "R", "M", "F", "P", ""],
-  "enthium_v13":   ["", "Q", "Y", "O", "U", "EQUAL", "X", "L", "D", "P", "Z", "",     "B", "C", "I", "E", "A", "MINUS",  "K", "H", "T", "N", "S", "W",      "", "SQT", "COMMA", "DOT", "FSLH", "SEMI", "J", "M", "G", "F", "V", ""],
-  "enthium_v14":   ["", "Q", "Y", "O", "U", "EQUAL", "X", "L", "D", "P", "Z", "",     "B", "C", "I", "A", "E", "MINUS",  "K", "H", "T", "N", "S", "W",      "", "SQT", "COMMA", "DOT", "SEMI", "FSLH", "J", "M", "G", "F", "V", ""],
-  "gallium":       ["", "B", "L", "D", "C", "V",     "J", "F", "O", "U", "COMMA", "",   "", "N", "R", "T", "S", "G",      "Y", "H", "A", "E", "I", "",      "", "X", "Q", "M", "W", "Z",      "K", "P", "SQT", "SEMI", "DOT", ""],
-  "graphite":      ["", "B", "L", "D", "W", "Z",     "SQT", "F", "O", "U", "J", "",     "", "N", "R", "T", "S", "G",      "Y", "H", "A", "E", "I", "",      "", "Q", "X", "M", "C", "V",      "K", "P", "DOT", "COMMA", "FSLH", ""],
-  "hands-down-neu": ["", "W", "F", "M", "P", "V",    "FSLH", "DOT", "Q", "DQT", "SQT", "Z", "", "R", "S", "N", "T", "B",   "COMMA", "A", "E", "I", "H", "J",   "", "X", "C", "L", "D", "G",     "MINUS", "U", "O", "Y", "K", ""]
-  "maltron":       ["", "Q", "P", "Y", "C", "B",     "V", "M", "U", "Z", "L", "",       "", "A", "N", "S", "I", "F",      "D", "T", "H", "O", "R", "",      "", "COMMA", "DOT", "J", "G", "SEMI", "FSLH", "W", "K", "MINUS", "X", ""],
-  "qwerty":        ["", "Q", "W", "E", "R", "T",     "Y", "U", "I", "O", "P", "",      "", "A", "S", "D", "F", "G",      "H", "J", "K", "L", "SEMI", "",    "", "Z", "X", "C", "V", "B",      "N", "M", "COMMA", "DOT", "FSLH", ""],
-  "workman":       ["", "Q", "D", "R", "W", "B",     "J", "F", "U", "P", "SEMI", "",    "", "A", "S", "H", "T", "G",      "Y", "N", "E", "O", "I", "",      "", "Z", "X", "M", "C", "V",      "K", "L", "COMMA", "DOT", "FSLH", ""],
+def layouts: 
+{
+  "aptmak": ["", "V", "W", "F", "P", "B", "J", "L", "U", "Y", "SQT", "", "", "R", "S", "T", "H", "K", "X", "N", "A", "I", "O", "", "", "C", "G", "D", "M", "COMMA", "DOT", "FSLH", "SEMI", "Z", "Q", ""],
+  "aptmak_blue": ["", "Q", "J", "U", "L", "SEMI", "B", "P", "F", "W", "X", "BSLH", "ESC", "A", "O", "I", "N", "Y", "K", "H", "T", "S", "R", "SQT", "", "Z", "DOT", "COMMA", "M", "E", "V", "D", "G", "C", "FSLH", ""],
+  "azerty": ["", "A", "Z", "E", "R", "T", "Y", "U", "I", "O", "P", "", "", "Q", "S", "D", "F", "G", "H", "J", "K", "L", "M", "", "", "W", "X", "C", "V", "B", "N", "M", "COMMA", "DOT", "FSLH", ""],
+  "canary": ["", "W", "L", "Y", "P", "B", "Z", "F", "O", "U", "SQT", "", "", "C", "R", "S", "T", "G", "M", "N", "E", "I", "A", "", "", "Q", "J", "V", "D", "K", "X", "H", "FSLH", "COMMA", "DOT", ""],
+  "colemak-dh": ["", "Q", "W", "F", "P", "B", "J", "L", "U", "Y", "SEMI", "", "", "A", "R", "S", "T", "G", "M", "N", "E", "I", "O", "", "", "Z", "X", "C", "D", "V", "K", "H", "COMMA", "DOT", "FSLH", ""],
+  "dvorak": ["", "SQT", "COMMA", "DOT", "P", "Y", "F", "G", "C", "R", "L", "", "", "A", "O", "E", "U", "I", "D", "H", "T", "N", "S", "", "", "SEMI", "Q", "J", "K", "X", "B", "M", "W", "V", "Z", ""],
+  "engram": ["", "B", "Y", "O", "U", "SQT", "DQT", "L", "D", "W", "V", "Z", "", "C", "I", "E", "A", "COMMA", "DOT", "H", "T", "S", "N", "Q", "", "G", "X", "J", "K", "MINUS", "QMARK", "R", "M", "F", "P", ""],
+  "engrammer": ["", "B", "Y", "O", "U", "SQT", "SEMI", "L", "D", "W", "V", "Z", "", "C", "I", "E", "A", "COMMA", "DOT", "H", "T", "S", "N", "Q", "", "G", "X", "J", "K", "MINUS", "FSLH", "R", "M", "F", "P", ""],
+  "enthium_v13": ["", "Q", "Y", "O", "U", "EQUAL", "X", "L", "D", "P", "Z", "", "B", "C", "I", "E", "A", "MINUS", "K", "H", "T", "N", "S", "W", "", "SQT", "COMMA", "DOT", "FSLH", "SEMI", "J", "M", "G", "F", "V", ""],
+  "enthium_v14": ["", "Q", "Y", "O", "U", "EQUAL", "X", "L", "D", "P", "Z", "", "B", "C", "I", "A", "E", "MINUS", "K", "H", "T", "N", "S", "W", "", "SQT", "COMMA", "DOT", "SEMI", "FSLH", "J", "M", "G", "F", "V", ""],
+  "gallium": ["", "B", "L", "D", "C", "V", "J", "F", "O", "U", "COMMA", "", "", "N", "R", "T", "S", "G", "Y", "H", "A", "E", "I", "", "", "X", "Q", "M", "W", "Z", "K", "P", "SQT", "SEMI", "DOT", ""],
+  "graphite": ["", "B", "L", "D", "W", "Z", "SQT", "F", "O", "U", "J", "", "", "N", "R", "T", "S", "G", "Y", "H", "A", "E", "I", "", "", "Q", "X", "M", "C", "V", "K", "P", "DOT", "COMMA", "FSLH", ""],
+  "hands-down-neu": ["", "W", "F", "M", "P", "V", "FSLH", "DOT", "Q", "DQT", "SQT", "Z", "", "R", "S", "N", "T", "B", "COMMA", "A", "E", "I", "H", "J", "", "X", "C", "L", "D", "G", "MINUS", "U", "O", "Y", "K", ""],
+  "maltron": ["", "Q", "P", "Y", "C", "B", "V", "M", "U", "Z", "L", "", "", "A", "N", "S", "I", "F", "D", "T", "H", "O", "R", "", "", "COMMA", "DOT", "J", "G", "SEMI", "FSLH", "W", "K", "MINUS", "X", ""],
+  "qwerty": ["", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "", "", "A", "S", "D", "F", "G", "H", "J", "K", "L", "SEMI", "", "", "Z", "X", "C", "V", "B", "N", "M", "COMMA", "DOT", "FSLH", ""],
+  "workman": ["", "Q", "D", "R", "W", "B", "J", "F", "U", "P", "SEMI", "", "", "A", "S", "H", "T", "G", "Y", "N", "E", "O", "I", "", "", "Z", "X", "M", "C", "V", "K", "L", "COMMA", "DOT", "FSLH", ""]
 };
 
 def keyboards: {
