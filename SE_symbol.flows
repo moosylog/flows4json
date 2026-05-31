@@ -34,8 +34,11 @@ def get_full_value:
   "SEMI": [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}],
   "LS(N6)": [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],
   "EQUAL": [{"value": "LS", "params": [{"value": "N0", "params": []}]}],
-
+  "LS(MINUS": [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],
   "LS(N4)": [{"value": "RA", "params": [{"value": "N4", "params": []}]}],
+  "LS(EQUAL)": [{"value": "MINUS", "params": []}],
+  "LS(SINGLE_QUOTE)": [{"value": "RBKT", "params": []}],
+  "SQT": [{"value": "EQUAL", "params": []}],
   "LS(N9)": [{"value": "LS", "params": [{"value": "N8", "params": []}]}],
   "LS(N0)": [{"value": "LS", "params": [{"value": "N9", "params": []}]}],
   "LBKT": [{"value": "RA", "params": [{"value": "N8", "params": []}]}],
