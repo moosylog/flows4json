@@ -2,7 +2,7 @@ uid = "alphaswap"
 type = "mutation"
 language = "us"
 title = "Alphaswap"
-subtitle = "Multiple Alternative Layouts"
+subtitle = "Any Alternative Layouts"
 description = """
 This helps you switch your keyboard layout to a another alpha layer. 
 
