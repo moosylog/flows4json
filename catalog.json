@@ -53,7 +53,7 @@
     "mediaUrl": null
   },
   {
-    "uid": "de_symbol",
+    "uid": "se_symbol",
     "title": "🌍 Swedish Symbols",
     "subtitle": "Symbol Layer Adjustments",
     "description": "Seamlessly adapts your symbol layer for Swedish keyboard layouts with accurate locale-specific mappings.\nTranslates US-style symbols into their correct Swedish equivalents, including AltGr and shifted key combinations.\nEnsures characters like brackets, quotes, slashes, and special symbols behave as expected on Swedish systems.\nKeeps your existing layout structure intact while applying precise regional adjustments.\nWorks directly on your Symbol layer without requiring manual remapping or editing.\nIdeal for users switching between US and Swedish keyboard standards.\nPreserves your muscle memory while fixing layout differences automatically.\nDesigned for smooth multilingual typing across environments and devices.",
