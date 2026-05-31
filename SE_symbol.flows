@@ -14,87 +14,76 @@ Preserves your muscle memory while fixing layout differences automatically.
 Designed for smooth multilingual typing across environments and devices.
 
 """
+script = """
+# DYNAMIC METADATA DISCOVERY (v18.3 - Swedish SE Fixed from File)
 
-# DYNAMIC METADATA DISCOVERY (v18.2 - Swedish SE Fixed from File)
-
-(
-  # 1. SET YOUR TARGET LAYER NAME
-  "Symbol" as $target_layer_name |
-
-  # Helper to reconstruct full ZMK strings
-  def get_full_value:
-    if .params == [] or .params == null then
-      .value | tostring
-    else
-      "\(.value)(\(.params[0] | get_full_value))"
-    end;
-
-  # THE PRECISE SWEDISH DELTA MAP (Extracted from TailorKey v4.2j)
-  {
-    "GRAVE": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}],
-
-    "LS(N9)": [{"value": "LS", "params": [{"value": "N8", "params": []}]}],
-    "LS(N0)": [{"value": "LS", "params": [{"value": "N9", "params": []}]}],
-
-    "LBKT": [{"value": "RA", "params": [{"value": "N8", "params": []}]}],
-    "LS(LBKT)": [{"value": "RA", "params": [{"value": "N7", "params": []}]}],
-    "LS(RBKT)": [{"value": "RA", "params": [{"value": "N0", "params": []}]}],
-    "RBKT": [{"value": "RA", "params": [{"value": "N9", "params": []}]}],
-
-    "LS(FSLH)": [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],
-    "LS(GRAVE)": [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],
-
-    "LS(COMMA)": [{"value": "NON_US_BSLH", "params": []}],
-    "LS(BSLH)": [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],
-
-    "LS(DOT)": [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],
-    "FSLH": [{"value": "LS", "params": [{"value": "N7", "params": []}]}],
-
-    "SQT": [{"value": "LS", "params": [{"value": "BSLH", "params": []}]}],
-    "LS(SQT)": [{"value": "LS", "params": [{"value": "N2", "params": []}]}],
-
-    "LS(EQUAL)": [{"value": "LS", "params": [{"value": "N0", "params": []}]}],
-    "LS(SEMI)": [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],
-
-    "LS(N2)": [{"value": "RA", "params": [{"value": "N2", "params": []}]}]
-  } as $map |
-
-  # 2. RESOLVE POSITION AND UPDATE
-  (
-    if .layer_names then
-      .layer_names
-    elif .keymap.layer_names then
-      .keymap.layer_names
-    else
-      null
-    end
-  ) as $names |
-
-  if $names == null then
-    "Error: layer_names not found."
-    | halt_error
+# Helper to reconstruct full ZMK strings
+def get_full_value:
+  if .params == [] or .params == null then
+    .value | tostring
   else
-    ($names | index($target_layer_name)) as $layer_idx |
+    "\(.value)(\(.params[0] | get_full_value))"
+  end;
 
-    if $layer_idx != null then
-      (.keymap.layers[$layer_idx] // .layers[$layer_idx]) |= map(
-        if . == null or .value != "&kp" then
-          .
+# 1. SET LOCALE AND TARGET LAYER
+.locale = "sv-SE" |
+"Symbol" as $target_layer_name |
+
+# THE PRECISE SWEDISH DELTA MAP (Extracted from TailorKey v4.2j)
+{
+  "GRAVE": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}],
+  "LS(N9)": [{"value": "LS", "params": [{"value": "N8", "params": []}]}],
+  "LS(N0)": [{"value": "LS", "params": [{"value": "N9", "params": []}]}],
+  "LBKT": [{"value": "RA", "params": [{"value": "N8", "params": []}]}],
+  "LS(LBKT)": [{"value": "RA", "params": [{"value": "N7", "params": []}]}],
+  "LS(RBKT)": [{"value": "RA", "params": [{"value": "N0", "params": []}]}],
+  "RBKT": [{"value": "RA", "params": [{"value": "N9", "params": []}]}],
+  "LS(FSLH)": [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],
+  "LS(GRAVE)": [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],
+  "LS(COMMA)": [{"value": "NON_US_BSLH", "params": []}],
+  "LS(BSLH)": [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],
+  "LS(DOT)": [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],
+  "FSLH": [{"value": "LS", "params": [{"value": "N7", "params": []}]}],
+  "SQT": [{"value": "LS", "params": [{"value": "BSLH", "params": []}]}],
+  "LS(SQT)": [{"value": "LS", "params": [{"value": "N2", "params": []}]}],
+  "LS(EQUAL)": [{"value": "LS", "params": [{"value": "N0", "params": []}]}],
+  "LS(SEMI)": [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],
+  "LS(N2)": [{"value": "RA", "params": [{"value": "N2", "params": []}]}]
+} as $map |
+
+# 2. RESOLVE POSITION AND UPDATE
+(.layer_names // .keymap.layer_names) as $names |
+
+if $names == null then
+  "Error: 'layer_names' array not found in AST. Check JSON structure." | halt_error
+else
+  ($names | index($target_layer_name)) as $layer_idx |
+  
+  if $layer_idx == null then
+    "Error: Layer '\($target_layer_name)' not found in layer_names." | halt_error
+  else
+    # Safely target the correct layers array based on AST schema
+    if .keymap.layers then
+      .keymap.layers[$layer_idx] |= map(
+        if . == null or .value != "&kp" then .
         else
           (.params[0] | get_full_value) as $full_val |
-          if $map[$full_val] then
-            .params = $map[$full_val]
-          else
-            .
-          end
+          if $map[$full_val] then .params = $map[$full_val] else . end
+        end
+      )
+    elif .layers then
+      .layers[$layer_idx] |= map(
+        if . == null or .value != "&kp" then .
+        else
+          (.params[0] | get_full_value) as $full_val |
+          if $map[$full_val] then .params = $map[$full_val] else . end
         end
       )
     else
-      "Error: Layer not found."
-      | halt_error
+      "Error: 'layers' array missing from AST entirely." | halt_error
     end
   end
-)
+end
 """
 [manifest]
 author = "moosyresearch"
