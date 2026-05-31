@@ -37,7 +37,9 @@
         }
 
         * { box-sizing: border-box; font-family: var(--font-stack); -webkit-font-smoothing: antialiased; }
-        body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* 1. MASTER LAYOUT LOCK */
+        body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; width: 100vw; }
         h1, h2, h3, h4, p { margin: 0; }
 
         /* BUTTONS */
@@ -57,7 +59,7 @@
         /* SIDEBAR */
         .sidebar {
             width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
-            padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10;
+            padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10; height: 100vh; overflow-y: auto;
         }
         .brand { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 8px; cursor: pointer;}
         
@@ -69,7 +71,6 @@
 
         .sidebar-section-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 8px; }
         
-        /* APPLE SEGMENTED CONTROL */
         .segmented-control { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 8px; border: 1px solid var(--border); }
         .segmented-control label { flex: 1; text-align: center; padding: 5px 0; font-size: 12px; font-weight: 500; color: var(--text-secondary); cursor: pointer; border-radius: 6px; transition: 0.2s; }
         .segmented-control input[type="radio"] { display: none; }
@@ -80,14 +81,14 @@
         .category-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
         .category-item.active { background: var(--accent-blue); color: white; }
 
-        /* VIEWS */
-        .view-container { flex-grow: 1; position: relative; background: var(--bg-window); display: flex; flex-direction: column; }
-        .view { display: none; width: 100%; height: 100%; flex-direction: column; animation: fade 0.2s ease; overflow: hidden; }
+        /* 2. VIEWS CONTAINER LOCK */
+        .view-container { flex: 1; min-width: 0; position: relative; background: var(--bg-window); display: flex; flex-direction: column; overflow: hidden; min-height: 0; height: 100vh; }
+        .view { display: none; flex: 1; flex-direction: column; animation: fade 0.2s ease; overflow: hidden; min-height: 0; width: 100%; }
         .view.active { display: flex; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
         /* --- LIBRARY VIEW --- */
-        .library-scroll { flex-grow: 1; overflow-y: auto; padding: 40px; }
+        .library-scroll { flex: 1; overflow-y: auto; padding: 40px; min-height: 0; }
         .library-content { max-width: 1200px; margin: 0 auto; }
         .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
         
@@ -100,7 +101,6 @@
         .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
         .app-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* HARDWARE TAGS */
         .app-tags { display: flex; gap: 6px; margin-top: 6px; }
         .device-tag { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; border: 1px solid var(--border); color: var(--text-secondary); background: rgba(255,255,255,0.05); }
         .device-tag.glove80 { color: #d2a8ff; background: rgba(163, 113, 247, 0.15); border-color: rgba(163, 113, 247, 0.3); }
@@ -110,13 +110,14 @@
         .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
 
         /* --- PRODUCT PAGE (TOP HALF) --- */
-        .product-scroll { flex: 1; overflow-y: auto; background: var(--bg-window); }
-        .product-page { padding: 0; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; }
+        /* 3. PRODUCT SCROLL LOCK */
+        .product-scroll { flex: 1; overflow-y: auto; background: var(--bg-window); min-height: 0; display: flex; flex-direction: column;}
+        .product-page { padding: 0; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; width: 100%;}
         
-        .nav-back { padding: 20px 40px; display: flex; align-items: center; gap: 8px; color: var(--accent-blue); cursor: pointer; font-size: 14px; font-weight: 500; }
+        .nav-back { padding: 20px 40px; display: flex; align-items: center; gap: 8px; color: var(--accent-blue); cursor: pointer; font-size: 14px; font-weight: 500; flex-shrink: 0;}
         .nav-back:hover { text-decoration: underline; }
 
-        .product-header { padding: 0 40px 40px 40px; display: flex; gap: 30px; align-items: flex-start; border-bottom: 1px solid var(--border); }
+        .product-header { padding: 0 40px 40px 40px; display: flex; gap: 30px; align-items: flex-start; border-bottom: 1px solid var(--border); flex-shrink: 0;}
         .product-icon-large { width: 120px; height: 120px; border-radius: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 48px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); }
         .product-header-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; justify-content: center; padding-top: 5px;}
         .product-title { font-size: 28px; font-weight: 700; line-height: 1.1; margin-bottom: 4px;}
@@ -128,9 +129,8 @@
         .wizard-status-title { font-size: 14px; font-weight: 600; }
         .wizard-status-desc { font-size: 12px; color: var(--text-secondary); }
 
-        .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; }
+        .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; flex-shrink: 0;}
         
-        /* App Store Style Media Hero (Screenshot/GIF) */
         .product-media { 
             width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #111; display: none; 
@@ -141,30 +141,31 @@
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
 
-        .dev-toggle-wrapper { padding: 20px 40px 40px 40px; text-align: center; }
+        .dev-toggle-wrapper { padding: 20px 40px 40px 40px; text-align: center; flex-shrink: 0;}
         .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
         .dev-toggle:hover { color: white; text-decoration: underline; }
 
         /* --- RESIZABLE IDE & SYNTAX HIGHLIGHTING (BOTTOM HALF) --- */
-        .resizer-h { height: 6px; background: var(--ide-bg); border-top: 1px solid var(--ide-border); border-bottom: 1px solid var(--ide-border); cursor: ns-resize; display: none; z-index: 50; transition: 0.2s; }
+        .resizer-h { height: 6px; background: var(--ide-bg); border-top: 1px solid var(--ide-border); border-bottom: 1px solid var(--ide-border); cursor: ns-resize; display: none; z-index: 50; transition: 0.2s; flex-shrink: 0;}
         .resizer-h:hover, .resizer-h.dragging { background: var(--accent-blue); }
 
-        .dev-ide-pane { display: none; height: 350px; background: var(--ide-bg); flex-direction: column; flex-shrink: 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.3); }
+        /* 4. IDE PANE LOCK */
+        .dev-ide-pane { display: none; height: 350px; background: var(--ide-bg); flex-direction: column; flex-shrink: 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.3); min-height: 0; }
         .dev-ide-pane.active { display: flex; }
         .resizer-h.active { display: block; }
 
-        .ide-toolbar { display: flex; background: var(--ide-panel); padding: 0 16px; border-bottom: 1px solid var(--ide-border); height: 35px; align-items: center; justify-content: space-between; }
+        .ide-toolbar { display: flex; background: var(--ide-panel); padding: 0 16px; border-bottom: 1px solid var(--ide-border); height: 35px; align-items: center; justify-content: space-between; flex-shrink: 0;}
         .ide-tab { padding: 0 16px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .ide-grid { display: grid; flex-grow: 1; grid-template-columns: var(--col1, 33.3%) 6px var(--col2, 33.3%) 6px var(--col3, 33.3%); overflow: hidden; }
+        /* 5. GRID/EDITOR CHAIN LOCK */
+        .ide-grid { display: grid; flex: 1; grid-template-columns: var(--col1, 1fr) 6px var(--col2, 1fr) 6px var(--col3, 1fr); overflow: hidden; min-height: 0; height: 100%;}
         .resizer-v { background: var(--ide-resizer); cursor: ew-resize; transition: 0.2s; z-index: 10;}
         .resizer-v:hover, .resizer-v.dragging { background: var(--accent-blue); }
 
-        .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; }
-        .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5;}
+        .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 0; height: 100%; width: 100%;}
+        .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;}
         
-        /* Transparent Matrix for Syntax Highlighting Overlay */
-        .code-matrix { position: relative; flex-grow: 1; overflow: hidden; background: var(--ide-bg); }
+        .code-matrix { position: relative; flex: 1; overflow: hidden; background: var(--ide-bg); min-height: 0; display: block;}
         .code-matrix textarea, .code-matrix pre {
             margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; font-family: var(--font-mono); font-size: 13px; line-height: 1.6;
             position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2;
@@ -173,14 +174,21 @@
         .code-matrix pre { z-index: 1; pointer-events: none; }
         .code-matrix code { font-family: var(--font-mono); text-shadow: none; }
 
-        /* Terminal */
-        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: auto; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 2px; }
-        .log-entry { padding: 4px 8px; line-height: 1.5; white-space: pre-wrap; color: #cccccc; word-wrap: break-word;}
+        /* 6. TERMINAL BUG FIX (Switched from flex to block to protect padding) */
+        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: auto; font-family: var(--font-mono); font-size: 12px; display: block; min-height: 0; }
+        .log-entry { padding: 4px 8px; line-height: 1.5; white-space: pre-wrap; color: #cccccc; word-wrap: break-word; border-radius: 4px; margin-bottom: 4px;}
         .log-time { color: var(--ide-dim); margin-right: 8px; font-size: 11px; }
-        .log-success { color: var(--accent-green); }
-        .log-danger { color: var(--accent-red); background: rgba(255, 69, 58, 0.1); border-radius: 4px;}
+        
+        .log-success { color: var(--accent-green); background: rgba(48, 209, 88, 0.05); }
+        .log-danger { color: var(--accent-red); background: rgba(255, 69, 58, 0.1); border-left: 2px solid var(--accent-red); }
         .log-info { color: var(--ide-blue); }
-        .log-verbose { color: #dcdcaa; opacity: 0.8;}
+        .log-warning { color: #dcdcaa; background: rgba(220, 220, 170, 0.1); }
+        
+        /* Diff Colors */
+        .log-diff-add { color: #4CAF50; }
+        .log-diff-rm { color: #F44336; }
+        .log-diff-mod { color: #2196F3; }
+        .log-verbose { color: var(--ide-dim); font-size: 11px; }
     </style>
 </head>
 <body>
@@ -248,7 +256,6 @@
                             <h3 class="section-title">Description</h3>
                             <div class="product-desc" id="studioDesc"></div>
                         </div>
-                        
                     </div>
                     <div class="dev-toggle-wrapper">
                         <button class="dev-toggle" onclick="app.toggleDevIDE()">{" "} Toggle Developer Console</button>
@@ -265,7 +272,6 @@
                 </div>
                 
                 <div class="ide-grid" id="ideGrid">
-                    
                     <div class="ide-editor">
                         <div class="ide-editor-header">source_flow.jq</div>
                         <div class="code-matrix">
@@ -273,7 +279,6 @@
                             <pre id="jqPre" aria-hidden="true"><code class="language-jq" id="jqHighlight"></code></pre>
                         </div>
                     </div>
-                    
                     <div class="resizer-v" id="resizerV1"></div>
                     
                     <div class="ide-editor">
@@ -283,14 +288,15 @@
                             <pre id="jsonPre" aria-hidden="true"><code class="language-json" id="jsonHighlight">// AST will stream here...</code></pre>
                         </div>
                     </div>
-                    
                     <div class="resizer-v" id="resizerV2"></div>
 
                     <div class="ide-editor">
-                        <div class="ide-editor-header">Terminal / Build Trace</div>
+                        <div class="ide-editor-header">
+                            <span>Terminal / Build Trace</span>
+                            <button style="background: transparent; color: var(--ide-dim); padding: 0;" onclick="terminal.clear()">Clear</button>
+                        </div>
                         <div class="log-panel" id="logPanel"></div>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -300,7 +306,42 @@
 
     <script>
         // ==========================================
-        // IDE RESIZERS
+        // DIFF ENGINE (AST Deep Comparison)
+        // ==========================================
+        class DiffEngine {
+            static compare(obj1, obj2, path = "root", changes = []) {
+                if (obj1 === obj2) return changes;
+                if (typeof obj1 !== typeof obj2 || obj1 === null || obj2 === null) {
+                    changes.push(`[MODIFIED] ${path} was structurally altered.`); return changes;
+                }
+                if (Array.isArray(obj1) && Array.isArray(obj2)) {
+                    if (obj1.length !== obj2.length) changes.push(`[MODIFIED] ${path} length changed from ${obj1.length} to ${obj2.length}`);
+                    const maxLen = Math.max(obj1.length, obj2.length);
+                    for (let i = 0; i < maxLen; i++) {
+                        if (i >= obj1.length) changes.push(`[ADDED] ${path}[${i}]`);
+                        else if (i >= obj2.length) changes.push(`[REMOVED] ${path}[${i}]`);
+                        else this.compare(obj1[i], obj2[i], `${path}[${i}]`, changes);
+                    }
+                } else if (typeof obj1 === 'object' && typeof obj2 === 'object') {
+                    const keys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
+                    keys.forEach(key => {
+                        if (!(key in obj1)) changes.push(`[ADDED] ${path}.${key}`);
+                        else if (!(key in obj2)) changes.push(`[REMOVED] ${path}.${key}`);
+                        else this.compare(obj1[key], obj2[key], `${path}.${key}`, changes);
+                    });
+                } else {
+                    if (obj1 !== obj2) {
+                        let v1 = typeof obj1 === 'string' ? `"${obj1}"` : obj1;
+                        let v2 = typeof obj2 === 'string' ? `"${obj2}"` : obj2;
+                        changes.push(`[MODIFIED] ${path}: ${v1} -> ${v2}`);
+                    }
+                }
+                return changes;
+            }
+        }
+
+        // ==========================================
+        // IDE RESIZERS (Fixed Math bounds)
         // ==========================================
         const resizerH = document.getElementById('resizerH');
         const devPane = document.getElementById('devPane');
@@ -317,9 +358,9 @@
 
         document.addEventListener('mousemove', (e) => {
             if (isResizingH) {
-                const containerHeight = document.querySelector('.view-container').offsetHeight;
-                const newHeight = containerHeight - e.clientY;
-                if (newHeight > 100 && newHeight < containerHeight - 50) devPane.style.height = `${newHeight}px`;
+                // Perfected Math: Y relative to window, bounded safely
+                const newHeight = window.innerHeight - e.clientY;
+                if (newHeight > 100 && newHeight < window.innerHeight - 50) devPane.style.height = `${newHeight}px`;
             }
             if (isResizingV1 || isResizingV2) {
                 const gridRect = ideGrid.getBoundingClientRect();
@@ -332,9 +373,11 @@
                     const newC2 = newC12 - c1;
                     if (newC2 > 5 && (c3 + c2 - newC2) > 5) { c3 = c3 + (c2 - newC2); c2 = newC2; }
                 }
-                ideGrid.style.setProperty('--col1', `${c1}%`);
-                ideGrid.style.setProperty('--col2', `${c2}%`);
-                ideGrid.style.setProperty('--col3', `${c3}%`);
+                
+                // Change the '%' to 'fr' here:
+                ideGrid.style.setProperty('--col1', `${c1}fr`);
+                ideGrid.style.setProperty('--col2', `${c2}fr`);
+                ideGrid.style.setProperty('--col3', `${c3}fr`);
             }
         });
 
@@ -345,15 +388,29 @@
         });
 
         // ==========================================
-        // LOGGER
+        // LOGGER (With Diff Formatting)
         // ==========================================
         class Logger {
             constructor(panelId) { this.panel = document.getElementById(panelId); }
             print(msg, type = "info") {
-                const entry = document.createElement('div'); entry.className = `log-entry log-${type}`;
+                const entry = document.createElement('div'); 
+                entry.className = `log-entry log-${type}`;
                 const time = new Date().toLocaleTimeString('en-US', { hour12: false });
-                entry.innerHTML = `<span class="log-time">[${time}]</span>${msg}`;
-                this.panel.appendChild(entry); this.panel.scrollTop = this.panel.scrollHeight;
+                entry.innerHTML = `<span class="log-time">[${time}]</span> ${msg}`;
+                this.panel.appendChild(entry); 
+                this.panel.scrollTop = this.panel.scrollHeight;
+            }
+            printDiff(msg) {
+                const entry = document.createElement('div');
+                let cssClass = "log-verbose"; // fallback
+                if (msg.startsWith("[ADDED]")) cssClass = "log-diff-add";
+                if (msg.startsWith("[REMOVED]")) cssClass = "log-diff-rm";
+                if (msg.startsWith("[MODIFIED]")) cssClass = "log-diff-mod";
+                
+                entry.className = `log-entry ${cssClass}`;
+                entry.innerText = msg;
+                this.panel.appendChild(entry);
+                this.panel.scrollTop = this.panel.scrollHeight;
             }
             verbose(msg) { this.print(msg, "verbose"); }
             clear() { this.panel.innerHTML = ''; }
@@ -406,6 +463,19 @@
             toggleDevIDE() {
                 document.getElementById('devPane').classList.toggle('active');
                 document.getElementById('resizerH').classList.toggle('active');
+                if (document.getElementById('devPane').classList.contains('active')) {
+                    document.getElementById('devPane').style.height = '350px'; 
+                }
+            }
+            
+            forceOpenIDE() {
+                const pane = document.getElementById('devPane');
+                const resizer = document.getElementById('resizerH');
+                if (!pane.classList.contains('active')) {
+                    pane.classList.add('active');
+                    resizer.classList.add('active');
+                    pane.style.height = '350px';
+                }
             }
 
             // --- SYNTAX HIGHLIGHTING ---
@@ -447,14 +517,14 @@
                 document.getElementById('studioAuthor').innerText = `Developer: ${flowData.author || 'moosyresearch'}`;
                 document.getElementById('studioDesc').innerText = flowData.description || 'No detailed description provided.';
                 
-                // Hardware Tags directly beneath Developer
+                // Hardware Tags
                 const tagsHtml = flowData.devices.map(d => {
                     let type = d.toLowerCase();
                     return `<span class="device-tag ${type === 'go60' || type === 'glove80' ? type : ''}">${d}</span>`;
                 }).join('');
                 document.getElementById('studioTags').innerHTML = tagsHtml;
 
-                // Screenshot / GIF Logic
+                // Screenshot Display
                 const mediaContainer = document.getElementById('studioMediaContainer');
                 const mediaImg = document.getElementById('studioMedia');
                 if (flowData.mediaUrl) {
@@ -508,36 +578,19 @@
             }
 
             // --- CATALOG LOGIC ---
-            parseFlowFile(content) {
-                const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
-                const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
-                const extCat = () => { const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
-                const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
-
-                return {
-                    uid: extVal("uid"), title: extVal("title") || "Untitled", subtitle: extVal("subtitle"),
-                    description: extMulti("description"), script: extMulti("script"), category: extCat(),
-                    author: extVal("author"), devices: extDev(), mediaUrl: null
-                };
-            }
-
             async fetchCatalog() {
                 const grid = document.getElementById('catalogGrid');
                 grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest automations...</p></div>';
                 
                 try {
-                    // Fetch directly from your CDN. No rate limits. Instant loading.
-                    // Adding a timestamp query (?t=...) prevents the browser from caching an old version
                     const response = await fetch(`https://moosylog.github.io/flows4json/catalog.json?t=${new Date().getTime()}`);
-                    
                     if (!response.ok) throw new Error("Could not reach the App Store server.");
                     
                     this.catalog = await response.json();
-                    
                     this.renderCategories();
                     this.renderGrid();
                 } catch (err) { 
-                    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p><p style="font-size: 12px; margin-top: 10px;">(Make sure GitHub Actions has finished building your catalog.json!)</p></div>`; 
+                    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p></div>`; 
                 }
             }
 
@@ -607,8 +660,8 @@
                         terminal.print(`Target AST normalized and stored in memory.`, "success");
                     } catch (err) { 
                         this.wizardError = "Invalid JSON structure."; this.wizardState = "error"; this.renderWizard();
-                        terminal.print(`Fatal Parse Error: ${err.message}`, "danger");
-                        if(!document.getElementById('devPane').classList.contains('active')) this.toggleDevIDE();
+                        terminal.print(`[Fatal Parse Error] ${err.message}`, "danger");
+                        this.forceOpenIDE();
                     }
                 }; reader.readAsText(file);
             }
@@ -621,6 +674,9 @@
                 terminal.verbose("Executing compilation via jq.wasm bridge...");
 
                 try {
+                    // Deep copy for diffing
+                    const snapshot = JSON.parse(JSON.stringify(this.sourceAST));
+
                     const result = await jq.json(this.sourceAST, script);
                     if (!result) throw new Error("Evaluation returned NULL.");
                     
@@ -629,12 +685,21 @@
                     document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
                     this.updateJSONSyntax(document.getElementById('jsonOutput').value);
                     
-                    terminal.print(`Compilation complete. Target memory updated cleanly.`, "success");
+                    // Run AST Diff Engine
+                    const changes = DiffEngine.compare(snapshot, this.outputAST);
+                    if (changes.length === 0) {
+                        terminal.print(`Compilation complete. 0 modifications made to AST.`, "warning");
+                    } else {
+                        terminal.print(`Compilation complete. ${changes.length} AST nodes modified.`, "success");
+                        terminal.verbose("--- DETAILED DIFF TRACE ---");
+                        changes.forEach(change => terminal.printDiff(change));
+                    }
+                    
                     this.wizardState = "success"; this.renderWizard();
                 } catch (error) {
                     this.wizardError = "Script compilation failed."; this.wizardState = "error"; this.renderWizard();
-                    terminal.print(`Compilation Exception: ${error.message}`, "danger");
-                    if(!document.getElementById('devPane').classList.contains('active')) this.toggleDevIDE();
+                    terminal.print(`[JQ Execution Error] ${error.message}`, "danger");
+                    this.forceOpenIDE();
                 }
             }
 
@@ -650,7 +715,7 @@
                     a.download = this.fileName; a.click();
                     
                     terminal.print(`Sanitized blob downloaded: ${this.fileName}`, "success");
-                } catch (err) { terminal.print(`I/O Exception: ${err.message}`, "danger"); }
+                } catch (err) { terminal.print(`[I/O Exception] ${err.message}`, "danger"); }
             }
         }
 
