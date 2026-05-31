@@ -2,7 +2,7 @@ uid = "se_symbol"
 type = "mutation"
 language = "us"
 title = "🌍 Swedish Symbols sv-SE"
-subtitle = "Symbol Layer Adjustments"
+subtitle = "Symbol Layer Adjustments ❓"
 description = """
 Seamlessly adapts your symbol layer for Swedish keyboard layouts with accurate locale-specific mappings.
 Translates US-style symbols into their correct Swedish equivalents, including AltGr and shifted key combinations.
