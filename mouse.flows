@@ -221,5 +221,5 @@ script = """
 author = "moosyresearch"
 keyboards = ["go60"]
 [config]
-foo = "Smart Controls"
+category = "Smart Controls"
 num = 123
