@@ -122,6 +122,10 @@ if (type != "object") then . else
       end
     else . end |
 
+    # STAGE 5: FINAL CLEANUP
+    # Automatically strip out any null keys (like "macros": null) so the parser doesn't choke
+    with_entries(select(.value != null)) |
+
     .creator = "moosy"
   )
 end
