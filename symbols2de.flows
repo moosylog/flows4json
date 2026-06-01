@@ -17,17 +17,22 @@ script = """
 #             OS TARGET: WINDOWS / LINUX (Standard ISO / de-DE)
 # ==============================================================================
 # 
-# VALIDATION UPGRADE: Explicitly forces correct QWERTZ positional behavior
-# for Minus and Underscore columns to match the visual layout editor target.
+# VALIDATION FIX: Corrects the positional inversion of Minus and Underscore 
+# on Column 4 to perfectly mirror the visual layout in image_ef6b5f.png.
 # ==============================================================================
 
 {
   # --- Punctuation & Basics ---
   "DOT":                 [{"value": "DOT", "params": []}],                                        # . -> .
   "COMMA":               [{"value": "COMMA", "params": []}],                                      # , -> ,
-  "MINUS":               [{"value": "FSLH", "params": []}],                                       # - -> - key (German physical FSLH)
-  "PLUS":                [{"value": "RBKT", "params": []}],                                       # + -> + key (German physical RBKT)
   "EQUAL":               [{"value": "LS", "params": [{"value": "N0", "params": []}]}],            # = -> Shift + 0
+
+  # --- Fixed Column 4 Realignment ---
+  "MINUS":               [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # Source Minus -> German Underscore (Shift + -)
+  "UNDER":               [{"value": "FSLH", "params": []}],                                       # Source Underscore -> German Minus (- key)
+  "UNDERSCORE":          [{"value": "FSLH", "params": []}],                                       
+  "LS(MINUS)":           [{"value": "FSLH", "params": []}],                                       
+  "PLUS":                [{"value": "RBKT", "params": []}],                                       # + -> + key (German physical RBKT)
 
   # --- Brackets & Braces ---
   "LPAR":                [{"value": "LS", "params": [{"value": "N8", "params": []}]}],            # ( -> Shift + 8
@@ -67,20 +72,17 @@ script = """
   "HASH":                [{"value": "NON_US_HASH", "params": []}],                                # # -> # key
   "LS(N3)":              [{"value": "NON_US_HASH", "params": []}],                                
   "DLLR":                [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            # $ -> Shift + 4
-  "LS(N4)":              [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            
+  "LS(N4)":              [{"value": "LS", "params": [{"value": "N4", "params": []}],            
   "PRCNT":               [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            # % -> Shift + 5
-  "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            
+  "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}],            
   "CARET":               [{"value": "GRAVE", "params": []}],                                      # ^ -> ^ key (top left)
   "LS(N6)":              [{"value": "GRAVE", "params": []}],                                      
   "AMPS":                [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            # & -> Shift + 6
-  "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            
+  "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}],            
   "STAR":                [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          # * -> Shift + +
-  "LS(N8)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          
+  "LS(N8)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}],          
   "TILDE":               [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> AltGr + +
-  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          
-  "UNDER":               [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # _ -> Shift + -
-  "UNDERSCORE":          [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          
-  "LS(MINUS)":           [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          
+  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}],          
   "QMARK":               [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         # ? -> Shift + ß
   "LS(FSLH)":            [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         
   "COLON":               [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           # : -> Shift + .
