@@ -13,85 +13,88 @@ This flow remaps those symbols so they produce the correct characters for the Ge
 """
 script = """
 # ==============================================================================
-#             FRENCH SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
-#             OS TARGET: WINDOWS / LINUX (Standard ISO / fr-FR)
+#             GERMAN SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
+#             OS TARGET: WINDOWS / LINUX (Standard ISO / de-DE)
 # ==============================================================================
 # 
-# WELCOME! This script translates your "Symbol" layer keys for a French AZERTY OS.
-# Maps aliases (e.g., SQT/SINGLE_QUOTE) to prevent any normalization bugs.
+# VALIDATION FIX: Corrects the positional inversion of Minus and Underscore 
+# on Column 4 to perfectly mirror the visual layout in image_ef6b5f.png.
 # ==============================================================================
 
 {
   # --- Punctuation & Basics ---
-  "DOT":                 [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}],         # . -> Shift + ; key (US COMMA position)
-  "COMMA":               [{"value": "M", "params": []}],                                          # , -> , key (US M position)
-  "MINUS":               [{"value": "N6", "params": []}],                                         # - -> - key (US N6)
-  "EQUAL":               [{"value": "EQUAL", "params": []}],                                      # = -> = key (US EQUAL)
+  "DOT":                 [{"value": "DOT", "params": []}],                                        # . -> .
+  "COMMA":               [{"value": "COMMA", "params": []}],                                      # , -> ,
+  "EQUAL":               [{"value": "LS", "params": [{"value": "N0", "params": []}]}],            # = -> Shift + 0
+
+  # --- Fixed Column 4 Realignment ---
+  "MINUS":               [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # Source Minus -> German Underscore (Shift + -)
+  "UNDER":               [{"value": "FSLH", "params": []}],                                       # Source Underscore -> German Minus (- key)
+  "UNDERSCORE":          [{"value": "FSLH", "params": []}],                                       
+  "LS(MINUS)":           [{"value": "FSLH", "params": []}],                                       
+  "PLUS":                [{"value": "RBKT", "params": []}],                                       # + -> + key (German physical RBKT)
 
   # --- Brackets & Braces ---
-  "LPAR":                [{"value": "N5", "params": []}],                                         # ( -> ( key (US N5)
-  "LS(N9)":              [{"value": "N5", "params": []}],            
-  "RPAR":                [{"value": "MINUS", "params": []}],                                      # ) -> ) key (US MINUS position)
-  "LS(N0)":              [{"value": "MINUS", "params": []}],            
-  "LBKT":                [{"value": "RA", "params": [{"value": "N5", "params": []}]}],            # [ -> AltGr + 5
-  "RBKT":                [{"value": "RA", "params": [{"value": "MINUS", "params": []}]}],          # ] -> AltGr + ) (US MINUS position)
-  "LBRC":                [{"value": "RA", "params": [{"value": "N4", "params": []}]}],            # { -> AltGr + 4
-  "LS(LBKT)":            [{"value": "RA", "params": [{"value": "N4", "params": []}]}],            
-  "RBRC":                [{"value": "RA", "params": [{"value": "EQUAL", "params": []}]}],          # } -> AltGr + = (US EQUAL position)
-  "LS(RBKT)":            [{"value": "RA", "params": [{"value": "EQUAL", "params": []}]}],            
-  "LT":                  [{"value": "NON_US_BSLH", "params": []}],                                # < -> < key (next to L-Shift)
+  "LPAR":                [{"value": "LS", "params": [{"value": "N8", "params": []}]}],            # ( -> Shift + 8
+  "LS(N9)":              [{"value": "LS", "params": [{"value": "N8", "params": []}]}],            
+  "RPAR":                [{"value": "LS", "params": [{"value": "N9", "params": []}]}],            # ) -> Shift + 9
+  "LS(N0)":              [{"value": "LS", "params": [{"value": "N9", "params": []}]}],            
+  "LBKT":                [{"value": "RA", "params": [{"value": "N8", "params": []}]}],            # [ -> AltGr + 8
+  "RBKT":                [{"value": "RA", "params": [{"value": "N9", "params": []}]}],            # ] -> AltGr + 9
+  "LBRC":                [{"value": "RA", "params": [{"value": "N7", "params": []}]}],            # { -> AltGr + 7
+  "LS(LBKT)":            [{"value": "RA", "params": [{"value": "N7", "params": []}]}],            
+  "RBRC":                [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            # } -> AltGr + 0
+  "LS(RBKT)":            [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            
+  "LT":                  [{"value": "NON_US_BSLH", "params": []}],                                # < -> < key
   "LS(COMMA)":           [{"value": "NON_US_BSLH", "params": []}],                                
   "GT":                  [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # > -> Shift + <
   "LS(DOT)":             [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],   
 
   # --- Slashes & Pipes ---
-  "FSLH":                [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           # / -> Shift + : key (US DOT position)
-  "BSLH":                [{"value": "RA", "params": [{"value": "N8", "params": []}]}],            # \ -> AltGr + 8
-  "PIPE":                [{"value": "RA", "params": [{"value": "N6", "params": []}]}],            # | -> AltGr + 6
-  "LS(BSLH)":            [{"value": "RA", "params": [{"value": "N6", "params": []}]}],   
+  "FSLH":                [{"value": "LS", "params": [{"value": "N7", "params": []}]}],            # / -> Shift + 7
+  "BSLH":                [{"value": "RA", "params": [{"value": "MINUS", "params": []}]}],         # \ -> AltGr + ß
+  "PIPE":                [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # | -> AltGr + <
+  "LS(BSLH)":            [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],   
 
   # --- Quotes & Ticks ---
-  "SQT":                 [{"value": "N4", "params": []}],                                         # ' -> ' key (US N4)
-  "SINGLE_QUOTE":        [{"value": "N4", "params": []}],                                  
-  "DQT":                 [{"value": "N3", "params": []}],                                         # " -> " key (US N3)
-  "LS(SINGLE_QUOTE)":    [{"value": "N3", "params": []}],            
-  "LS(SQT)":             [{"value": "N3", "params": []}],            
-  "GRAVE":               [{"value": "RA", "params": [{"value": "N7", "params": []}]}],            # ` -> AltGr + 7
+  "SQT":                 [{"value": "LS", "params": [{"value": "NON_US_HASH", "params": []}]}],   # ' -> Shift + #
+  "SINGLE_QUOTE":        [{"value": "LS", "params": [{"value": "NON_US_HASH", "params": []}]}],   
+  "DQT":                 [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            # " -> Shift + 2
+  "LS(SINGLE_QUOTE)":    [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            
+  "LS(SQT)":             [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            
+  "GRAVE":               [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}],         # ` -> Shift + ´
 
-  # --- Special Symbols ---
-  "EXCLM":               [{"value": "FSLH", "params": []}],                                       # ! -> ! key (US FSLH position)
-  "LS(N1)":              [{"value": "FSLH", "params": []}],            
-  "AT":                  [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            # @ -> AltGr + 0
-  "LS(N2)":              [{"value": "RA", "params": [{"value": "N0", "params": []}]}],             
-  "HASH":                [{"value": "RA", "params": [{"value": "N3", "params": []}]}],            # # -> AltGr + 3
-  "LS(N3)":              [{"value": "RA", "params": [{"value": "N3", "params": []}]}],                                
-  "DLLR":                [{"value": "RBKT", "params": []}],                                       # $ -> $ key (US RBKT position)
-  "LS(N4)":              [{"value": "RBKT", "params": []}],            
-  "PRCNT":               [{"value": "LS", "params": [{"value": "SQT", "params": []}]}],           # % -> Shift + ù key (US SQT position)
-  "LS(N5)":              [{"value": "LS", "params": [{"value": "SQT", "params": []}]}],            
-  "CARET":               [{"value": "LBKT", "params": []}],                                       # ^ -> ^ key (US LBKT dead key)
-  "LS(N6)":              [{"value": "LBKT", "params": []}],                                      
-  "AMPS":                [{"value": "N1", "params": []}],                                         # & -> & key (US N1)
-  "LS(N7)":              [{"value": "N1", "params": []}],            
-  "STAR":                [{"value": "BSLH", "params": []}],                                       # * -> * key (US BSLH position)
-  "LS(N8)":              [{"value": "BSLH", "params": []}],          
-  "TILDE":               [{"value": "RA", "params": [{"value": "N2", "params": []}]}],            # ~ -> AltGr + 2
-  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "N2", "params": []}]}],          
-  "UNDER":               [{"value": "N8", "params": []}],                                         # _ -> _ key (US N8)
-  "UNDERSCORE":          [{"value": "N8", "params": []}],          
-  "LS(MINUS)":           [{"value": "N8", "params": []}],          
-  "QMARK":               [{"value": "LS", "params": [{"value": "M", "params": []}]}],             # ? -> Shift + , key (US M position)
-  "LS(FSLH)":            [{"value": "LS", "params": [{"value": "M", "params": []}]}],         
-  "COLON":               [{"value": "DOT", "params": []}],                                        # : -> : key (US DOT position)
-  "LS(SEMI)":            [{"value": "DOT", "params": []}],           
-  "SEMI":                [{"value": "COMMA", "params": []}]                                       # ; -> ; key (US COMMA position)
-} as $french_symbol_map |
+  # --- Special Symbols (Number Row & Misc) ---
+  "EXCLM":               [{"value": "LS", "params": [{"value": "N1", "params": []}]}],            # ! -> Shift + 1
+  "LS(N1)":              [{"value": "LS", "params": [{"value": "N1", "params": []}]}],            
+  "AT":                  [{"value": "RA", "params": [{"value": "Q", "params": []}]}],             # @ -> AltGr + Q
+  "LS(N2)":              [{"value": "RA", "params": [{"value": "Q", "params": []}]}],             
+  "HASH":                [{"value": "NON_US_HASH", "params": []}],                                # # -> # key
+  "LS(N3)":              [{"value": "NON_US_HASH", "params": []}],                                
+  "DLLR":                [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            # $ -> Shift + 4
+  "LS(N4)":              [{"value": "LS", "params": [{"value": "N4", "params": []}],            
+  "PRCNT":               [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            # % -> Shift + 5
+  "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}],            
+  "CARET":               [{"value": "GRAVE", "params": []}],                                      # ^ -> ^ key (top left)
+  "LS(N6)":              [{"value": "GRAVE", "params": []}],                                      
+  "AMPS":                [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            # & -> Shift + 6
+  "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}],            
+  "STAR":                [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          # * -> Shift + +
+  "LS(N8)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}],          
+  "TILDE":               [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> AltGr + +
+  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}],          
+  "QMARK":               [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         # ? -> Shift + ß
+  "LS(FSLH)":            [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         
+  "COLON":               [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           # : -> Shift + .
+  "LS(SEMI)":            [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           
+  "SEMI":                [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}]          # ; -> Shift + ,
+} as $german_symbol_map |
 
 # ==============================================================================
 # CONFIGURATION TARGETS
 # ==============================================================================
 
-.locale = "fr-FR" |
+.locale = "de-DE" |
 "Symbol" as $layer_to_translate |
 
 # ==============================================================================
@@ -116,8 +119,8 @@ else
           # Extracts inner parameters safely to eliminate the outer wrapper mismatch
           (.params[0] | if .params == null or .params == [] then .value else "\(.value)(\(.params[0].value))" end) as $current_key |
           
-          if $french_symbol_map[$current_key] then 
-            .params = $french_symbol_map[$current_key] 
+          if $german_symbol_map[$current_key] then 
+            .params = $german_symbol_map[$current_key] 
           else 
             . 
           end
