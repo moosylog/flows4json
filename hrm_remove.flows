@@ -10,89 +10,116 @@ NOTE: This is the ultimate HRM removal and also removes the TailorKey Bilateral 
 """
 script = """
 # ==============================================================================
+# 0. SETTINGS & TOGGLES
+# ==============================================================================
+# Set to true to keep colors and UI decorators. Set to false for a clean wipe.
+def PRESERVE_DECORATORS: false; 
+
+# ==============================================================================
 # 1. HARDWARE ABSTRACTION LAYER (HAL)
 # ==============================================================================
-
-# Senior Dev Tip: Abstracting hardware logic prevents hardcoding brittle indices.
 def GetHomeIndices:
-  (.layout.keys | length) as $len |
-  if $len == 0 then
-    ("FATAL: Layout data is empty or missing." | stderr) | halt
-  elif $len > 70 then
-    [35,36,37,38,41,42,43,44] # Glove80
-  else
-    [25,26,27,28,31,32,33,34] # Go60
+  if (.layout.keys | type == "array") then
+    (.layout.keys | length) as $len |
+    if $len > 70 then [35, 36, 37, 38, 41, 42, 43, 44] # Glove80
+    else [25, 26, 27, 28, 31, 32, 33, 34]              # Go60
+    end
+  else [25, 26, 27, 28, 31, 32, 33, 34] # Default Fallback
   end;
 
+# Helper for shifting layer references safely
+# Restricts to numbers <= 30 to explicitly protect macro timers (e.g., 250ms)
+# which are also stored inside .params[].value arrays.
+def ShiftLayer($target_idx; $deleted_idx):
+  if ($target_idx | type == "number" and $target_idx <= 30) then
+    if $target_idx > $deleted_idx then $target_idx - 1
+    elif $target_idx == $deleted_idx then 0
+    else $target_idx end
+  else $target_idx end;
+
 # ==============================================================================
-# 2. MAIN TRANSFORMATION ENGINE (Full State Context)
+# 2. MAIN TRANSFORMATION
 # ==============================================================================
+if (type != "object") then . else
+  (.keymap // .) |= (
+    
+    # SETUP
+    [ "LeftIndex", "LeftMiddy", "LeftRingy", "LeftPinky", 
+      "RightIndex", "RightMiddy", "RightRingy", "RightPinky" ] as $targets |
+    (GetHomeIndices) as $home_row |
 
-# Ensure we have a valid hardware context before starting mutation
-(GetHomeIndices) as $home_row |
+    # STAGE 1: IDENTIFY HRM NAMES (Recursive lookup)
+    # Collects names from Layer 0 home row. Safe-guards against missing layer array.
+    # EXPLICITLY ignores standard ZMK behaviors to protect layers like Cursor/Gaming.
+    ([ .layers[0]?[$home_row[]]?.value | select(. != null) ] | map(ltrimstr("&")) | 
+     map(select(IN("kp", "mt", "lt", "mo", "sl", "sk", "tog", "none", "trans") | not))) as $to_purge |
+    
+    # STAGE 2: GLOBAL KEY REVERSION (Preserves Styling)
+    # Scans every layer. Converts any key referencing an HRM behavior to &kp.
+    (.layers // []) |= map(
+      map(
+        if (.value | ltrimstr("&") | (startswith("HRM_") or IN($to_purge[]))) then
+          (.params | if type == "array" and length > 0 then . else [{ "value": "NONE" }] end) as $p |
+          (if ($p | length > 1) then $p[1].value else $p[0].value end) as $keycode |
+          
+          # NEW BINDING OBJECT
+          { "value": "&kp", "params": [{ "value": $keycode }] } as $new_key |
+          
+          # TOGGLE LOGIC: Preserve existing decorators or replace entirely
+          # Force overwrite the params array to prevent index-merging corruption
+          if PRESERVE_DECORATORS then 
+            (. * $new_key | .params = $new_key.params)
+          else 
+            $new_key 
+          end
+        else . end
+      )
+    ) |
 
-# Root-level mutation ensures compatibility with the Keymap Editor's state
-(.keymap // .) |= (
+    # STAGE 3: REGISTRY PURGE
+    ( .holdTaps, .macros, .behaviors ) |= (
+      if type == "array" then
+        map(select(.name | type == "string" and ((. | IN($to_purge[])) or (ltrimstr("&") | startswith("HRM_"))) | not))
+      else . end
+    ) |
 
-  # --- STAGE 1: IDENTIFICATION (DISCOVERY PHASE) ---
-  # Safely collect behavior names currently residing on the home row.
-  # We use ltrimstr("&") to normalize names for comparison with the registry.
-  ([ .layers[0][($home_row[])].value | select(. != null) ] | map(ltrimstr("&"))) as $found_names |
+    # STAGE 4: SURGICAL LAYER DELETION & RE-INDEXING
+    if (.layer_names | type == "array") then
+      ([.layer_names | to_entries[] | select(.value | IN($targets[])) | .key] | sort | reverse) as $delete_list |
+      
+      reduce $delete_list[] as $idx (.;
+        del(.layers[$idx]) | 
+        del(.layer_names[$idx]) |
+        
+        # Universal Parameter Re-indexing 
+        # Strictly targets ONLY objects inside a .params array to ignore root-level properties
+        (.. | objects | select(has("params") and (.params | type == "array"))) |= (
+          .params |= map(
+            if (type == "object" and has("value")) then
+              .value |= ShiftLayer(.; $idx)
+            else . end
+          )
+        ) |
+        
+        # Combo Layer Requirements Sync
+        (.combos // [])[]? |= (
+          if has("layers") and (.layers | type == "array") then
+            .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
+          else . end
+        ) |
 
-  # Strictly define the HRM-specific layers generated by the build script.
-  [
-    "LeftIndex","LeftMiddy","LeftRingy","LeftPinky",
-    "RightIndex","RightMiddy","RightRingy","RightPinky"
-  ] as $layer_targets |
+        # Input Listener Layer Requirements Sync
+        (.inputListeners // [])[]?.nodes[]? |= (
+          if has("layers") and (.layers | type == "array") then
+            .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
+          else . end
+        )
+      )
+    else . end |
 
-  # --- STAGE 2: HOME ROW REVERSION ---
-  # Standardizes home row keys back to simple &kp nodes.
-  # This uses a safe parameter check to preserve the base character.
-  .layers[0] |= [
-    range(length) as $i | .[$i] |
-    if ($i | IN($home_row[])) then
-
-      # Defensive check: ensure we have a valid key to revert to
-      (.params | if type == "array" and length > 0 then . else [{"value":"NONE","params":[]}] end) as $p |
-
-      {
-        "value": "&kp",
-        "params": [{
-          "value": (if ($p | length > 1) then $p[1].value else $p[0].value end),
-          "params": []
-        }]
-      }
-
-    else . end
-  ] |
-
-  # --- STAGE 3: TARGETED REGISTRY PURGE ---
-  # Removes Behaviors/Macros that match the home row or the HRM_ namespace.
-  # Combo purge has been REMOVED to protect your custom combo logic.
-  (.holdTaps, .macros, .behaviors) |= (
-    if type == "array" then
-      map(select(
-        .name | type == "string" and (
-          (. | IN($found_names[])) or
-          (ltrimstr("&") | startswith("HRM_"))
-        ) | not
-      ))
-    else . end
-  ) |
-
-  # --- STAGE 4: RECURSIVE LAYER DELETION ---
-  # Senior Dev Tip: Deleting in reverse prevents the index-shift bug.
-  if (.layer_names | type == "array") then
-    ([.layer_names | to_entries[] | select(.value | IN($layer_targets[])) | .key] | sort | reverse) as $to_del |
-    reduce $to_del[] as $idx (.;
-      del(.layers[$idx]) |
-      del(.layer_names[$idx])
-    )
-  else . end |
-
-  # --- STAGE 5: METADATA & CLEANUP ---
-  .creator = "moosy"
-)
+    .creator = "moosy"
+  )
+end
 """
 [manifest]
 author = "moosyresearch"
