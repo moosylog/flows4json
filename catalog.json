@@ -207,6 +207,25 @@
     "mediaUrl": null
   },
   {
+    "uid": "l_hrm_tuner",
+    "title": "🚀 HRM Configurator",
+    "subtitle": "Launch App",
+    "description": "Advanced Home-Row Mod Configurator\nThis tool allows you to bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob or manual values to your entire layout at once.",
+    "script": "",
+    "category": "Base Setup",
+    "appUrl": "https://sites.google.com/view/tailorkey/how-to/hrm-tuner",
+    "author": "moosyresearch",
+    "devices": [
+      "go60",
+      "glove80"
+    ],
+    "config": {
+      "category": "Base Setup",
+      "num": "123"
+    },
+    "mediaUrl": null
+  },
+  {
     "uid": "l_qwerty_swap",
     "title": "🚀 QWERTY Swap App",
     "subtitle": "Launch App",
