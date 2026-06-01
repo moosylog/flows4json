@@ -250,11 +250,10 @@
     "description": "external app launcher",
     "script": "",
     "category": "Base Setup",
-    "appUrl": null,
+    "appUrl": "https://sites.google.com/view/tailorkey/moergo/qwerty_swap",
     "author": "moosyresearch",
     "devices": [
-      "go60",
-      "glove80"
+      "go60"
     ],
     "config": {
       "category": "Base Setup",
