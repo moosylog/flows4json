@@ -13,101 +13,75 @@ This flow remaps those symbols so they produce the correct characters for the Sw
 """
 script = """
 # ==============================================================================
-#           SWEDISH SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
+#             SWEDISH SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
 # ==============================================================================
 # 
-#  WELCOME! This script automatically changes your keyboard symbols so they type
-#  correctly on a Swedish operating system.
+# WELCOME! This script translates your "Symbol" layer keys for a Swedish OS.
 #
-#  HOW TO READ THE MAP BELOW:
-#  - The first item is the original US English symbol.
-#  - The second item is the main Swedish key used to trigger it.
-#  - The third item is a nested shift key helper (use "null" if not needed).
+# HOW TO EDIT CODES BELOW:
+#   To change a mapping, use this exact format:
+#   ["ORIGINAL_US_KEY", "SWEDISH_MAIN_KEY", "OPTIONAL_SHIFT_OR_ALT"]
 #
-#  [!] IF YOU WANT TO ADD/EDIT SYMBOLS, SCROLL TO CELL 1 LOWER DOWN.
-# ==============================================================================
-#
-#   When you want:       Send this Swedish combination:      Target Character
-#   -------------------------------------------------------------------------
-#   "GRAVE"              "LS"        "EQUAL"                 # `
-#   "SEMI"               "LS"        "COMMA"                 # ;
-#   "LS(N6)"             "LS"        "RBKT"                  # ^ (dead key)
-#   "EQUAL"              "LS"        "N0"                    # =
-#   "LS(MINUS)"          "LS"        "FSLH"                  # _
-#   "LS(N4)"             "RA"        "N4"                    # $
-#   "LS(EQUAL)"          "MINUS"     null                    # +
-#   "SQT"                "NON_US_HASH" null                  # '
-#   "LS(SQT)"            "LS"        "N2"                    # "
-#   "LS(N9)"             "LS"        "N8"                    # (
-#   "LS(N0)"             "LS"        "N9"                    # )
-#   "LBKT"               "RA"        "N8"                    # [
-#   "LS(LBKT)"           "RA"        "N7"                    # {
-#   "LS(RBKT)"           "RA"        "N0"                    # }
-#   "RBKT"               "RA"        "N9"                    # ]
-#   "LS(FSLH)"           "LS"        "MINUS"                 # ?
-#   "LS(GRAVE)"          "RA"        "RBKT"                  # ~ (dead key)
-#   "LS(COMMA)"          "NON_US_BSLH" null                  # <
-#   "LS(BSLH)"           "RA"        "NON_US_BSLH"           # |
-#   "LS(DOT)"            "LS"        "NON_US_BSLH"           # >
-#   "FSLH"               "LS"        "N7"                    # /
-#   "LS(SEMI)"           "LS"        "DOT"                   # :
-#   "LS(N2)"             "RA"        "N2"                    # @
-#
+#   If a key does not require a shift or alt helper, use null at the end.
 # ==============================================================================
 
+def swedish_profile_mappings: [
+#   [ Original US Key ,  Swedish Key ,  Modifier Helper ]     Target Character
+#   ----------------------------------------------------------------------------
+    ["GRAVE"          , "LS"         , "EQUAL"          ],   # `
+    ["SEMI"           , "LS"         , "COMMA"          ],   # ;
+    ["LS(N6)"         , "LS"         , "RBKT"           ],   # ^ (dead key)
+    ["EQUAL"          , "LS"         , "N0"             ],   # =
+    ["LS(MINUS)"      , "LS"         , "FSLH"           ],   # _
+    ["LS(N4)"         , "RA"         , "N4"             ],   # $
+    ["LS(EQUAL)"      , "MINUS"      , null             ],   # +
+    ["SQT"            , "NON_US_HASH", null             ],   # '
+    ["LS(SQT)"        , "LS"         , "N2"             ],   # "
+    ["LS(N9)"         , "LS"         , "N8"             ],   # (
+    ["LS(N0)"         , "LS"         , "N9"             ],   # )
+    ["LBKT"           , "RA"         , "N8"             ],   # [
+    ["LS(LBKT)"       , "RA"         , "N7"             ],   # {
+    ["LS(RBKT)"       , "RA"         , "N0"             ],   # }
+    ["RBKT"           , "RA"         , "N9"             ],   # ]
+    ["LS(FSLH)"       , "LS"         , "MINUS"          ],   # ?
+    ["LS(GRAVE)"      , "RA"         , "RBKT"           ],   # ~ (dead key)
+    ["LS(COMMA)"      , "NON_US_BSLH", null             ],   # <
+    ["LS(BSLH)"       , "RA"         , "NON_US_BSLH"    ],   # |
+    ["LS(DOT)"        , "LS"         , "NON_US_BSLH"    ],   # >
+    ["FSLH"           , "LS"         , "N7"             ],   # /
+    ["LS(SEMI)"       , "LS"         , "DOT"            ],   # :
+    ["LS(N2)"         , "RA"         , "N2"             ]    # @
+];
+
 # ==============================================================================
-# TECHNICAL ENGINE DECK (Tells the computer how to read the text above)
+# CONFIGURATION TARGETS
 # ==============================================================================
 
-def get_full_value:
-  if .params == [] or .params == null then .value | tostring
-  else "\(.value)(\(.params[0] | get_full_value))" end;
-
-def to_param($val): { "value": $val, "params": [] };
-def to_param($val; $nested): { "value": $val, "params": [to_param($nested)] };
-
-def translation($from; $to_val; $to_nested):
-  { "key": $from, "value": (if $to_nested then [to_param($to_val; $to_nested)] else [to_param($to_val)] end) };
-
-# ==============================================================================
-# CELL 1: ACTIVE DICTIONARY LIST (This must match the blueprint above)
-# ==============================================================================
-
-[
-  translation("GRAVE";     "LS";       "EQUAL"),
-  translation("SEMI";      "LS";       "COMMA"),
-  translation("LS(N6)";    "LS";       "RBKT"),
-  translation("EQUAL";     "LS";       "N0"),
-  translation("LS(MINUS)"; "LS";       "FSLH"),
-  translation("LS(N4)";    "RA";       "N4"),
-  translation("LS(EQUAL)"; "MINUS";    null),
-  translation("SQT";       "NON_US_HASH"; null),
-  translation("LS(SQT)";   "LS";       "N2"),
-  translation("LS(N9)";    "LS";       "N8"),
-  translation("LS(N0)";    "LS";       "N9"),
-  translation("LBKT";      "RA";       "N8"),
-  translation("LS(LBKT)";  "RA";       "N7"),
-  translation("LS(RBKT)";  "RA";       "N0"),
-  translation("RBKT";      "RA";       "N9"),
-  translation("LS(FSLH)";  "LS";       "MINUS"),
-  translation("LS(GRAVE)"; "RA";       "RBKT"),
-  translation("LS(COMMA)"; "NON_US_BSLH"; null),
-  translation("LS(BSLH)";  "RA";       "NON_US_BSLH"),
-  translation("LS(DOT)";   "LS";       "NON_US_BSLH"),
-  translation("FSLH";      "LS";       "N7"),
-  translation("LS(SEMI)";  "LS";       "DOT"),
-  translation("LS(N2)";    "RA";       "N2")
-] 
-| from_entries as $swedish_symbol_map |
-
-# SET TARGET LOCALE AND LAYER 
 .locale = "sv-SE" |
 "Symbol" as $layer_to_translate |
 
 # ==============================================================================
-# CELL 2: PROCESS AND SAVE UPDATES
+# BEHIND-THE-SCENES TRANSLATION MECHANISM (Do not alter)
 # ==============================================================================
 
+# System Parser: Combines nested array key structures into text strings
+def get_full_value:
+  if .params == [] or .params == null then .value | tostring
+  else "\(.value)(\(.params[0] | get_full_value))"
+  end;
+
+# System format helpers
+def to_param($val): { "value": $val, "params": [] };
+def to_param($val; $nested): { "value": $val, "params": [to_param($nested)] };
+
+# Converts the clean table matrix into the map dictionary
+def build_symbol_dictionary:
+  map({
+    "key": .[0],
+    "value": (if .[2] != null then [to_param(.[1]; .[2])] else [to_param(.[1])] end)
+  }) | from_entries;
+
+(swedish_profile_mappings | build_symbol_dictionary) as $swedish_symbol_map |
 (.layer_names // .keymap.layer_names) as $all_layers |
 
 if $all_layers == null then
