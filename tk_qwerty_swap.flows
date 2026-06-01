@@ -12,7 +12,7 @@ external app launcher
 
 [manifest]
 author = "moosyresearch"
-keyboards = ["go60"]
+keyboards = ["go60","glove80"]
 
 [config]
 category = "Base Setup"
