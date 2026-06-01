@@ -4,13 +4,11 @@ language = "us"
 title = "🌍 German Symbols"
 subtitle = "Symbol Layer Adjustments❓"
 description = """
-Automatically adapts your symbol layer for German keyboard layouts with precise, system-aware mappings.
-Converts US-style symbols into their correct German equivalents, including AltGr and shifted combinations.
-Keeps your custom layout intact while ensuring characters like brackets, slashes, and special symbols behave correctly.
-Works directly on your Symbol layer without breaking your existing key structure.
-Designed for seamless switching between US and German keyboard conventions.
-Perfect for bilingual users, developers, and anyone working across different keyboard standards.
-Preserves muscle memory while fixing locale-specific symbol differences.
+Automatically adapts your symbol layer from US to German keyboard layouts 
+⚠️ Requires a Symbol Layer - If you don't have a Symbol layer it will give you an error.
+🪳 Not fully tested
+
+
 No manual remapping needed — just run and your layout becomes German-ready.
 """
 script = """
