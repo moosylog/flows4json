@@ -1,8 +1,8 @@
 uid = "os_remap"
 type = "mutation"
 language = "us"
-title = "Unicode Macro"
-subtitle = "Macro: Create Unicode Character Macros❓"
+title = "Emoji Macro"
+subtitle = "Macro: Sample Unicode Character Macros❓"
 description = """
 Generates ready-to-use Unicode macros for your keyboard, letting you type emojis and symbols instantly.
 Includes popular characters like ❤️ ✨ ⭐ 🔥 😂 👍 mapped into simple, reusable shortcuts.
@@ -137,5 +137,5 @@ script = """
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-category = "Languages & Symbols"
+category = "Special keys"
 num = 123
