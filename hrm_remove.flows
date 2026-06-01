@@ -1,8 +1,8 @@
 uid = "hrm_remove"
 type = "mutation"
 language = "us"
-title = "❌ Home-Row Mode Remove"
-subtitle = "Removes HRM from your Layout"
+title = "❌ Removes HRM"
+subtitle = "from your Layout"
 description = """
 Removes all types of home-row mods, including TailorKey Bilateral HRM layers
 NOTE: This is the ultimate HRM removal and also removes the TailorKey Bilateral HRM
