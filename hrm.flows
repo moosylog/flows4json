@@ -1,8 +1,8 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "✔️ Home-Row Mods"
-subtitle = "Adds home-row modifiers to your layout."
+title = "Urob timeless"
+subtitle = "home-row mods with faster Index finger"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
 Tap a home-row key → types the normal letter (like a).
@@ -246,5 +246,5 @@ end;
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-category = "Smart Typing"
+category = "Home-Row Mods"
 num = 123
