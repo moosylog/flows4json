@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flows4JSON - App Store</title>
     
+    <script>
+        window.jqCompilerLogs = [];
+        const originalConsoleError = console.error;
+        console.error = function(...args) {
+            window.jqCompilerLogs.push(args.join(' '));
+            originalConsoleError.apply(console, args);
+        };
+    </script>
+    
     <script src="https://cdn.jsdelivr.net/npm/jq-web@0.5.1/jq.wasm.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
@@ -14,32 +23,21 @@
     <style>
         /* MAC APP STORE & VS CODE DESIGN SYSTEM */
         :root {
-            --bg-window: #1e1e1e;
-            --bg-sidebar: #252525;
-            --bg-card: #2c2c2e;
-            --text-primary: #ffffff;
-            --text-secondary: #98989d;
-            --accent-blue: #0a84ff;
-            --accent-green: #30d158;
-            --accent-red: #ff453a;
+            --bg-window: #1e1e1e; --bg-sidebar: #252525; --bg-card: #2c2c2e;
+            --text-primary: #ffffff; --text-secondary: #98989d;
+            --accent-blue: #0a84ff; --accent-green: #30d158; --accent-red: #ff453a;
             --border: rgba(255, 255, 255, 0.08);
-            
-            /* VS Code IDE Colors */
-            --ide-bg: #1e1e1e;
-            --ide-panel: #252526;
-            --ide-border: #3c3c3c;
-            --ide-dim: #858585;
-            --ide-resizer: #333333;
-
+            --ide-bg: #1e1e1e; --ide-panel: #252526; --ide-border: #3c3c3c;
+            --ide-dim: #858585; --ide-resizer: #333333;
             --radius-lg: 14px; --radius-md: 10px; --radius-sm: 6px;
             --font-stack: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
-            --font-mono: "SF Mono", "Fira Code", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            --font-mono: "SF Mono", "Fira Code", Consolas, Menlo, Courier, monospace;
         }
 
         * { box-sizing: border-box; font-family: var(--font-stack); -webkit-font-smoothing: antialiased; }
         
-        /* 1. MASTER LAYOUT LOCK */
-        body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; width: 100vw; }
+        /* 1. MASTER LAYOUT LOCK - Strictly bound width to prevent scrollbar push */
+        body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; width: 100%; max-width: 100vw; }
         h1, h2, h3, h4, p { margin: 0; }
 
         /* BUTTONS */
@@ -47,7 +45,7 @@
             background: rgba(255,255,255,0.1); color: var(--text-primary); border: none;
             padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 600;
             transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
-            white-space: nowrap; flex-shrink: 0; /* Forces button to never wrap or squish */
+            white-space: nowrap; flex-shrink: 0;
         }
         button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
         button:active:not(:disabled) { transform: scale(0.96); }
@@ -58,16 +56,10 @@
         button.accent:hover:not(:disabled) { background: #0071e3; }
 
         /* SIDEBAR */
-        .sidebar {
-            width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border);
-            padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10; height: 100vh; overflow-y: auto;
-        }
+        .sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10; height: 100vh; overflow-y: auto; }
         .brand { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 8px; cursor: pointer;}
         
-        .search-box {
-            width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white;
-            padding: 8px 12px; border-radius: var(--radius-sm); outline: none; font-size: 13px; transition: 0.2s;
-        }
+        .search-box { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; padding: 8px 12px; border-radius: var(--radius-sm); outline: none; font-size: 13px; transition: 0.2s; }
         .search-box:focus { border-color: var(--accent-blue); background: rgba(0,0,0,0.4); box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.2); }
 
         .sidebar-section-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 8px; }
@@ -82,13 +74,13 @@
         .category-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
         .category-item.active { background: var(--accent-blue); color: white; }
 
-        /* 2. VIEWS CONTAINER LOCK */
-        .view-container { flex: 1; min-width: 0; position: relative; background: var(--bg-window); display: flex; flex-direction: column; overflow: hidden; min-height: 0; height: 100vh; }
-        .view { display: none; flex: 1; flex-direction: column; animation: fade 0.2s ease; overflow: hidden; min-height: 0; width: 100%; }
+        /* VIEWS CONTAINER */
+        .view-container { flex: 1; min-width: 0; max-width: 100%; position: relative; background: var(--bg-window); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
+        .view { display: none; flex: 1; flex-direction: column; animation: fade 0.2s ease; overflow: hidden; min-height: 0; width: 100%; max-width: 100%; }
         .view.active { display: flex; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- LIBRARY VIEW --- */
+        /* LIBRARY VIEW */
         .library-scroll { flex: 1; overflow-y: auto; padding: 40px; min-height: 0; }
         .library-content { max-width: 1200px; margin: 0 auto; }
         .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
@@ -110,8 +102,7 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
 
-        /* --- PRODUCT PAGE (TOP HALF) --- */
-        /* 3. PRODUCT SCROLL LOCK */
+        /* PRODUCT PAGE */
         .product-scroll { flex: 1; overflow-y: auto; background: var(--bg-window); min-height: 0; display: flex; flex-direction: column;}
         .product-page { padding: 0; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; width: 100%;}
         
@@ -132,11 +123,7 @@
 
         .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; flex-shrink: 0;}
         
-        .product-media { 
-            width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #111; display: none; 
-            justify-content: center; align-items: center; margin-bottom: -10px;
-        }
+        .product-media { width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #111; display: none; justify-content: center; align-items: center; margin-bottom: -10px;}
         .product-media img { max-width: 100%; max-height: 320px; object-fit: contain; display: block; }
 
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
@@ -146,37 +133,33 @@
         .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
         .dev-toggle:hover { color: white; text-decoration: underline; }
 
-        /* --- RESIZABLE IDE & SYNTAX HIGHLIGHTING (BOTTOM HALF) --- */
+        /* RESIZERS */
         .resizer-h { height: 6px; background: var(--ide-bg); border-top: 1px solid var(--ide-border); border-bottom: 1px solid var(--ide-border); cursor: ns-resize; display: none; z-index: 50; transition: 0.2s; flex-shrink: 0;}
         .resizer-h:hover, .resizer-h.dragging { background: var(--accent-blue); }
 
-        /* 4. IDE PANE LOCK */
-        .dev-ide-pane { display: none; height: 350px; background: var(--ide-bg); flex-direction: column; flex-shrink: 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.3); min-height: 0; }
+        .dev-ide-pane { display: none; height: 350px; background: var(--ide-bg); flex-direction: column; flex-shrink: 0; box-shadow: 0 -10px 20px rgba(0,0,0,0.3); min-height: 0; width: 100%; max-width: 100%; overflow: hidden; }
         .dev-ide-pane.active { display: flex; }
         .resizer-h.active { display: block; }
 
         .ide-toolbar { display: flex; background: var(--ide-panel); padding: 0 16px; border-bottom: 1px solid var(--ide-border); height: 35px; align-items: center; justify-content: space-between; flex-shrink: 0;}
         .ide-tab { padding: 0 16px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* 5. GRID/EDITOR CHAIN LOCK */
-        .ide-grid { display: grid; flex: 1; grid-template-columns: var(--col1, 1fr) 6px var(--col2, 1fr) 6px var(--col3, 1fr); overflow: hidden; min-height: 0; }
+        /* 5. GRID/EDITOR CHAIN LOCK: Bulletproofed max-width & Grid bounds */
+        .ide-grid { display: grid; flex: 1; grid-template-columns: minmax(0, var(--col1, 1fr)) 6px minmax(0, var(--col2, 1fr)) 6px minmax(0, var(--col3, 1fr)); width: 100%; max-width: 100%; overflow: hidden; min-height: 0; min-width: 0; }
         .resizer-v { background: var(--ide-resizer); cursor: ew-resize; transition: 0.2s; z-index: 10;}
         .resizer-v:hover, .resizer-v.dragging { background: var(--accent-blue); }
 
-        .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 0; width: 100%;}
+        .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 0; min-width: 0; width: 100%; max-width: 100%; }
         .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;}
         
-        .code-matrix { position: relative; flex: 1; overflow: hidden; background: var(--ide-bg); min-height: 0; display: block;}
-        .code-matrix textarea, .code-matrix pre {
-            margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; font-family: var(--font-mono); font-size: 13px; line-height: 1.6;
-            position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2;
-        }
+        .code-matrix { position: relative; flex: 1; overflow: hidden; background: var(--ide-bg); min-height: 0; min-width: 0; display: block; width: 100%; max-width: 100%; }
+        .code-matrix textarea, .code-matrix pre { margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; max-width: 100%; position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2; }
         .code-matrix textarea { color: transparent; background: transparent; caret-color: #fff; z-index: 2; resize: none; outline: none;}
         .code-matrix pre { z-index: 1; pointer-events: none; }
         .code-matrix code { font-family: var(--font-mono); text-shadow: none; }
 
-        /* 6. TERMINAL BUG FIX */
-        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: auto; overflow-x: hidden; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 4px; min-height: 0; }
+        /* 6. TERMINAL: Forced vertical scroll, bound maximum width to 100% */
+        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: scroll; overflow-x: hidden; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 4px; min-height: 0; min-width: 0; max-width: 100%; word-wrap: break-word; word-break: break-all; }
         .log-entry { padding: 4px 8px; line-height: 1.5; white-space: pre-wrap; color: #cccccc; word-wrap: break-word; border-radius: 4px; margin-bottom: 4px;}
         .log-time { color: var(--ide-dim); margin-right: 8px; font-size: 11px; }
         
@@ -185,7 +168,6 @@
         .log-info { color: var(--ide-blue); }
         .log-warning { color: #dcdcaa; background: rgba(220, 220, 170, 0.1); }
         
-        /* Diff Colors */
         .log-diff-add { color: #4CAF50; }
         .log-diff-rm { color: #F44336; }
         .log-diff-mod { color: #2196F3; }
@@ -195,7 +177,7 @@
 <body>
 
     <div class="sidebar">
-        <div class="brand" onclick="app.showLibrary()">⚡ Flows4JSON</div>
+        <div class="brand" onclick="app.showLibrary()">🤖 Flows4JSON</div>
         <div><input type="text" id="searchInput" class="search-box" placeholder="Search flows..."></div>
         <div>
             <div class="sidebar-section-title">Hardware Support</div>
@@ -221,7 +203,7 @@
         <div id="viewLibrary" class="view active">
             <div class="library-scroll">
                 <div class="library-content">
-                    <h1 class="page-title">Discover Flows</h1>
+                    <h1 class="page-title">Discover Automations</h1>
                     <div id="catalogGrid" class="app-grid"></div>
                 </div>
             </div>
@@ -236,7 +218,7 @@
                     </div>
                     
                     <div class="product-header">
-                        <div class="product-icon-large" id="studioIcon">⚡</div>
+                        <div class="product-icon-large" id="studioIcon">🤖</div>
                         <div class="product-header-info">
                             <h1 class="product-title" id="studioTitle">Flow Title</h1>
                             <p class="product-subtitle" id="studioSub">Subtitle goes here</p>
@@ -258,7 +240,7 @@
                             <div class="product-desc" id="studioDesc"></div>
                         </div>
                     </div>
-                    <div class="dev-toggle-wrapper">
+                    <div class="dev-toggle-wrapper" id="devToggleWrapper">
                         <button class="dev-toggle" onclick="app.toggleDevIDE()">{" "} Toggle Developer Console</button>
                     </div>
                 </div>
@@ -306,9 +288,6 @@
     <input type="file" id="layoutFile" accept=".json" style="display: none;">
 
     <script>
-        // ==========================================
-        // DIFF ENGINE (AST Deep Comparison)
-        // ==========================================
         class DiffEngine {
             static compare(obj1, obj2, path = "root", changes = []) {
                 if (obj1 === obj2) return changes;
@@ -341,19 +320,14 @@
             }
         }
 
-        // ==========================================
-        // IDE RESIZERS (Fixed Math bounds)
-        // ==========================================
         const resizerH = document.getElementById('resizerH');
         const devPane = document.getElementById('devPane');
         const ideGrid = document.getElementById('ideGrid');
         
-        let isResizingH = false;
-        resizerH.addEventListener('mousedown', (e) => { isResizingH = true; resizerH.classList.add('dragging'); document.body.style.cursor = 'ns-resize'; e.preventDefault(); });
-        
-        let isResizingV1 = false, isResizingV2 = false;
+        let isResizingH = false, isResizingV1 = false, isResizingV2 = false;
         let c1 = 33.3, c2 = 33.3, c3 = 33.4;
 
+        resizerH.addEventListener('mousedown', (e) => { isResizingH = true; resizerH.classList.add('dragging'); document.body.style.cursor = 'ns-resize'; e.preventDefault(); });
         document.getElementById('resizerV1').addEventListener('mousedown', (e) => { isResizingV1 = true; document.body.style.cursor = 'ew-resize'; e.preventDefault(); });
         document.getElementById('resizerV2').addEventListener('mousedown', (e) => { isResizingV2 = true; document.body.style.cursor = 'ew-resize'; e.preventDefault(); });
 
@@ -385,9 +359,6 @@
             document.body.style.cursor = '';
         });
 
-        // ==========================================
-        // LOGGER (With Diff Formatting)
-        // ==========================================
         class Logger {
             constructor(panelId) { this.panel = document.getElementById(panelId); }
             print(msg, type = "info") {
@@ -400,11 +371,10 @@
             }
             printDiff(msg) {
                 const entry = document.createElement('div');
-                let cssClass = "log-verbose"; // fallback
+                let cssClass = "log-verbose"; 
                 if (msg.startsWith("[ADDED]")) cssClass = "log-diff-add";
                 if (msg.startsWith("[REMOVED]")) cssClass = "log-diff-rm";
                 if (msg.startsWith("[MODIFIED]")) cssClass = "log-diff-mod";
-                
                 entry.className = `log-entry ${cssClass}`;
                 entry.innerText = msg;
                 this.panel.appendChild(entry);
@@ -415,7 +385,6 @@
         }
         const terminal = new Logger('logPanel');
 
-        // Helpers
         function getGradient(str) {
             const colors = [ ['#FF3B30', '#FF9500'], ['#34C759', '#30D158'], ['#007AFF', '#5AC8FA'], ['#AF52DE', '#FF2D55'], ['#FF9500', '#FFCC00'] ];
             let hash = 0; for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -423,20 +392,15 @@
             return `linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
         }
         function getEmoji(cat) {
-            const map = { 'colemak': '⌨️', 'automation': '⚡', 'gaming': '🎮', 'mac': '🍎', 'windows': '🪟' };
-            for (let k in map) if (cat.toLowerCase().includes(k)) return map[k];
+            const map = { 'colemak': '⌨️', 'automation': '🤖', 'gaming': '🎮', 'mac': '🍎', 'windows': '🪟' };
+            for (let k in map) if (cat && cat.toLowerCase().includes(k)) return map[k];
             return '✨';
         }
 
-        // ==========================================
-        // MAIN APP ENGINE
-        // ==========================================
         class FlowsStoreApp {
             constructor() {
-                this.apiUrl = `https://api.github.com/repos/moosylog/flows4json/contents/`;
                 this.catalog = [];
                 this.activeCategory = 'All';
-                
                 this.activeFlow = null;
                 this.sourceAST = null;
                 this.outputAST = null;
@@ -446,6 +410,10 @@
                 this.bindEvents();
                 this.fetchCatalog();
             }
+
+            getCategory(f) { return (f.config && f.config.category) || f.category || "Uncategorized"; }
+            getDevices(f)  { return (f.manifest && f.manifest.keyboards) || f.keyboards || f.devices || ["All"]; }
+            getAuthor(f)   { return (f.manifest && f.manifest.author) || f.author || "moosyresearch"; }
 
             bindEvents() {
                 const handleSidebarNav = () => { this.interceptSidebarNav(); this.renderGrid(); };
@@ -476,7 +444,6 @@
                 }
             }
 
-            // --- SYNTAX HIGHLIGHTING ---
             updateJQSyntax() {
                 const text = document.getElementById('jqInput').value;
                 document.getElementById('jqHighlight').innerHTML = Prism.highlight(text, Prism.languages.jq, 'jq');
@@ -490,7 +457,6 @@
                 pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft;
             }
 
-            // --- ROUTING ---
             showLibrary() {
                 document.getElementById('viewStudio').classList.remove('active');
                 document.getElementById('viewLibrary').classList.add('active');
@@ -501,28 +467,28 @@
 
             showStudio(flowData) {
                 this.activeFlow = flowData;
-                this.wizardState = "upload";
                 this.sourceAST = null;
+
+                const isLauncher = (flowData.type === "launcher" || flowData.appUrl || flowData.app_url);
+                this.wizardState = isLauncher ? "launcher" : "upload";
 
                 document.getElementById('viewLibrary').classList.remove('active');
                 document.getElementById('viewStudio').classList.add('active');
 
-                // Populate Info
+                const category = this.getCategory(flowData);
+                const author = this.getAuthor(flowData);
+                const devices = this.getDevices(flowData);
+
                 document.getElementById('studioIcon').style.background = getGradient(flowData.title);
-                document.getElementById('studioIcon').innerText = getEmoji(flowData.category);
+                document.getElementById('studioIcon').innerText = getEmoji(category);
                 document.getElementById('studioTitle').innerText = flowData.title;
-                document.getElementById('studioSub').innerText = flowData.subtitle || flowData.category;
-                document.getElementById('studioAuthor').innerText = `Developer: ${flowData.author || 'moosyresearch'}`;
+                document.getElementById('studioSub').innerText = flowData.subtitle || category;
+                document.getElementById('studioAuthor').innerText = `Developer: ${author}`;
                 document.getElementById('studioDesc').innerText = flowData.description || 'No detailed description provided.';
                 
-                // Hardware Tags
-                const tagsHtml = flowData.devices.map(d => {
-                    let type = d.toLowerCase();
-                    return `<span class="device-tag ${type === 'go60' || type === 'glove80' ? type : ''}">${d}</span>`;
-                }).join('');
+                const tagsHtml = devices.map(d => `<span class="device-tag ${d.toLowerCase() === 'go60' || d.toLowerCase() === 'glove80' ? d.toLowerCase() : ''}">${d}</span>`).join('');
                 document.getElementById('studioTags').innerHTML = tagsHtml;
 
-                // Screenshot Display
                 const mediaContainer = document.getElementById('studioMediaContainer');
                 const mediaImg = document.getElementById('studioMedia');
                 if (flowData.mediaUrl) {
@@ -533,35 +499,41 @@
                     mediaContainer.style.display = 'none';
                 }
 
-                // Reset IDE
-                document.getElementById('jqInput').value = flowData.script;
-                this.updateJQSyntax();
-                document.getElementById('jsonOutput').value = '';
-                document.getElementById('jsonHighlight').innerHTML = '// AST will stream here...';
-                terminal.clear();
-                terminal.print(`Studio Sandbox mounted for: ${flowData.uid}.flows`, "info");
+                const devToggleBtn = document.getElementById('devToggleWrapper');
+                if (isLauncher) {
+                    devToggleBtn.style.display = 'none'; 
+                    document.getElementById('devPane').classList.remove('active');
+                    document.getElementById('resizerH').classList.remove('active');
+                } else {
+                    devToggleBtn.style.display = 'block'; 
+                    document.getElementById('jqInput').value = flowData.script || "";
+                    this.updateJQSyntax();
+                    document.getElementById('jsonOutput').value = '';
+                    document.getElementById('jsonHighlight').innerHTML = '// AST will stream here...';
+                    terminal.clear();
+                    terminal.print(`Studio Sandbox mounted for: ${flowData.uid || 'flow'}.flows`, "info");
+                }
                 
                 this.renderWizard();
             }
 
-            // --- WIZARD UI ---
- // --- WIZARD UI ---
             renderWizard() {
                 const box = document.getElementById('wizardBox');
                 
-                // 1. Check if this is an external web app first
-                if (this.activeFlow && this.activeFlow.appUrl) {
+                if (this.activeFlow && (this.activeFlow.appUrl || this.activeFlow.app_url)) {
+                    const targetUrl = this.activeFlow.appUrl || this.activeFlow.app_url;
                     box.innerHTML = `
                         <div class="wizard-status">
                             <span class="wizard-status-title" style="color: var(--accent-blue);">External App Available</span>
-                            <span class="wizard-status-desc">External app will be launched in a separate tab.</span>
+                            <span class="wizard-status-desc">There is a specific app for this config.</span>
                         </div>
-                        <button class="accent" onclick="window.open('${this.activeFlow.appUrl}', '_blank', 'noopener,noreferrer')">Launch ↗</button>
+                        <button class="accent" onclick="window.open('${targetUrl}', '_blank', 'noopener,noreferrer')">
+                            Launch <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:2px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </button>
                     `;
-                    return; // Exit early so it doesn't render file upload states
+                    return;
                 }
 
-                // 2. Default Script Workflow (Fallback)
                 if (this.wizardState === "upload") {
                     box.innerHTML = `
                         <div class="wizard-status"><span class="wizard-status-title">Ready to Install</span><span class="wizard-status-desc">Provide your current JSON layout to begin.</span></div>
@@ -590,7 +562,6 @@
                 }
             }
 
-            // --- CATALOG LOGIC ---
             async fetchCatalog() {
                 const grid = document.getElementById('catalogGrid');
                 grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest flows...</p></div>';
@@ -609,7 +580,10 @@
 
             renderCategories() {
                 const counts = { 'All': this.catalog.length };
-                this.catalog.forEach(f => { counts[f.category] = (counts[f.category] || 0) + 1; });
+                this.catalog.forEach(f => { 
+                    const cat = this.getCategory(f);
+                    counts[cat] = (counts[cat] || 0) + 1; 
+                });
                 const list = document.getElementById('categoryList');
                 list.innerHTML = '';
                 Object.keys(counts).sort().forEach(cat => {
@@ -627,27 +601,32 @@
                 
                 grid.innerHTML = '';
                 let filtered = this.catalog.filter(f => {
-                    const matchesCat = this.activeCategory === 'All' || f.category === this.activeCategory;
+                    const cat = this.getCategory(f);
+                    const devices = this.getDevices(f);
+
+                    const matchesCat = this.activeCategory === 'All' || cat === this.activeCategory;
                     const matchesSearch = f.title.toLowerCase().includes(searchQ) || f.description.toLowerCase().includes(searchQ);
-                    let matchesDevice = activeDevice === 'all' ? true : f.devices.map(d => d.toLowerCase()).includes(activeDevice);
+                    let matchesDevice = activeDevice === 'all' ? true : devices.map(d => d.toLowerCase()).includes(activeDevice);
                     return matchesCat && matchesSearch && matchesDevice;
                 });
 
                 if (filtered.length === 0) { grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h2>No matches found</h2><p>Try adjusting your filters.</p></div>'; return; }
 
                 filtered.forEach(flow => {
+                    const cat = this.getCategory(flow);
+                    const devices = this.getDevices(flow);
+
                     const card = document.createElement('div'); card.className = 'app-card'; card.onclick = () => this.showStudio(flow);
-                    const tagsHtml = flow.devices.map(d => { let type = d.toLowerCase(); return `<span class="device-tag ${type === 'go60' || type === 'glove80' ? type : ''}">${d}</span>`; }).join('');
+                    const tagsHtml = devices.map(d => `<span class="device-tag ${d.toLowerCase() === 'go60' || d.toLowerCase() === 'glove80' ? d.toLowerCase() : ''}">${d}</span>`).join('');
                     card.innerHTML = `
-                        <div class="app-icon" style="background: ${getGradient(flow.title)};">${getEmoji(flow.category)}</div>
-                        <div class="app-info"><div class="app-title">${flow.title}</div><div class="app-sub">${flow.subtitle || flow.category}</div><div class="app-tags">${tagsHtml}</div></div>
+                        <div class="app-icon" style="background: ${getGradient(flow.title)};">${getEmoji(cat)}</div>
+                        <div class="app-info"><div class="app-title">${flow.title}</div><div class="app-sub">${flow.subtitle || cat}</div><div class="app-tags">${tagsHtml}</div></div>
                         <div class="app-action"><button>View</button></div>
                     `;
                     grid.appendChild(card);
                 });
             }
 
-            // --- EXECUTION ENGINE ---
             async loadTargetJSON(e) {
                 const file = e.target.files[0];
                 if (!file) return; e.target.value = ''; 
@@ -687,18 +666,17 @@
                 terminal.verbose("Executing compilation via jq.wasm bridge...");
 
                 try {
-                    // Deep copy for diffing
-                    const snapshot = JSON.parse(JSON.stringify(this.sourceAST));
+                    window.jqCompilerLogs = []; // Reset the global logs array before every run
 
+                    const snapshot = JSON.parse(JSON.stringify(this.sourceAST));
                     const result = await jq.json(this.sourceAST, script);
+                    
                     if (!result) throw new Error("Evaluation returned NULL.");
                     
                     this.outputAST = result;
-                    
                     document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
                     this.updateJSONSyntax(document.getElementById('jsonOutput').value);
                     
-                    // Run AST Diff Engine
                     const changes = DiffEngine.compare(snapshot, this.outputAST);
                     if (changes.length === 0) {
                         terminal.print(`Compilation complete. 0 modifications made to AST.`, "warning");
@@ -712,6 +690,18 @@
                 } catch (error) {
                     this.wizardError = "Script compilation failed."; this.wizardState = "error"; this.renderWizard();
                     terminal.print(`[JQ Execution Error] ${error.message}`, "danger");
+                    
+                    // Delay slightly to let the WASM engine finish dumping to console.error
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                    
+                    // The global interceptor at the top of the file captures the C-level syntax output 
+                    if (window.jqCompilerLogs && window.jqCompilerLogs.length > 0) {
+                        terminal.verbose("--- COMPILER SYNTAX TRACE ---");
+                        window.jqCompilerLogs.forEach(err => terminal.print(err, "warning"));
+                    } else {
+                        terminal.verbose("Check your jq script for syntax errors.");
+                    }
+                    
                     this.forceOpenIDE();
                 }
             }
