@@ -1,7 +1,7 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "Urob timeless GACS"
+title = "Add Urob timeless GACS"
 subtitle = "Add HRM for Win/Linux"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
