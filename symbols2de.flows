@@ -11,14 +11,9 @@ This flow remaps those symbols so they produce the correct characters for the Ge
 ⚠️ REQUIRED: a layout with a 'Symbol Layer'
 🪳 QUALITY: not fully testend and can have some bugs
 """
-script = """
-# ==============================================================================
+script = """# ==============================================================================
 #             GERMAN SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
 #             OS TARGET: WINDOWS / LINUX (Standard ISO / de-DE)
-# ==============================================================================
-# 
-# VALIDATION FIX: Corrects the positional inversion of Minus and Underscore 
-# on Column 4 to perfectly mirror the visual layout in image_ef6b5f.png.
 # ==============================================================================
 
 {
@@ -72,17 +67,17 @@ script = """
   "HASH":                [{"value": "NON_US_HASH", "params": []}],                                # # -> # key
   "LS(N3)":              [{"value": "NON_US_HASH", "params": []}],                                
   "DLLR":                [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            # $ -> Shift + 4
-  "LS(N4)":              [{"value": "LS", "params": [{"value": "N4", "params": []}],            
+  "LS(N4)":              [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            
   "PRCNT":               [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            # % -> Shift + 5
-  "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}],            
+  "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            
   "CARET":               [{"value": "GRAVE", "params": []}],                                      # ^ -> ^ key (top left)
   "LS(N6)":              [{"value": "GRAVE", "params": []}],                                      
   "AMPS":                [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            # & -> Shift + 6
-  "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}],            
+  "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            
   "STAR":                [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          # * -> Shift + +
-  "LS(N8)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}],          
+  "LS(N8)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          
   "TILDE":               [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> AltGr + +
-  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}],          
+  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          
   "QMARK":               [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         # ? -> Shift + ß
   "LS(FSLH)":            [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         
   "COLON":               [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           # : -> Shift + .
