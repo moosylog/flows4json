@@ -3,14 +3,17 @@ type = "mutation"
 language = "us"
 title = "TK qwerty_swap"
 subtitle = "🚀 TailorKey QWERTY swap"
+"appUrl": "https://sites.google.com/view/tailorkey/moergo/qwerty_swap",
+"script": ""
+
 description = """
 external app launcher
 """
-"appUrl": "https://sites.google.com/view/tailorkey/moergo/qwerty_swap",
-"script": ""
+
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60"]
+
 [config]
 category = "Base Setup"
 num = 123
