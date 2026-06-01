@@ -111,5 +111,5 @@ script = """
 author = "CasuGregSeries"
 keyboards = ["go60"]
 [config]
-foo = "Gaming"
+category = "Gaming"
 num = 123
