@@ -1,7 +1,7 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "Home-Row Mods"
+title = "✔️ Home-Row Mods"
 subtitle = "Adds home-row modifiers to your layout."
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
