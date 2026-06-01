@@ -253,7 +253,8 @@
     "appUrl": null,
     "author": "moosyresearch",
     "devices": [
-      "go60"
+      "go60",
+      "glove80"
     ],
     "config": {
       "category": "Base Setup",
