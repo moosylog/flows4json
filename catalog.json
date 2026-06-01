@@ -56,25 +56,6 @@
     "mediaUrl": null
   },
   {
-    "uid": "de_symbol",
-    "title": "🌍 German Symbols",
-    "subtitle": "From en-US to de-DE",
-    "description": "When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to German (de-DE), some symbols no longer match their expected characters.\n\nThis flow remaps those symbols so they produce the correct characters for the German layout.\n\n⚠️ REQUIRED: a layout with a 'Symbol Layer'\n🪳 QUALITY: not fully testend and can have some bugs",
-    "script": "# DYNAMIC METADATA DISCOVERY (v18.0 - Robust Index Lookup)\n\n(\n  # 1. SET YOUR TARGET LAYER NAME\n  \"Symbol\" as $target_layer_name |\n\n  # Helper to reconstruct full ZMK strings (e.g., LS(N1))\n  def get_full_value:\n    if .params == [] or .params == null then\n      .value | tostring\n    else\n      \"\\(.value)(\\(.params[0] | get_full_value))\"\n    end;\n\n  # THE PRECISE DELTA MAP (Verified German OS Parity)\n  {\n    \"GRAVE\": [{\"value\": \"LS\", \"params\": [{\"value\": \"BSLH\", \"params\": []}]}],\n\n    \"LS(N9)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N8\", \"params\": []}]}],\n    \"LS(N0)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N9\", \"params\": []}]}],\n\n    \"SEMI\": [{\"value\": \"LS\", \"params\": [{\"value\": \"COMMA\", \"params\": []}]}],\n\n    \"LBKT\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N8\", \"params\": []}]}],\n    \"LS(LBKT)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N7\", \"params\": []}]}],\n    \"LS(RBKT)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N0\", \"params\": []}]}],\n    \"RBKT\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N9\", \"params\": []}]}],\n\n    \"LS(FSLH)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"MINUS\", \"params\": []}]}],\n    \"LS(N3)\": [{\"value\": \"BSLH\", \"params\": []}],\n    \"LS(N6)\": [{\"value\": \"GRAVE\", \"params\": []}],\n\n    \"LS(SINGLE_QUOTE)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N2\", \"params\": []}]}],\n    \"LS(GRAVE)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"RBKT\", \"params\": []}]}],\n\n    \"LS(COMMA)\": [{\"value\": \"NON_US_BSLH\", \"params\": []}],\n    \"LS(BSLH)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"NON_US_BSLH\", \"params\": []}]}],\n\n    \"MINUS\": [{\"value\": \"FSLH\", \"params\": []}],\n    \"LS(DOT)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"NON_US_BSLH\", \"params\": []}]}],\n    \"FSLH\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N7\", \"params\": []}]}],\n\n    \"SQT\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N1\", \"params\": []}]}],\n\n    \"LS(EQUAL)\": [{\"value\": \"RBKT\", \"params\": []}],\n    \"LS(SEMI)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"DOT\", \"params\": []}]}],\n\n    \"LS(N2)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"Q\", \"params\": []}]}]\n  } as $map |\n\n  # 2. RESOLVE POSITION ROBUSTLY\n  # Check root and .keymap for the layer_names array\n  (\n    if .layer_names then\n      .layer_names\n    elif .keymap.layer_names then\n      .keymap.layer_names\n    else\n      null\n    end\n  ) as $names |\n\n  if $names == null then\n    \"Error: Could not find 'layer_names' array in JSON structure.\"\n    | halt_error\n  else\n    ($names | index($target_layer_name)) as $layer_idx |\n\n    if $layer_idx != null then\n\n      # Update the layer inside .keymap (if exists) or root\n      if .keymap then\n        .keymap.layers[$layer_idx] |= map(\n          if . == null or .value != \"&kp\" then\n            .\n          else\n            (.params[0] | get_full_value) as $full_val |\n            if $map[$full_val] then\n              .params = $map[$full_val]\n            else\n              .\n            end\n          end\n        )\n      else\n        .layers[$layer_idx] |= map(\n          if . == null or .value != \"&kp\" then\n            .\n          else\n            (.params[0] | get_full_value) as $full_val |\n            if $map[$full_val] then\n              .params = $map[$full_val]\n            else\n              .\n            end\n          end\n        )\n      end\n\n    else\n      (\n        \"Error: Layer '\"\n        + $target_layer_name\n        + \"' not found in layer_names: \"\n        + ($names | tostring)\n      ) | halt_error\n    end\n  end\n)",
-    "category": "Languages & Symbols",
-    "appUrl": null,
-    "author": "moosyresearch",
-    "devices": [
-      "go60",
-      "glove80"
-    ],
-    "config": {
-      "category": "Languages & Symbols",
-      "num": "123"
-    },
-    "mediaUrl": null
-  },
-  {
     "uid": "alphaswap",
     "title": "Remap to Colemak-DH",
     "subtitle": "Or any other alt.layouts",
@@ -299,6 +280,25 @@
       "num": "123"
     },
     "mediaUrl": "https://moosylog.github.io/flows4json/mouse.png"
+  },
+  {
+    "uid": "de_symbol",
+    "title": "🌍 German Symbols",
+    "subtitle": "From en-US to de-DE",
+    "description": "When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to German (de-DE), some symbols no longer match their expected characters.\n\nThis flow remaps those symbols so they produce the correct characters for the German layout.\n\n⚠️ REQUIRED: a layout with a 'Symbol Layer'\n🪳 QUALITY: not fully testend and can have some bugs",
+    "script": "# DYNAMIC METADATA DISCOVERY (v18.0 - Robust Index Lookup)\n\n(\n  # 1. SET YOUR TARGET LAYER NAME\n  \"Symbol\" as $target_layer_name |\n\n  # Helper to reconstruct full ZMK strings (e.g., LS(N1))\n  def get_full_value:\n    if .params == [] or .params == null then\n      .value | tostring\n    else\n      \"\\(.value)(\\(.params[0] | get_full_value))\"\n    end;\n\n  # THE PRECISE DELTA MAP (Verified German OS Parity)\n  {\n    \"GRAVE\": [{\"value\": \"LS\", \"params\": [{\"value\": \"BSLH\", \"params\": []}]}],\n\n    \"LS(N9)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N8\", \"params\": []}]}],\n    \"LS(N0)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N9\", \"params\": []}]}],\n\n    \"SEMI\": [{\"value\": \"LS\", \"params\": [{\"value\": \"COMMA\", \"params\": []}]}],\n\n    \"LBKT\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N8\", \"params\": []}]}],\n    \"LS(LBKT)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N7\", \"params\": []}]}],\n    \"LS(RBKT)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N0\", \"params\": []}]}],\n    \"RBKT\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N9\", \"params\": []}]}],\n\n    \"LS(FSLH)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"MINUS\", \"params\": []}]}],\n    \"LS(N3)\": [{\"value\": \"BSLH\", \"params\": []}],\n    \"LS(N6)\": [{\"value\": \"GRAVE\", \"params\": []}],\n\n    \"LS(SINGLE_QUOTE)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N2\", \"params\": []}]}],\n    \"LS(GRAVE)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"RBKT\", \"params\": []}]}],\n\n    \"LS(COMMA)\": [{\"value\": \"NON_US_BSLH\", \"params\": []}],\n    \"LS(BSLH)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"NON_US_BSLH\", \"params\": []}]}],\n\n    \"MINUS\": [{\"value\": \"FSLH\", \"params\": []}],\n    \"LS(DOT)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"NON_US_BSLH\", \"params\": []}]}],\n    \"FSLH\": [{\"value\": \"LS\", \"params\": [{\"value\": \"N7\", \"params\": []}]}],\n\n    \"SQT\": [{\"value\": \"RA\", \"params\": [{\"value\": \"N1\", \"params\": []}]}],\n\n    \"LS(EQUAL)\": [{\"value\": \"RBKT\", \"params\": []}],\n    \"LS(SEMI)\": [{\"value\": \"LS\", \"params\": [{\"value\": \"DOT\", \"params\": []}]}],\n\n    \"LS(N2)\": [{\"value\": \"RA\", \"params\": [{\"value\": \"Q\", \"params\": []}]}]\n  } as $map |\n\n  # 2. RESOLVE POSITION ROBUSTLY\n  # Check root and .keymap for the layer_names array\n  (\n    if .layer_names then\n      .layer_names\n    elif .keymap.layer_names then\n      .keymap.layer_names\n    else\n      null\n    end\n  ) as $names |\n\n  if $names == null then\n    \"Error: Could not find 'layer_names' array in JSON structure.\"\n    | halt_error\n  else\n    ($names | index($target_layer_name)) as $layer_idx |\n\n    if $layer_idx != null then\n\n      # Update the layer inside .keymap (if exists) or root\n      if .keymap then\n        .keymap.layers[$layer_idx] |= map(\n          if . == null or .value != \"&kp\" then\n            .\n          else\n            (.params[0] | get_full_value) as $full_val |\n            if $map[$full_val] then\n              .params = $map[$full_val]\n            else\n              .\n            end\n          end\n        )\n      else\n        .layers[$layer_idx] |= map(\n          if . == null or .value != \"&kp\" then\n            .\n          else\n            (.params[0] | get_full_value) as $full_val |\n            if $map[$full_val] then\n              .params = $map[$full_val]\n            else\n              .\n            end\n          end\n        )\n      end\n\n    else\n      (\n        \"Error: Layer '\"\n        + $target_layer_name\n        + \"' not found in layer_names: \"\n        + ($names | tostring)\n      ) | halt_error\n    end\n  end\n)",
+    "category": "Languages & Symbols",
+    "appUrl": null,
+    "author": "moosyresearch",
+    "devices": [
+      "go60",
+      "glove80"
+    ],
+    "config": {
+      "category": "Languages & Symbols",
+      "num": "123"
+    },
+    "mediaUrl": null
   },
   {
     "uid": "se_symbol",
