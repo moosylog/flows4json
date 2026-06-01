@@ -6,7 +6,8 @@ subtitle = "Macro: Create a string❓"
 description = """
 This is an example to create a string macros.
 
-🚩 You can set your string in the first line of the script! Toggle Developer Console to see the script.
+🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
+🚩 CHANGE: You can set your string in the first line of the script! Toggle Developer Console to see the script.
 """
 script = """
 # 1. Set your configuration variables (keeps the AST root context clean)
