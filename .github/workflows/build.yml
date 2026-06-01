@@ -27,11 +27,11 @@ jobs:
             const catalog = flows.map(file => {
               const content = fs.readFileSync(file, 'utf8');
               
-              const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
+              const extVal = (key) => { const m = content.match(new RegExp(`(?:^|\\n)${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
               const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
-              const extCat = () => { const m = content.match(/\[config\][\s\S]*?category\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
               const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
               
+              // Parse the [config] block cleanly for custom settings variables
               let cfg = {};
               const mCfg = content.match(/\[config\]([\s\S]*?)(?:\[|$)/);
               if (mCfg) {
@@ -49,9 +49,16 @@ jobs:
               const matchingMedia = media.find(m => m.startsWith(baseName + '.'));
               
               return {
-                uid: extVal("uid"), title: extVal("title") || "Untitled", subtitle: extVal("subtitle"),
-                description: extMulti("description"), script: extMulti("script"), category: extCat(),
-                author: extVal("author"), devices: extDev(), config: cfg,
+                uid: extVal("uid"), 
+                title: extVal("title") || "Untitled", 
+                subtitle: extVal("subtitle"),
+                description: extMulti("description"), 
+                script: extMulti("script"), 
+                category: extVal("category") || "Utilities", // Now parses root level cleanly
+                appUrl: extVal("appUrl") || null,            // Added to parse the external launch link
+                author: extVal("author"), 
+                devices: extDev(), 
+                config: cfg,
                 mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null
               };
             });
