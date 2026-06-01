@@ -1,7 +1,7 @@
 uid = "hrm_remove"
 type = "mutation"
 language = "us"
-title = "❌ Removes HRM 🪳🪳"
+title = "❌ Removes HRM 🪳"
 subtitle = "from your Layout"
 description = """
 Removes all types of home-row mods, including TailorKey Bilateral HRM layers
@@ -42,6 +42,7 @@ def ShiftLayer($target_idx; $deleted_idx):
 # ==============================================================================
 if (type != "object") then . else
   (.keymap // .) |= (
+    
     # SETUP
     [ "LeftIndex", "LeftMiddy", "LeftRingy", "LeftPinky", 
       "RightIndex", "RightMiddy", "RightRingy", "RightPinky" ] as $targets |
@@ -51,7 +52,7 @@ if (type != "object") then . else
     # Collects names from Layer 0 home row. 
     # EXPLICITLY ignores standard ZMK behaviors to protect layers like Cursor/Gaming.
     ([ .layers[0][($home_row[])].value | select(. != null) ] | map(ltrimstr("&")) | 
-      map(select(IN("kp", "mt", "lt", "mo", "sl", "sk", "tog", "none", "trans") | not))) as $to_purge |
+     map(select(IN("kp", "mt", "lt", "mo", "sl", "sk", "tog", "none", "trans") | not))) as $to_purge |
     
     # STAGE 2: GLOBAL KEY REVERSION (Preserves Styling)
     # Scans every layer. Converts any key referencing an HRM behavior to &kp.
@@ -86,34 +87,39 @@ if (type != "object") then . else
     if (.layer_names | type == "array") then
       ([.layer_names | to_entries[] | select(.value | IN($targets[])) | .key] | sort | reverse) as $delete_list |
       
-      reduce $delete_list[] as $idx (.;
-        del(.layers[$idx]) | 
-        del(.layer_names[$idx]) |
-        
-        # Universal Parameter Re-indexing 
-        # Strictly targets ONLY objects inside a .params array to ignore root-level properties
-        (.. | objects | select(has("params") and (.params | type == "array"))) |= (
-          .params |= map(
-            if (type == "object" and has("value")) then
-              .value |= ShiftLayer(.; $idx)
+      # EXPLICIT GUARD: Only run deletion and re-indexing if layers were actually found
+      if ($delete_list | length > 0) then
+        reduce $delete_list[] as $idx (.;
+          del(.layers[$idx]) | 
+          del(.layer_names[$idx]) |
+          
+          # Universal Parameter Re-indexing 
+          # Strictly targets ONLY objects inside a .params array to ignore root-level properties
+          (.. | objects | select(has("params") and (.params | type == "array"))) |= (
+            .params |= map(
+              if (type == "object" and has("value")) then
+                .value |= ShiftLayer(.; $idx)
+              else . end
+            )
+          ) |
+          
+          # Combo Layer Requirements Sync
+          (.combos // [])[]? |= (
+            if has("layers") and (.layers | type == "array") then
+              .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
+            else . end
+          ) |
+
+          # Input Listener Layer Requirements Sync
+          (.inputListeners // [])[]?.nodes[]? |= (
+            if has("layers") and (.layers | type == "array") then
+              .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
             else . end
           )
-        ) |
-        
-        # Combo Layer Requirements Sync
-        (.combos // [])[]? |= (
-          if has("layers") and (.layers | type == "array") then
-            .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
-          else . end
-        ) |
-
-        # Input Listener Layer Requirements Sync
-        (.inputListeners // [])[]?.nodes[]? |= (
-          if has("layers") and (.layers | type == "array") then
-            .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
-          else . end
         )
-      )
+      else
+        . # Do nothing if no layers matched the targets
+      end
     else . end |
 
     .creator = "moosy"
