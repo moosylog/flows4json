@@ -1,8 +1,8 @@
 uid = "Fn_combos"
 type = "mutation"
 language = "us"
-title = "🎹 Adds Fn keys"
-subtitle = "Function key combos on Go60"
+title = "Function keys Go60"
+subtitle = "Combos on Go60"
 description = """
 Adds easy-to-reach F1–F12 keys to your Go60 using simple vertical key combos.
 Press a number key together with the key directly below it to trigger function keys instantly.
