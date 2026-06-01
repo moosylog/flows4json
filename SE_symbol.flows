@@ -1,17 +1,15 @@
 uid = "se_symbol"
 type = "mutation"
 language = "us"
-title = "🌍 Swedish Symbols sv-SE"
-subtitle = "Symbol Layer Adjustments ❓"
+title = "🌍 Swedish Symbols"
+subtitle = "From en-US to sv-SE"
 description = """
-Seamlessly adapts your symbol layer for Swedish keyboard layouts with accurate locale-specific mappings.
-Translates US-style symbols into their correct Swedish equivalents, including AltGr and shifted key combinations.
-Ensures characters like brackets, quotes, slashes, and special symbols behave as expected on Swedish systems.
-Keeps your existing layout structure intact while applying precise regional adjustments.
-Works directly on your Symbol layer without requiring manual remapping or editing.
-Ideal for users switching between US and Swedish keyboard standards.
-Preserves your muscle memory while fixing layout differences automatically.
-Designed for smooth multilingual typing across environments and devices.
+When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to Swedish (sv-SE), some symbols no longer match their expected characters.
+
+This flow remaps those symbols so they produce the correct characters for the Swedish layout.
+
+⚠️ REQUIRED: a layout with a 'Symbol Layer'
+🪳 QUALITY: not fully testend and can have some bugs
 """
 script = """
 # DYNAMIC METADATA DISCOVERY (v18.3 - Swedish SE Fixed from File)
