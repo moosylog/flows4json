@@ -683,19 +683,25 @@
                 }
             }
 
-            async saveJSON() {
+        async saveJSON() {
                 if (!this.outputAST) return;
                 try {
-                    terminal.verbose("Applying final sanitization filter...");
-                    const filter = `(.keymap // .) |= ((if (.holdTaps | type == "array" and length == 0) then del(.holdTaps) else . end) | (if (.macros | type == "array" and length == 0) then del(.macros) else . end) | (if (.combos | type == "array" and length == 0) then del(.combos) else . end) | (if (.behaviors | type == "array" and length == 0) then del(.behaviors) else . end))`;
+                    terminal.verbose("Applying final sanitization filter (stripping layout scaffolding)...");
+                    
+                    // Added del(.layout) at the start of the cleanup pipe
+                    const filter = `(.keymap // .) |= (del(.layout) | (if (.holdTaps | type == "array" and length == 0) then del(.holdTaps) else . end) | (if (.macros | type == "array" and length == 0) then del(.macros) else . end) | (if (.combos | type == "array" and length == 0) then del(.combos) else . end) | (if (.behaviors | type == "array" and length == 0) then del(.behaviors) else . end))`;
+                    
                     let cleanAST = await jq.json(this.outputAST, filter);
                     
                     const a = document.createElement('a');
                     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanAST, null, 2));
-                    a.download = this.fileName; a.click();
+                    a.download = this.fileName; 
+                    a.click();
                     
                     terminal.print(`Sanitized blob downloaded: ${this.fileName}`, "success");
-                } catch (err) { terminal.print(`[I/O Exception] ${err.message}`, "danger"); }
+                } catch (err) { 
+                    terminal.print(`[I/O Exception] ${err.message}`, "danger"); 
+                }
             }
         }
 
