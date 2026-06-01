@@ -212,7 +212,7 @@
     "subtitle": "🚀 External App",
     "description": "Replace QWERTY with any alt layout Instantly with an easy to use app.\nSwitch from QWERTY to an alternative layout like Colemak-DH with a single click, keeping your entire custom setup intact. Supports multi-layer configurations and advanced Home Row Mods (HRM) from TailorKey.",
     "script": "",
-    "category": "Base Setup",
+    "category": "QWERTY Alternatives",
     "appUrl": "https://sites.google.com/view/tailorkey/moergo/qwerty_swap",
     "author": "moosyresearch",
     "devices": [
@@ -220,7 +220,7 @@
       "glove80"
     ],
     "config": {
-      "category": "Base Setup",
+      "category": "QWERTY Alternatives",
       "num": "123"
     },
     "mediaUrl": "https://moosylog.github.io/flows4json/l_qwerty_swap.png"
