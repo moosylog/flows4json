@@ -283,7 +283,7 @@
   },
   {
     "uid": "fr_symbol",
-    "title": "🌍 French Symbols AZERTY",
+    "title": "🌍 French Symbols AZERTY ❌",
     "subtitle": "From en-US to fr-FR",
     "description": "When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to French (fr-FR), some symbols no longer match their expected characters.\n\nThis flow remaps those symbols so they produce the correct characters for the German layout.\n\n⚠️ REQUIRED: a layout with a 'Symbol Layer'\n🪳 QUALITY: not fully testend and can have some bugs",
     "script": "uid = \"fr_symbol\"\ntype = \"mutation\"\nlanguage = \"us\"\ntitle = \"🌍 French Symbols AZERTY\"\nsubtitle = \"From en-US to fr-FR\"\ndescription =",
