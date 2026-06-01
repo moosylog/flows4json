@@ -1,7 +1,7 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "🎉Urob timeless GACS"
+title = "🪳Urob timeless GACS"
 subtitle = "Add HRM for macOS"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
@@ -19,34 +19,49 @@ CAGS = MacOS
 """
 script = """
 # ==============================================================================
-# 0. USER SETTINGS
+# 0. SETTINGS & TOGGLES
 # ==============================================================================
 
-2 as $target_version |         # Options: 1, 2, or 3
-"CAGS" as $mod_preset |        # Options: "GACS" or "CAGS"
+# Keep colors/UI decorators or strip them for a clean output
+def PRESERVE_DECORATORS: true;
 
-# Define the actual sequences mapped to the presets
+# ------------------------------------------------------------------------------
+# USER CONFIGURATION
+# ------------------------------------------------------------------------------
+
+2 as $target_version |          # Options: 1, 2, or 3
+"GACS" as $mod_preset |         # Options: "GACS" or "CAGS"
+
+# Modifier sequences
 {
-  "GACS": ["LGUI", "LALT", "LCTRL", "LSHFT", "RSHFT", "RCTRL", "LALT", "RGUI"],
-  "CAGS": ["LCTRL", "LALT", "LGUI", "LSHFT", "RSHFT", "RGUI", "LALT", "RCTRL"]
+  "GACS": [
+    "LGUI", "LALT", "LCTRL", "LSHFT",
+    "RSHFT", "RCTRL", "LALT", "RGUI"
+  ],
+  "CAGS": [
+    "LCTRL", "LALT", "LGUI", "LSHFT",
+    "RSHFT", "RGUI", "LALT", "RCTRL"
+  ]
 } as $mod_registry |
 
 # ==============================================================================
 # 1. CORE UTILITIES
 # ==============================================================================
 
-def log_err($msg): ($msg | stderr) | empty;
+def log_err($msg):
+  ($msg | stderr) | empty;
 
-def get_side($idx): if $idx < 4 then "left" else "right" end;
+def get_side($idx):
+  if $idx < 4 then "left" else "right" end;
 
-# Robust node extraction: Handles strings, objects, and nulls
+# Robust node extraction (string/object/null safe)
 def get_char_node:
   if type == "object" then
-    (.params[1] // .params[0] // { "value": "NONE", "params": [] })
+    (.params[1] // .params[0] // { value: "NONE", params: [] })
   elif type == "string" then
-    { "value": ., "params": [] }
+    { value: ., params: [] }
   else
-    { "value": "NONE", "params": [] }
+    { value: "NONE", params: [] }
   end;
 
 # ==============================================================================
@@ -54,51 +69,65 @@ def get_char_node:
 # ==============================================================================
 
 def GetRegistry($v):
-{
-  "1": {
-    "flavor": "balanced",
-    "idle": 150,
-    "naming": "simple",
-    "profiles": [{ "id": "hand", "term": 280, "quick": 175 }],
-    "map": ["hand","hand","hand","hand","hand","hand","hand","hand"]
-  },
-  "2": {
-    "flavor": "balanced",
-    "idle": 150,
-    "naming": "HRM",
-    "profiles": [
-      { "id": "finger", "term": 250, "quick": 105 },
-      { "id": "index", "term": 200, "quick": 150 }
-    ],
-    "map": ["finger","finger","finger","index","index","finger","finger","finger"]
-  },
-  "3": {
-    "flavor": "tap-preferred",
-    "idle": 150,
-    "naming": "HRM",
-    "profiles": [
-      { "id": "pinky", "term": 280, "quick": 175 },
-      { "id": "ring", "term": 250, "quick": 175 },
-      { "id": "middy", "term": 220, "quick": 150 },
-      { "id": "index", "term": 200, "quick": 150 }
-    ],
-    "map": ["pinky","ring","middy","index","index","middy","ring","pinky"]
-  }
-}[$v | tostring] // (log_err("FATAL: Version \($v) not found") | halt);
+  {
+    "1": {
+      flavor: "balanced",
+      idle: 150,
+      naming: "simple",
+      profiles: [
+        { id: "hand", term: 280, quick: 175 }
+      ],
+      map: [
+        "hand","hand","hand","hand",
+        "hand","hand","hand","hand"
+      ]
+    },
+
+    "2": {
+      flavor: "balanced",
+      idle: 150,
+      naming: "HRM",
+      profiles: [
+        { id: "finger", term: 250, quick: 105 },
+        { id: "index",  term: 200, quick: 150 }
+      ],
+      map: [
+        "finger","finger","finger","index",
+        "index","finger","finger","finger"
+      ]
+    },
+
+    "3": {
+      flavor: "tap-preferred",
+      idle: 150,
+      naming: "HRM",
+      profiles: [
+        { id: "pinky", term: 270, quick: 300 },
+        { id: "ring",  term: 240, quick: 300 },
+        { id: "middy", term: 210, quick: 300 },
+        { id: "index", term: 180, quick: 300, idle: 100 }
+      ],
+      map: [
+        "pinky","ring","middy","index",
+        "index","middy","ring","pinky"
+      ]
+    }
+  }[$v | tostring]
+  // (log_err("FATAL: Version \($v) not found") | halt);
 
 # ==============================================================================
 # 3. HARDWARE ABSTRACTION LAYER (HAL)
 # ==============================================================================
 
 def GetHardware:
-(.layout.keys | length) as $len |
-if $len > 70 then
-  { "type": "glove80", "home": [35,36,37,38,41,42,43,44], "l_pref": "R_C", "r_pref": "L_C" }
-elif $len > 0 then
-  { "type": "go60", "home": [25,26,27,28,31,32,33,34], "l_pref": "R_C", "r_pref": "L_C" }
-else
-  log_err("FATAL: Layout empty") | halt
-end;
+  (.layout.keys | length) as $len |
+  if $len > 70 then
+    { type: "glove80", home: [35,36,37,38,41,42,43,44], l_pref: "R_C", r_pref: "L_C" }
+  elif $len > 0 then
+    { type: "go60", home: [25,26,27,28,31,32,33,34], l_pref: "R_C", r_pref: "L_C" }
+  else
+    log_err("FATAL: Layout empty") | halt
+  end;
 
 # ==============================================================================
 # 4. MAIN TRANSFORMATION ENGINE
@@ -108,11 +137,14 @@ end;
 (GetHardware) as $hw |
 ($mod_registry[$mod_preset] // $mod_registry["GACS"]) as $mod_seq |
 
-# --- STAGE 1: Positional Indexing ---
-(.layout.keys | reduce .[] as $k (
-  { "l_trigs": [], "r_trigs": [], "home_map": {} };
+# ----------------------------------------------------------------------
+# STAGE 1: Positional Indexing
+# ----------------------------------------------------------------------
 
-  ($k.label | if type == "string" then . else "" end) as $lbl |
+(.layout.keys | reduce .[] as $k (
+  { l_trigs: [], r_trigs: [], home_map: {} };
+
+  ($k.label // "") as $lbl |
 
   (if ($lbl | startswith($hw.l_pref)) then .l_trigs += [$k.i] else . end) |
   (if ($lbl | startswith($hw.r_pref)) then .r_trigs += [$k.i] else . end) |
@@ -121,23 +153,40 @@ end;
   (if $idx != null then .home_map[$k.i | tostring] = $idx else . end)
 )) as $db |
 
-# --- STAGE 2: Apply Transformation ---
+# ----------------------------------------------------------------------
+# STAGE 2: Apply Transformation
+# ----------------------------------------------------------------------
+
 (.keymap // .) |= (
 
-  .holdTaps = ([
-    (.holdTaps // [])[],
-    (("left","right") as $side | $cfg.profiles[] | {
-      "name": (if $cfg.naming == "simple" then "&\($side)_hand" else "&HRM_\($side)_\(.id)" end),
-      "description": "Auto-gen \($side) HRM (v\($target_version))",
-      "bindings": ["&kp","&kp"],
-      "tappingTermMs": .term,
-      "quickTapMs": .quick,
-      "requirePriorIdleMs": $cfg.idle,
-      "flavor": $cfg.flavor,
-      "holdTriggerOnRelease": true,
-      "holdTriggerKeyPositions": (if $side == "left" then ($db.l_trigs | sort) else ($db.r_trigs | sort) end)
-    })
-  ] | unique_by(.name)) |
+  .holdTaps = (
+    [
+      (.holdTaps // [])[],
+
+      (("left","right") as $side |
+        $cfg.profiles[] | {
+          name:
+            (if $cfg.naming == "simple"
+             then "&\($side)_hand"
+             else "&HRM_\($side)_\(.id)" end),
+
+          description: "Auto-gen \($side) HRM (v\($target_version))",
+          bindings: ["&kp","&kp"],
+          tappingTermMs: .term,
+          quickTapMs: .quick,
+          requirePriorIdleMs: (.idle // $cfg.idle),
+          flavor: $cfg.flavor,
+          holdTriggerOnRelease: true,
+
+          holdTriggerKeyPositions:
+            (if $side == "left"
+             then ($db.l_trigs | sort)
+             else ($db.r_trigs | sort)
+             end)
+        }
+      )
+    ] | unique_by(.name)
+  ) |
 
   .layers[0] |= [
     range(length) as $i | .[$i] |
@@ -146,101 +195,30 @@ end;
     if $h_idx != null then
       get_side($h_idx) as $side |
       get_char_node as $char |
+
+      (if PRESERVE_DECORATORS
+       and type == "object"
+       and .decoration
+       then { decoration: .decoration }
+       else {}
+       end) as $dec |
+
       {
-        "value": (if $cfg.naming == "simple" then "&\($side)_hand" else "&HRM_\($side)_\($cfg.map[$h_idx])" end),
-        "params": [
-          { "value": $mod_seq[$h_idx], "params": [] },
+        value:
+          (if $cfg.naming == "simple"
+           then "&\($side)_hand"
+           else "&HRM_\($side)_\($cfg.map[$h_idx])"
+           end),
+
+        params: [
+          { value: $mod_seq[$h_idx], params: [] },
           $char
         ]
-      }
+      } + $dec
+
     else . end
   ]
-) | # <--- YOU MUST ADD THIS PIPE HERE!
-
-# ==============================================================================
-
-# 3. MAIN ENGINE (Root Object Context)
-
-# ==============================================================================
-
-
-
-# Step 1: Capture base layer info from the root
-
-(.keymap.layers[0] // .layers[0]) as $base_layer |
-
-($base_layer | length) as $key_count |
-
-
-
-# Step 2: Perform transformation on the keymap branch
-
-(.keymap // .) |= (
-
-  
-
-  # Inject Behaviors
-
-  .macros = ([.macros // [], get_as_macros] | flatten | unique_by(.name)) |
-
-  .holdTaps = ([.holdTaps // [], [get_as_holdtap]] | flatten | unique_by(.name)) |
-
-
-
-  # Identify/Create Autoshift Layer
-
-  (.layer_names | index("Autoshift") // (. | length)) as $as_idx |
-
-  .layer_names[$as_idx] = "Autoshift" |
-
-  .creator = "moosy" |
-
-
-
-  # Build the layer mapping
-
-  .layers[$as_idx] = [
-
-    range($key_count) as $i |
-
-    $base_layer[$i] as $k |
-
-    (if ($k | type == "object") then ($k.params[0].value // "") else ($k | tostring) end) as $val |
-
-
-
-    if ($k.value == "&kp" or ($k | type == "string" and startswith("&kp "))) and is_autoshift_candidate($val) then
-
-      {
-
-        "value": "&AS_v1_TKZ",
-
-        "params": [
-
-          {
-
-            "value": $val, 
-
-            "params": (if ($k | type == "object") then ($k.params[0].params // []) else [] end)
-
-          }
-
-        ]
-
-      }
-
-    else
-
-      {"value": "&trans", "params": []}
-
-    end
-
-  ]
-
-) 
-
-# The final result is the modified root object, containing layout, env, and config.
-
+)
 """
 [manifest]
 author = "moosyresearch"
