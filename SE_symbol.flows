@@ -100,7 +100,7 @@ def translation($from; $to_val; $to_nested):
 ] 
 | from_entries as $swedish_symbol_map |
 
-# SET TARGET LAYER 
+# SET TARGET LOCALE AND LAYER 
 .locale = "sv-SE" |
 "Symbol" as $layer_to_translate |
 
