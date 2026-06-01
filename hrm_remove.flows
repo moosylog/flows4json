@@ -1,7 +1,7 @@
 uid = "hrm_remove"
 type = "mutation"
 language = "us"
-title = "❌ Removes HRM"
+title = "❌ Removes HRM 🪳"
 subtitle = "from your Layout"
 description = """
 Removes all types of home-row mods, including TailorKey Bilateral HRM layers
@@ -28,8 +28,6 @@ def GetHomeIndices:
   end;
 
 # Helper for shifting layer references safely
-# Restricts to numbers <= 30 to explicitly protect macro timers (e.g., 250ms)
-# which are also stored inside .params[].value arrays.
 def ShiftLayer($target_idx; $deleted_idx):
   if ($target_idx | type == "number" and $target_idx <= 30) then
     if $target_idx > $deleted_idx then $target_idx - 1
@@ -48,33 +46,33 @@ if (type != "object") then . else
       "RightIndex", "RightMiddy", "RightRingy", "RightPinky" ] as $targets |
     (GetHomeIndices) as $home_row |
 
-    # STAGE 1: IDENTIFY HRM NAMES (Recursive lookup)
-    # Collects names from Layer 0 home row. Safe-guards against missing layer array.
-    # EXPLICITLY ignores standard ZMK behaviors to protect layers like Cursor/Gaming.
-    ([ .layers[0]?[$home_row[]]?.value | select(. != null) ] | map(ltrimstr("&")) | 
+    # STAGE 1: IDENTIFY HRM NAMES
+    # Corrected path to look inside the .bindings array of Layer 0
+    ([ .layers[0]?.bindings?[$home_row[]]?.value | select(. != null) ] | map(ltrimstr("&")) | 
      map(select(IN("kp", "mt", "lt", "mo", "sl", "sk", "tog", "none", "trans") | not))) as $to_purge |
     
-    # STAGE 2: GLOBAL KEY REVERSION (Preserves Styling)
-    # Scans every layer. Converts any key referencing an HRM behavior to &kp.
-    (.layers // []) |= map(
-      map(
-        if (.value | ltrimstr("&") | (startswith("HRM_") or IN($to_purge[]))) then
-          (.params | if type == "array" and length > 0 then . else [{ "value": "NONE" }] end) as $p |
-          (if ($p | length > 1) then $p[1].value else $p[0].value end) as $keycode |
-          
-          # NEW BINDING OBJECT
-          { "value": "&kp", "params": [{ "value": $keycode }] } as $new_key |
-          
-          # TOGGLE LOGIC: Preserve existing decorators or replace entirely
-          # Force overwrite the params array to prevent index-merging corruption
-          if PRESERVE_DECORATORS then 
-            (. * $new_key | .params = $new_key.params)
-          else 
-            $new_key 
-          end
+    # STAGE 2: GLOBAL KEY REVERSION
+    # Corrected path to target ONLY the .bindings array inside layer objects
+    if (.layers | type == "array") then
+      .layers[]?.bindings |= (
+        if type == "array" then
+          map(
+            if (type == "object" and (.value | type == "string") and (.value | ltrimstr("&") | (startswith("HRM_") or IN($to_purge[])))) then
+              (.params | if type == "array" and length > 0 then . else [{ "value": "NONE" }] end) as $p |
+              (if ($p | length > 1) then $p[1].value else $p[0].value end) as $keycode |
+              
+              { "value": "&kp", "params": [{ "value": $keycode }] } as $new_key |
+              
+              if PRESERVE_DECORATORS then 
+                (. * $new_key | .params = $new_key.params)
+              else 
+                $new_key 
+              end
+            else . end
+          )
         else . end
       )
-    ) |
+    else . end |
 
     # STAGE 3: REGISTRY PURGE
     ( .holdTaps, .macros, .behaviors ) |= (
@@ -92,7 +90,6 @@ if (type != "object") then . else
         del(.layer_names[$idx]) |
         
         # Universal Parameter Re-indexing 
-        # Strictly targets ONLY objects inside a .params array to ignore root-level properties
         (.. | objects | select(has("params") and (.params | type == "array"))) |= (
           .params |= map(
             if (type == "object" and has("value")) then
@@ -101,19 +98,23 @@ if (type != "object") then . else
           )
         ) |
         
-        # Combo Layer Requirements Sync
-        (.combos // [])[]? |= (
-          if has("layers") and (.layers | type == "array") then
-            .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
-          else . end
-        ) |
+        # Combo Layer Requirements Sync (Safe explicit layout path)
+        if (.combos | type == "array") then
+          .combos[]?.layers |= (
+            if type == "array" then
+              map(if . == $idx then empty else ShiftLayer(.; $idx) end)
+            else . end
+          )
+        else . end |
 
-        # Input Listener Layer Requirements Sync
-        (.inputListeners // [])[]?.nodes[]? |= (
-          if has("layers") and (.layers | type == "array") then
-            .layers |= map(if . == $idx then empty else ShiftLayer(.; $idx) end)
-          else . end
-        )
+        # Input Listener Layer Requirements Sync (Safe explicit layout path)
+        if (.inputListeners | type == "array") then
+          .inputListeners[]?.nodes[]?.layers |= (
+            if type == "array" then
+              map(if . == $idx then empty else ShiftLayer(.; $idx) end)
+            else . end
+          )
+        else . end
       )
     else . end |
 
