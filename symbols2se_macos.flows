@@ -9,7 +9,7 @@ When you change the language settings in the MoErgo Layout Editor from the defau
 This flow remaps those symbols so they produce the correct characters for the Swedish layout.
 
 ⚠️ REQUIRED: a layout with a 'Symbol Layer'
-🪳 QUALITY: AI-generated and can have some flaws.
+🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
 """
 script = """
 # ==============================================================================
