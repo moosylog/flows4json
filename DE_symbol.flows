@@ -2,14 +2,14 @@ uid = "de_symbol"
 type = "mutation"
 language = "us"
 title = "🌍 German Symbols"
-subtitle = "Symbol Layer Adjustments❓"
+subtitle = "From en-US to de-DE"
 description = """
-Automatically adapts your symbol layer from US to German keyboard layouts 
-⚠️ Requires a Symbol Layer - If you don't have a Symbol layer it will give you an error.
-🪳 Not fully tested
+When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to German (de-DE), some symbols no longer match their expected characters.
 
+This flow remaps those symbols so they produce the correct characters for the German layout.
 
-No manual remapping needed — just run and your layout becomes German-ready.
+⚠️ REQUIRED: a layout with a 'Symbol Layer'
+🪳 QUALITY: not fully testend and can have some bugs
 """
 script = """
 # DYNAMIC METADATA DISCOVERY (v18.0 - Robust Index Lookup)
