@@ -1,7 +1,7 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "Sunaku GACS"
+title = "Add Sunaku GACS"
 subtitle = "Add HRM for Win/Linux"
 description = """
 Sunaku's per finger home-row mods
