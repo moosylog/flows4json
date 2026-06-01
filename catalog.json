@@ -23,13 +23,13 @@
     "subtitle": "Function key combos on Go60",
     "description": "Adds easy-to-reach F1–F12 keys to your Go60 using simple vertical key combos.\nPress a number key together with the key directly below it to trigger function keys instantly.\nKeeps your layout compact while giving you fast access to shortcuts, media controls, IDE commands, and more.\nPerfect for users who want full function-row power without sacrificing desk space or portability.",
     "script": "# Moosy’s Playground Marketplace\n# AUTOMATION: Go60 Vertical Function Row (F1-F12) Combos\n# VERSION: 1.0 (01/01/2026)\n# TARGET: [v] Go60  [X] Glove80\n#\n# DESCRIPTION:\n# Injects 12 vertical combos for the Go60 hardware matrix.\n# Chords the Number Row (1-12) with the QWERTY Row (13-24).\n#\n# VISUAL MAPPING (Go60 Physical Indices):\n#\n# [01][02][03][04][05][06][07][08][09][10][11][12]  <-- Number Row\n#  +   +   +   +   +   +   +   +   +   +   +   +\n# [13][14][15][16][17][18][19][20][21][22][23][24]  <-- QWERTY Row\n#  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||  ||\n# [F1][F2][F3][F4][F5][F6][F7][F8][F9][F10][F11][F12]\n###############################################################################\n\n# 1. ROOT-AGNOSTIC ENTRY\n# Ensures compatibility whether the JSON is raw or wrapped in a .keymap object.\n(if .keymap then .keymap else . end) |= (\n\n  # 2. HARDWARE VALIDATION\n  # Prevents index corruption if run against a Glove80 or unknown board.\n  if .keyboard == \"go60\" then\n\n    # 3. PRE-FLIGHT CHECK\n    # Ensure .combos array exists to avoid null-addition errors.\n    .combos //= [] |\n\n    # 4. ATOMIC COMBO GENERATION\n    .combos += [\n      range(1; 13) | . as $idx |\n      {\n        \"name\": \"F\\($idx)_vertical_combo\",\n        \"description\": \"Auto-generated: F\\($idx) via Col \\($idx) vertical chord\",\n\n        # UI-COMPLIANT BINDING (Recursive Object Pattern)\n        \"binding\": {\n          \"value\": \"&kp\",\n          \"params\": [\n            {\n              \"value\": \"F\\($idx)\",\n              \"params\": []\n            }\n          ]\n        },\n\n        # HARDWARE COORDINATES\n        \"keyPositions\": [$idx, ($idx + 12)],\n\n        # REASONABLE DEFAULTS\n        \"timeoutMs\": 50,\n        \"layers\": [-1] # Global availability\n      }\n    ]\n\n  else\n\n    # 5. GRACEFUL EXIT\n    # Provide feedback if this script is run on the wrong hardware.\n    stderr\n    | \"Warning: Automation skipped. Hardware '\\(.keyboard)' is not supported.\"\n\n  end\n)",
-    "category": "Utilities",
+    "category": "Smart Typing",
     "author": "moosyresearch",
     "devices": [
       "go60"
     ],
     "config": {
-      "foo": "Smart Typing",
+      "category": "Smart Typing",
       "num": "123"
     },
     "mediaUrl": null
