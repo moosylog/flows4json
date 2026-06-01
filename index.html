@@ -545,8 +545,23 @@
             }
 
             // --- WIZARD UI ---
+ // --- WIZARD UI ---
             renderWizard() {
                 const box = document.getElementById('wizardBox');
+                
+                // 1. Check if this is an external web app first
+                if (this.activeFlow && this.activeFlow.appUrl) {
+                    box.innerHTML = `
+                        <div class="wizard-status">
+                            <span class="wizard-status-title" style="color: var(--accent-blue);">External App Available</span>
+                            <span class="wizard-status-desc">External app will be launched in a separate tab.</span>
+                        </div>
+                        <button class="accent" onclick="window.open('${this.activeFlow.appUrl}', '_blank', 'noopener,noreferrer')">Launch ↗</button>
+                    `;
+                    return; // Exit early so it doesn't render file upload states
+                }
+
+                // 2. Default Script Workflow (Fallback)
                 if (this.wizardState === "upload") {
                     box.innerHTML = `
                         <div class="wizard-status"><span class="wizard-status-title">Ready to Install</span><span class="wizard-status-desc">Provide your current JSON layout to begin.</span></div>
