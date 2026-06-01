@@ -11,7 +11,8 @@ This flow remaps those symbols so they produce the correct characters for the Ge
 ⚠️ REQUIRED: a layout with a 'Symbol Layer'
 🪳 QUALITY: not fully testend and can have some bugs
 """
-script = """# ==============================================================================
+script = """
+# ==============================================================================
 #             GERMAN SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
 #             OS TARGET: WINDOWS / LINUX (Standard ISO / de-DE)
 # ==============================================================================
@@ -106,22 +107,26 @@ else
   if $layer_index == null then
     "Error: The layer named '\($layer_to_translate)' does not exist." | halt_error
   else
-    if .keymap.layers then .keymap.layers else .layers end |= (
-      .[$layer_index] |= map(
+    # Outer logic block structures modifications correctly for standard JQ environments
+    if .keymap.layers then
+      .keymap.layers[$layer_index] |= map(
         if . == null or .value != "&kp" or .params == null or .params == [] then 
           .
         else
-          # Extracts inner parameters safely to eliminate the outer wrapper mismatch
           (.params[0] | if .params == null or .params == [] then .value else "\(.value)(\(.params[0].value))" end) as $current_key |
-          
-          if $german_symbol_map[$current_key] then 
-            .params = $german_symbol_map[$current_key] 
-          else 
-            . 
-          end
+          if $german_symbol_map[$current_key] then .params = $german_symbol_map[$current_key] else . end
         end
       )
-    )
+    else
+      .layers[$layer_index] |= map(
+        if . == null or .value != "&kp" or .params == null or .params == [] then 
+          .
+        else
+          (.params[0] | if .params == null or .params == [] then .value else "\(.value)(\(.params[0].value))" end) as $current_key |
+          if $german_symbol_map[$current_key] then .params = $german_symbol_map[$current_key] else . end
+        end
+      )
+    end
   end
 end
 """
