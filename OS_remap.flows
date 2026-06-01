@@ -1,7 +1,7 @@
 uid = "os_remap"
 type = "mutation"
 language = "us"
-title = "🍏 Switch to/from macOS"
+title = "🍏 Remap to/from macOS"
 subtitle = "Swap modifier: macOS/Win"
 description = """
 Instantly swap Ctrl and Cmd across your entire keyboard layout for a seamless Mac ↔ Windows experience.
