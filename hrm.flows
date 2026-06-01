@@ -246,5 +246,5 @@ end;
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "Smart Typing"
+category = "Smart Typing"
 num = 123
