@@ -1,0 +1,17 @@
+uid = "l_hrm_tuner"
+type = "mutation"
+language = "us"
+title = "🚀 HRM Configurator"
+subtitle = "Launch App"
+description = """
+Advanced Home-Row Mod Configurator
+This tool allows you to bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob or manual values to your entire layout at once. 
+"""
+appUrl = "https://sites.google.com/view/tailorkey/how-to/hrm-tuner"
+script = ""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+[config]
+category = "Base Setup"
+num = 123
