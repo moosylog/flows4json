@@ -12,115 +12,121 @@ This flow remaps those symbols so they produce the correct characters for the Ge
 🪳 QUALITY: not fully testend and can have some bugs
 """
 script = """
-# DYNAMIC METADATA DISCOVERY (v18.0 - Robust Index Lookup)
+# ==============================================================================
+#             GERMAN SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
+#             OS TARGET: WINDOWS / LINUX (Standard ISO / de-DE)
+# ==============================================================================
+# 
+# VALIDATION UPGRADE: Includes both raw shifted codes (LS(N2)) and standard 
+# ZMK aliases (AT, TILDE, PIPE) to prevent normalization misses from MoErgo.
+# ==============================================================================
 
-(
-  # 1. SET YOUR TARGET LAYER NAME
-  "Symbol" as $target_layer_name |
+{
+  # --- Punctuation & Basics ---
+  "DOT":                 [{"value": "DOT", "params": []}],                                        # . -> .
+  "COMMA":               [{"value": "COMMA", "params": []}],                                      # , -> ,
+  "MINUS":               [{"value": "FSLH", "params": []}],                                       # - -> - key (US FSLH)
+  "PLUS":                [{"value": "RBKT", "params": []}],                                       # + -> + key (US RBKT)
+  "EQUAL":               [{"value": "LS", "params": [{"value": "N0", "params": []}]}],            # = -> Shift + 0
 
-  # Helper to reconstruct full ZMK strings (e.g., LS(N1))
-  def get_full_value:
-    if .params == [] or .params == null then
-      .value | tostring
-    else
-      "\(.value)(\(.params[0] | get_full_value))"
-    end;
+  # --- Brackets & Braces ---
+  "LPAR":                [{"value": "LS", "params": [{"value": "N8", "params": []}]}],            # ( -> Shift + 8
+  "LS(N9)":              [{"value": "LS", "params": [{"value": "N8", "params": []}]}],            
+  "RPAR":                [{"value": "LS", "params": [{"value": "N9", "params": []}]}],            # ) -> Shift + 9
+  "LS(N0)":              [{"value": "LS", "params": [{"value": "N9", "params": []}]}],            
+  "LBKT":                [{"value": "RA", "params": [{"value": "N8", "params": []}]}],            # [ -> AltGr + 8
+  "RBKT":                [{"value": "RA", "params": [{"value": "N9", "params": []}]}],            # ] -> AltGr + 9
+  "LBRC":                [{"value": "RA", "params": [{"value": "N7", "params": []}]}],            # { -> AltGr + 7
+  "LS(LBKT)":            [{"value": "RA", "params": [{"value": "N7", "params": []}]}],            
+  "RBRC":                [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            # } -> AltGr + 0
+  "LS(RBKT)":            [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            
+  "LT":                  [{"value": "NON_US_BSLH", "params": []}],                                # < -> < key
+  "LS(COMMA)":           [{"value": "NON_US_BSLH", "params": []}],                                
+  "GT":                  [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # > -> Shift + <
+  "LS(DOT)":             [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],   
 
-  # THE PRECISE DELTA MAP (Verified German OS Parity)
-  {
-    "GRAVE": [{"value": "LS", "params": [{"value": "BSLH", "params": []}]}],
+  # --- Slashes & Pipes ---
+  "FSLH":                [{"value": "LS", "params": [{"value": "N7", "params": []}]}],            # / -> Shift + 7
+  "BSLH":                [{"value": "RA", "params": [{"value": "MINUS", "params": []}]}],         # \ -> AltGr + ß
+  "PIPE":                [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # | -> AltGr + <
+  "LS(BSLH)":            [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],   
 
-    "LS(N9)": [{"value": "LS", "params": [{"value": "N8", "params": []}]}],
-    "LS(N0)": [{"value": "LS", "params": [{"value": "N9", "params": []}]}],
+  # --- Quotes & Ticks ---
+  "SQT":                 [{"value": "LS", "params": [{"value": "NON_US_HASH", "params": []}]}],   # ' -> Shift + #
+  "SINGLE_QUOTE":        [{"value": "LS", "params": [{"value": "NON_US_HASH", "params": []}]}],   
+  "DQT":                 [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            # " -> Shift + 2
+  "LS(SINGLE_QUOTE)":    [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            
+  "LS(SQT)":             [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            
+  "GRAVE":               [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}],         # ` -> Shift + ´
 
-    "SEMI": [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}],
+  # --- Special Symbols (Number Row & Misc) ---
+  "EXCLM":               [{"value": "LS", "params": [{"value": "N1", "params": []}]}],            # ! -> Shift + 1
+  "LS(N1)":              [{"value": "LS", "params": [{"value": "N1", "params": []}]}],            
+  "AT":                  [{"value": "RA", "params": [{"value": "Q", "params": []}]}],             # @ -> AltGr + Q
+  "LS(N2)":              [{"value": "RA", "params": [{"value": "Q", "params": []}]}],             
+  "HASH":                [{"value": "NON_US_HASH", "params": []}],                                # # -> # key
+  "LS(N3)":              [{"value": "NON_US_HASH", "params": []}],                                
+  "DLLR":                [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            # $ -> Shift + 4
+  "LS(N4)":              [{"value": "LS", "params": [{"value": "N4", "params": []}]}],            
+  "PRCNT":               [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            # % -> Shift + 5
+  "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            
+  "CARET":               [{"value": "GRAVE", "params": []}],                                      # ^ -> ^ key (top left)
+  "LS(N6)":              [{"value": "GRAVE", "params": []}],                                      
+  "AMPS":                [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            # & -> Shift + 6
+  "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            
+  "STAR":                [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          # * -> Shift + +
+  "LS(N8)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          
+  "TILDE":               [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> AltGr + +
+  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          
+  "UNDER":               [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # _ -> Shift + -
+  "UNDERSCORE":          [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          
+  "LS(MINUS)":           [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          
+  "QMARK":               [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         # ? -> Shift + ß
+  "LS(FSLH)":            [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         
+  "COLON":               [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           # : -> Shift + .
+  "LS(SEMI)":            [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           
+  "SEMI":                [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}]          # ; -> Shift + ,
+} as $german_symbol_map |
 
-    "LBKT": [{"value": "RA", "params": [{"value": "N8", "params": []}]}],
-    "LS(LBKT)": [{"value": "RA", "params": [{"value": "N7", "params": []}]}],
-    "LS(RBKT)": [{"value": "RA", "params": [{"value": "N0", "params": []}]}],
-    "RBKT": [{"value": "RA", "params": [{"value": "N9", "params": []}]}],
+# ==============================================================================
+# CONFIGURATION TARGETS
+# ==============================================================================
 
-    "LS(FSLH)": [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],
-    "LS(N3)": [{"value": "BSLH", "params": []}],
-    "LS(N6)": [{"value": "GRAVE", "params": []}],
+.locale = "de-DE" |
+"Symbol" as $layer_to_translate |
 
-    "LS(SINGLE_QUOTE)": [{"value": "LS", "params": [{"value": "N2", "params": []}]}],
-    "LS(GRAVE)": [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],
+# ==============================================================================
+# BEHIND-THE-SCENES TRANSLATION ENGINE
+# ==============================================================================
 
-    "LS(COMMA)": [{"value": "NON_US_BSLH", "params": []}],
-    "LS(BSLH)": [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],
+(.layer_names // .keymap.layer_names) as $all_layers |
 
-    "MINUS": [{"value": "FSLH", "params": []}],
-    "LS(DOT)": [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],
-    "FSLH": [{"value": "LS", "params": [{"value": "N7", "params": []}]}],
+if $all_layers == null then
+  "Error: Could not find any keyboard layer names in this file." | halt_error
+else
+  ($all_layers | index($layer_to_translate)) as $layer_index |
 
-    "SQT": [{"value": "RA", "params": [{"value": "N1", "params": []}]}],
-
-    "LS(EQUAL)": [{"value": "RBKT", "params": []}],
-    "LS(SEMI)": [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],
-
-    "LS(N2)": [{"value": "RA", "params": [{"value": "Q", "params": []}]}]
-  } as $map |
-
-  # 2. RESOLVE POSITION ROBUSTLY
-  # Check root and .keymap for the layer_names array
-  (
-    if .layer_names then
-      .layer_names
-    elif .keymap.layer_names then
-      .keymap.layer_names
-    else
-      null
-    end
-  ) as $names |
-
-  if $names == null then
-    "Error: Could not find 'layer_names' array in JSON structure."
-    | halt_error
+  if $layer_index == null then
+    "Error: The layer named '\($layer_to_translate)' does not exist." | halt_error
   else
-    ($names | index($target_layer_name)) as $layer_idx |
-
-    if $layer_idx != null then
-
-      # Update the layer inside .keymap (if exists) or root
-      if .keymap then
-        .keymap.layers[$layer_idx] |= map(
-          if . == null or .value != "&kp" then
-            .
-          else
-            (.params[0] | get_full_value) as $full_val |
-            if $map[$full_val] then
-              .params = $map[$full_val]
-            else
-              .
-            end
+    if .keymap.layers then .keymap.layers else .layers end |= (
+      .[$layer_index] |= map(
+        if . == null or .value != "&kp" or .params == null or .params == [] then 
+          .
+        else
+          # Extracts inner parameters safely to eliminate the outer wrapper mismatch
+          (.params[0] | if .params == null or .params == [] then .value else "\(.value)(\(.params[0].value))" end) as $current_key |
+          
+          if $german_symbol_map[$current_key] then 
+            .params = $german_symbol_map[$current_key] 
+          else 
+            . 
           end
-        )
-      else
-        .layers[$layer_idx] |= map(
-          if . == null or .value != "&kp" then
-            .
-          else
-            (.params[0] | get_full_value) as $full_val |
-            if $map[$full_val] then
-              .params = $map[$full_val]
-            else
-              .
-            end
-          end
-        )
-      end
-
-    else
-      (
-        "Error: Layer '"
-        + $target_layer_name
-        + "' not found in layer_names: "
-        + ($names | tostring)
-      ) | halt_error
-    end
+        end
+      )
+    )
   end
-)
+end
 """
 [manifest]
 author = "moosyresearch"
