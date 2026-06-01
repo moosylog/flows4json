@@ -13,7 +13,7 @@ Multi-Layer Support: The all_layers option enables remapping across all alpha la
 Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
 
 ⚠️ Thumb: Letters on the thumb are not supported due to the risk of overwriting.
-⚠️ BHRM:  TailorKey bilateral HRM is not supported, and the macros must be updated manually.
+⚠️ TailorKey Bilateral HRM is currently unsupported. Please use the QWERTY Swap tool instead.
 
 🚩 Configure alpha layer and layers to include or exclude in the first lines of the script
 """
