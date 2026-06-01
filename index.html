@@ -7,11 +7,16 @@
     
     <script>
         window.jqCompilerLogs = [];
-        const originalConsoleError = console.error;
-        console.error = function(...args) {
-            window.jqCompilerLogs.push(args.join(' '));
-            originalConsoleError.apply(console, args);
-        };
+        window.isJqCompiling = false;
+        ['log', 'info', 'warn', 'error'].forEach(method => {
+            const original = console[method];
+            console[method] = function(...args) {
+                if (window.isJqCompiling) {
+                    window.jqCompilerLogs.push(`[${method.toUpperCase()}] ` + args.join(' '));
+                }
+                original.apply(console, args);
+            };
+        });
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/jq-web@0.5.1/jq.wasm.js"></script>
@@ -21,7 +26,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 
     <style>
-        /* MAC APP STORE & VS CODE DESIGN SYSTEM */
         :root {
             --bg-window: #1e1e1e; --bg-sidebar: #252525; --bg-card: #2c2c2e;
             --text-primary: #ffffff; --text-secondary: #98989d;
@@ -35,18 +39,10 @@
         }
 
         * { box-sizing: border-box; font-family: var(--font-stack); -webkit-font-smoothing: antialiased; }
-        
-        /* 1. MASTER LAYOUT LOCK - Strictly bound width to prevent scrollbar push */
         body { background: var(--bg-window); color: var(--text-primary); margin: 0; display: flex; height: 100vh; overflow: hidden; width: 100%; max-width: 100vw; }
         h1, h2, h3, h4, p { margin: 0; }
 
-        /* BUTTONS */
-        button {
-            background: rgba(255,255,255,0.1); color: var(--text-primary); border: none;
-            padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 600;
-            transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px;
-            white-space: nowrap; flex-shrink: 0;
-        }
+        button { background: rgba(255,255,255,0.1); color: var(--text-primary); border: none; padding: 6px 14px; border-radius: 16px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; flex-shrink: 0; }
         button:hover:not(:disabled) { background: rgba(255,255,255,0.2); }
         button:active:not(:disabled) { transform: scale(0.96); }
         button:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -55,13 +51,10 @@
         button.accent { background: var(--accent-blue); color: white; }
         button.accent:hover:not(:disabled) { background: #0071e3; }
 
-        /* SIDEBAR */
         .sidebar { width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 24px 16px; display: flex; flex-direction: column; gap: 24px; flex-shrink: 0; z-index: 10; height: 100vh; overflow-y: auto; }
         .brand { font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 8px; padding: 0 8px; cursor: pointer;}
-        
         .search-box { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: white; padding: 8px 12px; border-radius: var(--radius-sm); outline: none; font-size: 13px; transition: 0.2s; }
         .search-box:focus { border-color: var(--accent-blue); background: rgba(0,0,0,0.4); box-shadow: 0 0 0 2px rgba(10, 132, 255, 0.2); }
-
         .sidebar-section-title { font-size: 11px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; padding: 0 8px; margin-bottom: 8px; }
         
         .segmented-control { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 8px; border: 1px solid var(--border); }
@@ -74,13 +67,11 @@
         .category-item:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
         .category-item.active { background: var(--accent-blue); color: white; }
 
-        /* VIEWS CONTAINER */
         .view-container { flex: 1; min-width: 0; max-width: 100%; position: relative; background: var(--bg-window); display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
         .view { display: none; flex: 1; flex-direction: column; animation: fade 0.2s ease; overflow: hidden; min-height: 0; width: 100%; max-width: 100%; }
         .view.active { display: flex; }
         @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 
-        /* LIBRARY VIEW */
         .library-scroll { flex: 1; overflow-y: auto; padding: 40px; min-height: 0; }
         .library-content { max-width: 1200px; margin: 0 auto; }
         .page-title { font-size: 28px; font-weight: 700; margin-bottom: 24px; }
@@ -102,7 +93,6 @@
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }
         .empty-state-icon { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
 
-        /* PRODUCT PAGE */
         .product-scroll { flex: 1; overflow-y: auto; background: var(--bg-window); min-height: 0; display: flex; flex-direction: column;}
         .product-page { padding: 0; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; width: 100%;}
         
@@ -122,10 +112,8 @@
         .wizard-status-desc { font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
         .product-body { padding: 40px; display: flex; flex-direction: column; gap: 40px; flex-shrink: 0;}
-        
         .product-media { width: 100%; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #111; display: none; justify-content: center; align-items: center; margin-bottom: -10px;}
         .product-media img { max-width: 100%; max-height: 320px; object-fit: contain; display: block; }
-
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
 
@@ -144,7 +132,6 @@
         .ide-toolbar { display: flex; background: var(--ide-panel); padding: 0 16px; border-bottom: 1px solid var(--ide-border); height: 35px; align-items: center; justify-content: space-between; flex-shrink: 0;}
         .ide-tab { padding: 0 16px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.5px; }
         
-        /* 5. GRID/EDITOR CHAIN LOCK: Bulletproofed max-width & Grid bounds */
         .ide-grid { display: grid; flex: 1; grid-template-columns: minmax(0, var(--col1, 1fr)) 6px minmax(0, var(--col2, 1fr)) 6px minmax(0, var(--col3, 1fr)); width: 100%; max-width: 100%; overflow: hidden; min-height: 0; min-width: 0; }
         .resizer-v { background: var(--ide-resizer); cursor: ew-resize; transition: 0.2s; z-index: 10;}
         .resizer-v:hover, .resizer-v.dragging { background: var(--accent-blue); }
@@ -158,16 +145,13 @@
         .code-matrix pre { z-index: 1; pointer-events: none; }
         .code-matrix code { font-family: var(--font-mono); text-shadow: none; }
 
-        /* 6. TERMINAL: Forced vertical scroll, bound maximum width to 100% */
         .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: scroll; overflow-x: hidden; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 4px; min-height: 0; min-width: 0; max-width: 100%; word-wrap: break-word; word-break: break-all; }
         .log-entry { padding: 4px 8px; line-height: 1.5; white-space: pre-wrap; color: #cccccc; word-wrap: break-word; border-radius: 4px; margin-bottom: 4px;}
         .log-time { color: var(--ide-dim); margin-right: 8px; font-size: 11px; }
-        
         .log-success { color: var(--accent-green); background: rgba(48, 209, 88, 0.05); }
         .log-danger { color: var(--accent-red); background: rgba(255, 69, 58, 0.1); border-left: 2px solid var(--accent-red); }
         .log-info { color: var(--ide-blue); }
         .log-warning { color: #dcdcaa; background: rgba(220, 220, 170, 0.1); }
-        
         .log-diff-add { color: #4CAF50; }
         .log-diff-rm { color: #F44336; }
         .log-diff-mod { color: #2196F3; }
@@ -223,9 +207,7 @@
                             <h1 class="product-title" id="studioTitle">Flow Title</h1>
                             <p class="product-subtitle" id="studioSub">Subtitle goes here</p>
                             <p class="product-developer" id="studioAuthor">Developer: moosyresearch</p>
-                            
                             <div class="app-tags" id="studioTags" style="margin-top: 8px; margin-bottom: 6px;"></div>
-                            
                             <div class="wizard-area" id="wizardBox"></div>
                         </div>
                     </div>
@@ -234,7 +216,6 @@
                         <div class="product-media" id="studioMediaContainer">
                             <img id="studioMedia" src="" alt="App Preview">
                         </div>
-
                         <div>
                             <h3 class="section-title">Description</h3>
                             <div class="product-desc" id="studioDesc"></div>
@@ -406,7 +387,6 @@
                 this.outputAST = null;
                 this.fileName = "compiled_layout.json";
                 this.wizardState = "upload"; 
-
                 this.bindEvents();
                 this.fetchCatalog();
             }
@@ -519,7 +499,6 @@
 
             renderWizard() {
                 const box = document.getElementById('wizardBox');
-                
                 if (this.activeFlow && (this.activeFlow.appUrl || this.activeFlow.app_url)) {
                     const targetUrl = this.activeFlow.appUrl || this.activeFlow.app_url;
                     box.innerHTML = `
@@ -565,11 +544,9 @@
             async fetchCatalog() {
                 const grid = document.getElementById('catalogGrid');
                 grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest flows...</p></div>';
-                
                 try {
                     const response = await fetch(`https://moosylog.github.io/flows4json/catalog.json?t=${new Date().getTime()}`);
                     if (!response.ok) throw new Error("Could not reach the App Store server.");
-                    
                     this.catalog = await response.json();
                     this.renderCategories();
                     this.renderGrid();
@@ -603,7 +580,6 @@
                 let filtered = this.catalog.filter(f => {
                     const cat = this.getCategory(f);
                     const devices = this.getDevices(f);
-
                     const matchesCat = this.activeCategory === 'All' || cat === this.activeCategory;
                     const matchesSearch = f.title.toLowerCase().includes(searchQ) || f.description.toLowerCase().includes(searchQ);
                     let matchesDevice = activeDevice === 'all' ? true : devices.map(d => d.toLowerCase()).includes(activeDevice);
@@ -615,7 +591,6 @@
                 filtered.forEach(flow => {
                     const cat = this.getCategory(flow);
                     const devices = this.getDevices(flow);
-
                     const card = document.createElement('div'); card.className = 'app-card'; card.onclick = () => this.showStudio(flow);
                     const tagsHtml = devices.map(d => `<span class="device-tag ${d.toLowerCase() === 'go60' || d.toLowerCase() === 'glove80' ? d.toLowerCase() : ''}">${d}</span>`).join('');
                     card.innerHTML = `
@@ -666,7 +641,8 @@
                 terminal.verbose("Executing compilation via jq.wasm bridge...");
 
                 try {
-                    window.jqCompilerLogs = []; // Reset the global logs array before every run
+                    window.jqCompilerLogs = []; // Wipe clean
+                    window.isJqCompiling = true; // TRAP ACTIVATED
 
                     const snapshot = JSON.parse(JSON.stringify(this.sourceAST));
                     const result = await jq.json(this.sourceAST, script);
@@ -691,18 +667,19 @@
                     this.wizardError = "Script compilation failed."; this.wizardState = "error"; this.renderWizard();
                     terminal.print(`[JQ Execution Error] ${error.message}`, "danger");
                     
-                    // Delay slightly to let the WASM engine finish dumping to console.error
-                    await new Promise(resolve => setTimeout(resolve, 50));
+                    await new Promise(resolve => setTimeout(resolve, 150));
                     
-                    // The global interceptor at the top of the file captures the C-level syntax output 
+                    terminal.verbose("--- COMPILER SYNTAX TRACE ---");
                     if (window.jqCompilerLogs && window.jqCompilerLogs.length > 0) {
-                        terminal.verbose("--- COMPILER SYNTAX TRACE ---");
                         window.jqCompilerLogs.forEach(err => terminal.print(err, "warning"));
                     } else {
-                        terminal.verbose("Check your jq script for syntax errors.");
+                        terminal.verbose("No internal trace captured. Check script syntax.");
+                        if (error.stack) terminal.verbose(error.stack);
                     }
                     
                     this.forceOpenIDE();
+                } finally {
+                    window.isJqCompiling = false; // TRAP DEACTIVATED
                 }
             }
 
