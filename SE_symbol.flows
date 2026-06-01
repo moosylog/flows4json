@@ -19,39 +19,38 @@ script = """
 # WELCOME! This script translates your "Symbol" layer keys for a Swedish OS.
 #
 # HOW TO EDIT CODES BELOW:
-#   To change a mapping, use this exact format:
-#   ["ORIGINAL_US_KEY", "SWEDISH_MAIN_KEY", "OPTIONAL_SHIFT_OR_ALT"]
+#   To change a mapping, follow this simple rule:
+#   "ORIGINAL_US_KEY": [{"value": "SWEDISH_KEY", "params": []}]
 #
-#   If a key does not require a shift or alt helper, use null at the end.
+#   If a key needs a shift or alt combo, put the helper code inside the brackets:
+#   "ORIGINAL_US_KEY": [{"value": "MAIN_KEY", "params": [{"value": "HELPER_KEY", "params": []}]}]
 # ==============================================================================
 
-def swedish_profile_mappings: [
-#   [ Original US Key ,  Swedish Key ,  Modifier Helper ]     Target Character
-#   ----------------------------------------------------------------------------
-    ["GRAVE"          , "LS"         , "EQUAL"          ],   # `
-    ["SEMI"           , "LS"         , "COMMA"          ],   # ;
-    ["LS(N6)"         , "LS"         , "RBKT"           ],   # ^ (dead key)
-    ["EQUAL"          , "LS"         , "N0"             ],   # =
-    ["LS(MINUS)"      , "LS"         , "FSLH"           ],   # _
-    ["LS(N4)"         , "RA"         , "N4"             ],   # $
-    ["LS(EQUAL)"      , "MINUS"      , null             ],   # +
-    ["SQT"            , "NON_US_HASH", null             ],   # '
-    ["LS(SQT)"        , "LS"         , "N2"             ],   # "
-    ["LS(N9)"         , "LS"         , "N8"             ],   # (
-    ["LS(N0)"         , "LS"         , "N9"             ],   # )
-    ["LBKT"           , "RA"         , "N8"             ],   # [
-    ["LS(LBKT)"       , "RA"         , "N7"             ],   # {
-    ["LS(RBKT)"       , "RA"         , "N0"             ],   # }
-    ["RBKT"           , "RA"         , "N9"             ],   # ]
-    ["LS(FSLH)"       , "LS"         , "MINUS"          ],   # ?
-    ["LS(GRAVE)"      , "RA"         , "RBKT"           ],   # ~ (dead key)
-    ["LS(COMMA)"      , "NON_US_BSLH", null             ],   # <
-    ["LS(BSLH)"       , "RA"         , "NON_US_BSLH"    ],   # |
-    ["LS(DOT)"        , "LS"         , "NON_US_BSLH"    ],   # >
-    ["FSLH"           , "LS"         , "N7"             ],   # /
-    ["LS(SEMI)"       , "LS"         , "DOT"            ],   # :
-    ["LS(N2)"         , "RA"         , "N2"             ]    # @
-];
+{
+  "GRAVE":     [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}],       # `
+  "SEMI":      [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}],       # ;
+  "LS(N6)":    [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],        # ^ (dead key)
+  "EQUAL":     [{"value": "LS", "params": [{"value": "N0", "params": []}]}],          # =
+  "LS(MINUS)": [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],        # _
+  "LS(N4)":    [{"value": "RA", "params": [{"value": "N4", "params": []}]}],          # $
+  "LS(EQUAL)": [{"value": "MINUS", "params": []}],                                    # +
+  "SQT":       [{"value": "NON_US_HASH", "params": []}],                              # '
+  "LS(SQT)":   [{"value": "LS", "params": [{"value": "N2", "params": []}]}],          # "
+  "LS(N9)":    [{"value": "LS", "params": [{"value": "N8", "params": []}]}],          # (
+  "LS(N0)":    [{"value": "LS", "params": [{"value": "N9", "params": []}]}],          # )
+  "LBKT":      [{"value": "RA", "params": [{"value": "N8", "params": []}]}],          # [
+  "LS(LBKT)":  [{"value": "RA", "params": [{"value": "N7", "params": []}]}],          # {
+  "LS(RBKT)":  [{"value": "RA", "params": [{"value": "N0", "params": []}]}],          # }
+  "RBKT":      [{"value": "RA", "params": [{"value": "N9", "params": []}]}],          # ]
+  "LS(FSLH)":  [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],       # ?
+  "LS(GRAVE)": [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],        # ~ (dead key)
+  "LS(COMMA)": [{"value": "NON_US_BSLH", "params": []}],                              # <
+  "LS(BSLH)":  [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}], # |
+  "LS(DOT)":   [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}], # >
+  "FSLH":      [{"value": "LS", "params": [{"value": "N7", "params": []}]}],          # /
+  "LS(SEMI)":  [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],         # :
+  "LS(N2)":    [{"value": "RA", "params": [{"value": "N2", "params": []}]}]           # @
+} as $swedish_symbol_map |
 
 # ==============================================================================
 # CONFIGURATION TARGETS
@@ -61,50 +60,39 @@ def swedish_profile_mappings: [
 "Symbol" as $layer_to_translate |
 
 # ==============================================================================
-# BEHIND-THE-SCENES TRANSLATION MECHANISM (Do not alter)
+# BEHIND-THE-SCENES TRANSLATION ENGINE
 # ==============================================================================
 
-# System Parser: Combines nested array key structures into text strings
-def get_full_value:
-  if .params == [] or .params == null then .value | tostring
-  else "\(.value)(\(.params[0] | get_full_value))"
-  end;
-
-# System format helpers
-def to_param($val): { "value": $val, "params": [] };
-def to_param($val; $nested): { "value": $val, "params": [to_param($nested)] };
-
-# Converts the clean table matrix into the map dictionary
-def build_symbol_dictionary:
-  map({
-    "key": .[0],
-    "value": (if .[2] != null then [to_param(.[1]; .[2])] else [to_param(.[1])] end)
-  }) | from_entries;
-
-(swedish_profile_mappings | build_symbol_dictionary) as $swedish_symbol_map |
+# Find where layer names live in your profile
 (.layer_names // .keymap.layer_names) as $all_layers |
 
 if $all_layers == null then
   "Error: Could not find any keyboard layer names in this file." | halt_error
-end;
+else
+  ($all_layers | index($layer_to_translate)) as $layer_index |
 
-($all_layers | index($layer_to_translate)) as $layer_index |
-
-if $layer_index == null then
-  "Error: The layer named '\($layer_to_translate)' does not exist in your layout profile." | halt_error
-end;
-
-if .keymap.layers then .keymap.layers else .layers end |= (
-  if . == null then "Error: Your file is missing the 'layers' configuration canvas entirely." | halt_error else . end |
-  .[$layer_index] |= map(
-    if .value == "&kp" then
-      (.params[0] | get_full_value) as $current_key |
-      if $swedish_symbol_map[$current_key] then .params = $swedish_symbol_map[$current_key] else . end
-    else
-      .
-    end
-  )
-)
+  if $layer_index == null then
+    "Error: The layer named '\($layer_to_translate)' does not exist." | halt_error
+  else
+    # Choose correct layer canvas context safely
+    if .keymap.layers then .keymap.layers else .layers end |= (
+      .[$layer_index] |= map(
+        if . == null or .value != "&kp" then 
+          .
+        else
+          # Fallback reconstruction logic written inline to maximize engine safety
+          ((if .params == [] or .params == null then .value | tostring else "\(.value)(\(if .params[0].params == [] or .params[0].params == null then .params[0].value | tostring else "\(.params[0].value)(\(.params[0].params[0].value | tostring))" end))" end)) as $current_key |
+          
+          if $swedish_symbol_map[$current_key] then 
+            .params = $swedish_symbol_map[$current_key] 
+          else 
+            . 
+          end
+        end
+      )
+    )
+  end
+end
 """
 [manifest]
 author = "moosyresearch"
