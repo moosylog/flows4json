@@ -231,6 +231,23 @@
     "mediaUrl": "https://moosylog.github.io/flows4json/mouse.png"
   },
   {
+    "uid": "qwerty_swap",
+    "title": "TK qwerty_swap",
+    "subtitle": "🚀 TailorKey QWERTY swap",
+    "description": "external app launcher",
+    "script": "",
+    "category": "Base Setup",
+    "author": "moosyresearch",
+    "devices": [
+      "go60"
+    ],
+    "config": {
+      "category": "Base Setup",
+      "num": "123"
+    },
+    "mediaUrl": null
+  },
+  {
     "uid": "os_remap",
     "title": "Unicode Macro",
     "subtitle": "Macro: Create Unicode Character Macros❓",
