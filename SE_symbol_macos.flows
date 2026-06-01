@@ -1,7 +1,7 @@
 uid = "se_symbol"
 type = "mutation"
 language = "us"
-title = "🌍 Swedish Symbols Windows/Linux"
+title = "🌍 Swedish Symbols macOS"
 subtitle = "From en-US to sv-SE"
 description = """
 When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to Swedish (sv-SE), some symbols no longer match their expected characters.
@@ -14,10 +14,10 @@ This flow remaps those symbols so they produce the correct characters for the Sw
 script = """
 # ==============================================================================
 #             SWEDISH SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
-#             OS TARGET: WINDOWS / LINUX (Standard ISO)
+#             OS TARGET: macOS (Standard ISO / sv-SE)
 # ==============================================================================
 # 
-# WELCOME! This script translates your "Symbol" layer keys for a Swedish OS.
+# WELCOME! This script translates your "Symbol" layer keys for a Swedish macOS target.
 # Maps aliases (e.g., SQT/SINGLE_QUOTE) to prevent any normalization bugs.
 # ==============================================================================
 
@@ -29,33 +29,33 @@ script = """
   "SEMI":                [{"value": "LS", "params": [{"value": "COMMA", "params": []}]}],         # ; -> Shift + ,
   "DOT":                 [{"value": "DOT", "params": []}],                                        # . -> .
   "LS(N1)":              [{"value": "LS", "params": [{"value": "N1", "params": []}]}],            # ! -> Shift + 1
-  "LBKT":                [{"value": "RA", "params": [{"value": "N8", "params": []}]}],            # [ -> AltGr + 8
-  "LS(LBKT)":            [{"value": "RA", "params": [{"value": "N7", "params": []}]}],            # { -> AltGr + 7
-  "LS(RBKT)":            [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            # } -> AltGr + 0
-  "RBKT":                [{"value": "RA", "params": [{"value": "N9", "params": []}]}],            # ] -> AltGr + 9
+  "LBKT":                [{"value": "LA", "params": [{"value": "N8", "params": []}]}],            # [ -> Option + 8
+  "LS(LBKT)":            [{"value": "LS", "params": [{"value": "LA", "params": [{"value": "N8", "params": []}]}]}], # { -> Shift + Option + 8
+  "LS(RBKT)":            [{"value": "LS", "params": [{"value": "LA", "params": [{"value": "N9", "params": []}]}]}], # } -> Shift + Option + 9
+  "RBKT":                [{"value": "LA", "params": [{"value": "N9", "params": []}]}],            # ] -> Option + 9
   "LS(FSLH)":            [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         # ? -> Shift + +
   "LS(N3)":              [{"value": "LS", "params": [{"value": "N3", "params": []}]}],            # # -> Shift + 3
   "LS(N6)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          # ^ -> Shift + ¨
   "EQUAL":               [{"value": "LS", "params": [{"value": "N0", "params": []}]}],            # = -> Shift + 0
   "LS(MINUS)":           [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # _ -> Shift + -
   "UNDERSCORE":          [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # Alternate alias for _
-  "LS(N4)":              [{"value": "RA", "params": [{"value": "N4", "params": []}]}],            # $ -> AltGr + 4
-  "LS(N8)":              [{"value": "LS", "params": [{"value": "BSLH", "params": []}]}],          # * -> Shift + '
+  "LS(N4)":              [{"value": "LA", "params": [{"value": "N4", "params": []}]}],            # $ -> Option + 4
+  "LS(N8)":              [{"value": "SQT", "params": []}],                                        # * -> Key next to Ä (US SQT)
   "LS(SINGLE_QUOTE)":    [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            # " -> Shift + 2
   "LS(SQT)":             [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            # Alternate alias for "
-  "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> AltGr + ¨
+  "LS(GRAVE)":           [{"value": "LA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> Option + ¨
   "LS(COMMA)":           [{"value": "NON_US_BSLH", "params": []}],                                # < -> < key
-  "LS(BSLH)":            [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # | -> AltGr + <
-  "MINUS":               [{"value": "FSLH", "params": []}],                                       # - -> - key
+  "LS(BSLH)":            [{"value": "LA", "params": [{"value": "N7", "params": []}]}],            # | -> Option + 7
+  "MINUS":               [{"value": "FSLH", "params": []}],                                       # - -> - key (US FSLH position)
   "LS(DOT)":             [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # > -> Shift + <
   "FSLH":                [{"value": "LS", "params": [{"value": "N7", "params": []}]}],            # / -> Shift + 7
-  "SQT":                 [{"value": "BSLH", "params": []}],                                       # ' -> ' key
-  "SINGLE_QUOTE":        [{"value": "BSLH", "params": []}],                                       # Alternate alias for '
-  "BSLH":                [{"value": "RA", "params": [{"value": "MINUS", "params": []}]}],         # \ -> AltGr + +
+  "SQT":                 [{"value": "LS", "params": [{"value": "SQT", "params": []}]}],           # ' -> Shift + Key next to Ä
+  "SINGLE_QUOTE":        [{"value": "LS", "params": [{"value": "SQT", "params": []}]}],           # Alternate alias for '
+  "BSLH":                [{"value": "LS", "params": [{"value": "LA", "params": [{"value": "N7", "params": []}]}]}], # \ -> Shift + Option + 7
   "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            # & -> Shift + 6
   "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            # % -> Shift + 5
   "LS(SEMI)":            [{"value": "LS", "params": [{"value": "DOT", "params": []}]}],           # : -> Shift + .
-  "LS(N2)":              [{"value": "RA", "params": [{"value": "N2", "params": []}]}]             # @ -> AltGr + 2
+  "LS(N2)":              [{"value": "LA", "params": [{"value": "N2", "params": []}]}]             # @ -> Option + 2
 } as $swedish_symbol_map |
 
 # ==============================================================================
@@ -84,7 +84,7 @@ else
         if . == null or .value != "&kp" or .params == null or .params == [] then 
           .
         else
-          # Extracts inner parameters safely to eliminate the outer wrapper mismatch
+          # Extracts inner parameters safely to eliminate outer wrapper mismatch
           (.params[0] | if .params == null or .params == [] then .value else "\(.value)(\(.params[0].value))" end) as $current_key |
           
           if $swedish_symbol_map[$current_key] then 
