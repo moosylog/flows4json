@@ -18,13 +18,7 @@ script = """
 # ==============================================================================
 # 
 # WELCOME! This script translates your "Symbol" layer keys for a Swedish OS.
-#
-# HOW TO EDIT CODES BELOW:
-#   To change a mapping, follow this simple rule:
-#   "ORIGINAL_US_KEY": [{"value": "SWEDISH_KEY", "params": []}]
-#
-#   If a key needs a shift or alt combo, wrap it like this:
-#   "ORIGINAL_US_KEY": [{"value": "MAIN_KEY", "params": [{"value": "HELPER_KEY", "params": []}]}]
+# Maps aliases (e.g., SQT/SINGLE_QUOTE) to prevent any normalization bugs.
 # ==============================================================================
 
 {
@@ -40,13 +34,15 @@ script = """
   "LS(RBKT)":            [{"value": "RA", "params": [{"value": "N0", "params": []}]}],            # } -> AltGr + 0
   "RBKT":                [{"value": "RA", "params": [{"value": "N9", "params": []}]}],            # ] -> AltGr + 9
   "LS(FSLH)":            [{"value": "LS", "params": [{"value": "MINUS", "params": []}]}],         # ? -> Shift + +
-  "LS(N3)":              [{"value": "LS", "params": [{"value": "N3", "params": []}]}],            # # -> Shift + 3 (Fixed from £)
+  "LS(N3)":              [{"value": "LS", "params": [{"value": "N3", "params": []}]}],            # # -> Shift + 3
   "LS(N6)":              [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}],          # ^ -> Shift + ¨
   "EQUAL":               [{"value": "LS", "params": [{"value": "N0", "params": []}]}],            # = -> Shift + 0
   "LS(MINUS)":           [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # _ -> Shift + -
+  "UNDERSCORE":          [{"value": "LS", "params": [{"value": "FSLH", "params": []}]}],          # Alternate alias for _
   "LS(N4)":              [{"value": "RA", "params": [{"value": "N4", "params": []}]}],            # $ -> AltGr + 4
   "LS(N8)":              [{"value": "LS", "params": [{"value": "BSLH", "params": []}]}],          # * -> Shift + '
   "LS(SINGLE_QUOTE)":    [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            # " -> Shift + 2
+  "LS(SQT)":             [{"value": "LS", "params": [{"value": "N2", "params": []}]}],            # Alternate alias for "
   "LS(GRAVE)":           [{"value": "RA", "params": [{"value": "RBKT", "params": []}]}],          # ~ -> AltGr + ¨
   "LS(COMMA)":           [{"value": "NON_US_BSLH", "params": []}],                                # < -> < key
   "LS(BSLH)":            [{"value": "RA", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # | -> AltGr + <
@@ -54,6 +50,7 @@ script = """
   "LS(DOT)":             [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],   # > -> Shift + <
   "FSLH":                [{"value": "LS", "params": [{"value": "N7", "params": []}]}],            # / -> Shift + 7
   "SQT":                 [{"value": "BSLH", "params": []}],                                       # ' -> ' key
+  "SINGLE_QUOTE":        [{"value": "BSLH", "params": []}],                                       # Alternate alias for '
   "BSLH":                [{"value": "RA", "params": [{"value": "MINUS", "params": []}]}],         # \ -> AltGr + +
   "LS(N7)":              [{"value": "LS", "params": [{"value": "N6", "params": []}]}],            # & -> Shift + 6
   "LS(N5)":              [{"value": "LS", "params": [{"value": "N5", "params": []}]}],            # % -> Shift + 5
@@ -84,10 +81,11 @@ else
   else
     if .keymap.layers then .keymap.layers else .layers end |= (
       .[$layer_index] |= map(
-        if . == null or .value != "&kp" then 
+        if . == null or .value != "&kp" or .params == null or .params == [] then 
           .
         else
-          ((if .params == [] or .params == null then .value | tostring else "\(.value)(\(if .params[0].params == [] or .params[0].params == null then .params[0].value | tostring else "\(.params[0].value)(\(.params[0].params[0].value | tostring))" end))" end)) as $current_key |
+          # Extracts inner parameters safely to eliminate the outer wrapper mismatch
+          (.params[0] | if .params == null or .params == [] then .value else "\(.value)(\(.params[0].value))" end) as $current_key |
           
           if $swedish_symbol_map[$current_key] then 
             .params = $swedish_symbol_map[$current_key] 
