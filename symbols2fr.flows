@@ -1,20 +1,6 @@
 uid = "fr_symbol"
 type = "mutation"
 language = "us"
-title = "🌍 French Symbols AZERTY ❌"
-subtitle = "From en-US to fr-FR"
-description = """
-When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to French (fr-FR), some symbols no longer match their expected characters.
-
-This flow remaps those symbols so they produce the correct characters for the German layout.
-
-⚠️ REQUIRED: a layout with a 'Symbol Layer'
-🪳 QUALITY: not fully testend and can have some bugs
-"""
-script = """
-uid = "fr_symbol"
-type = "mutation"
-language = "us"
 title = "🌍 French Symbols AZERTY"
 subtitle = "From en-US to fr-FR"
 description = """
