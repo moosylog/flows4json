@@ -174,7 +174,7 @@
     "subtitle": "🚀 External App",
     "description": "Advanced Home-Row Mod Configurator\nThis tool allows you to bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob or manual values to your entire layout at once.",
     "script": "",
-    "category": "Base Setup",
+    "category": "Home-Row Mods",
     "appUrl": "https://sites.google.com/view/tailorkey/how-to/hrm-tuner",
     "author": "moosyresearch",
     "devices": [
@@ -182,7 +182,7 @@
       "glove80"
     ],
     "config": {
-      "category": "Base Setup",
+      "category": "Home-Row Mods",
       "num": "123"
     },
     "mediaUrl": "https://moosylog.github.io/flows4json/l_hrm_tuner.png"
