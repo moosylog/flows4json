@@ -98,5 +98,5 @@ def GetHomeIndices:
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-category = "Smart Typing"
+category = "Home-Row Mods"
 num = 123
