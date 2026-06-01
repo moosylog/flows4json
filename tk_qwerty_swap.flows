@@ -1,16 +1,17 @@
 uid = "qwerty_swap"
 type = "mutation"
 language = "us"
-title = "TK qwerty_swap"
-subtitle = "🚀 TailorKey QWERTY swap"
+title = "🚀 QWERTY Swap App"
+subtitle = "Launch App"
 description = """
-external app launcher
+Replace QWERTY with any alt layout Instantly with an easy to use app.
+Switch from QWERTY to an alternative layout like Colemak-DH with a single click, keeping your entire custom setup intact. Supports multi-layer configurations and advanced Home Row Mods (HRM) from TailorKey.
 """
 appUrl = "https://sites.google.com/view/tailorkey/moergo/qwerty_swap"
 script = ""
 [manifest]
 author = "moosyresearch"
-keyboards = ["go60"]
+keyboards = ["go60","glove80"]
 [config]
 category = "Base Setup"
 num = 123
