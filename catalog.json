@@ -250,7 +250,7 @@
     "subtitle": "Launch App",
     "description": "Oryx Migration Assistant\n\nMigrate your ZSA ORYX Layout to MoErgo Go60 \nThis tool converts a Oryx layouts to the Layout Editor.",
     "script": "",
-    "category": "Base Setup",
+    "category": "ZSA Migration",
     "appUrl": "https://github.com/moosylog/oma/blob/main/README.md",
     "author": "moosyresearch",
     "devices": [
@@ -258,7 +258,7 @@
       "glove80"
     ],
     "config": {
-      "category": "Base Setup",
+      "category": "ZSA Migration",
       "num": "123"
     },
     "mediaUrl": "https://moosylog.github.io/flows4json/l_oryx_swap.png"
