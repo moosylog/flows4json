@@ -17,16 +17,16 @@ script = """
 #             OS TARGET: WINDOWS / LINUX (Standard ISO / de-DE)
 # ==============================================================================
 # 
-# VALIDATION UPGRADE: Includes both raw shifted codes (LS(N2)) and standard 
-# ZMK aliases (AT, TILDE, PIPE) to prevent normalization misses from MoErgo.
+# VALIDATION UPGRADE: Explicitly forces correct QWERTZ positional behavior
+# for Minus and Underscore columns to match the visual layout editor target.
 # ==============================================================================
 
 {
   # --- Punctuation & Basics ---
   "DOT":                 [{"value": "DOT", "params": []}],                                        # . -> .
   "COMMA":               [{"value": "COMMA", "params": []}],                                      # , -> ,
-  "MINUS":               [{"value": "FSLH", "params": []}],                                       # - -> - key (US FSLH)
-  "PLUS":                [{"value": "RBKT", "params": []}],                                       # + -> + key (US RBKT)
+  "MINUS":               [{"value": "FSLH", "params": []}],                                       # - -> - key (German physical FSLH)
+  "PLUS":                [{"value": "RBKT", "params": []}],                                       # + -> + key (German physical RBKT)
   "EQUAL":               [{"value": "LS", "params": [{"value": "N0", "params": []}]}],            # = -> Shift + 0
 
   # --- Brackets & Braces ---
