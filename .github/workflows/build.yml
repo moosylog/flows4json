@@ -29,7 +29,7 @@ jobs:
               
               const extVal = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
               const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
-              const extCat = () => { const m = content.match(/\[config\][\s\S]*?foo\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
+              const extCat = () => { const m = content.match(/\[config\][\s\S]*?category\s*=\s*"([^"]+)"/); return m ? m[1] : 'Utilities'; };
               const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
               
               let cfg = {};
