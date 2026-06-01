@@ -16,5 +16,5 @@ script = ""
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-category = "Base Setup"
+category = "ZSA Migration"
 num = 123
