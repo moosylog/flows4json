@@ -13,95 +13,113 @@ This flow remaps those symbols so they produce the correct characters for the Sw
 """
 script = """
 # ==============================================================================
-# KEYBOARD LAYOUT TRANSLATOR: US-English to Swedish (sv-SE)
-# For MoErgo Layout Editor / ZMK Keymaps
+#           SWEDISH SYMBOL MAPPER (For MoErgo Layout Editor / ZMK)
+# ==============================================================================
+# 
+#  WELCOME! This script automatically changes your keyboard symbols so they type
+#  correctly on a Swedish operating system.
+#
+#  HOW TO READ THE MAP BELOW:
+#  - The first item is the original US English symbol.
+#  - The second item is the main Swedish key used to trigger it.
+#  - The third item is a nested shift key helper (use "null" if not needed).
+#
+#  [!] IF YOU WANT TO ADD/EDIT SYMBOLS, SCROLL TO CELL 1 LOWER DOWN.
 # ==============================================================================
 #
-# WHAT THIS DOES:
-# When you type on a Swedish operating system, the computer expects keys to be
-# where they are on a standard Swedish keyboard. If your keyboard profile was 
-# built using standard US-English symbols, your characters will be scrambled.
-#
-# This script scans your layout, looks for the US symbols on the left, 
-# and swaps them with the correct Swedish key combinations on the right.
+#   When you want:       Send this Swedish combination:      Target Character
+#   -------------------------------------------------------------------------
+#   "GRAVE"              "LS"        "EQUAL"                 # `
+#   "SEMI"               "LS"        "COMMA"                 # ;
+#   "LS(N6)"             "LS"        "RBKT"                  # ^ (dead key)
+#   "EQUAL"              "LS"        "N0"                    # =
+#   "LS(MINUS)"          "LS"        "FSLH"                  # _
+#   "LS(N4)"             "RA"        "N4"                    # $
+#   "LS(EQUAL)"          "MINUS"     null                    # +
+#   "SQT"                "NON_US_HASH" null                  # '
+#   "LS(SQT)"            "LS"        "N2"                    # "
+#   "LS(N9)"             "LS"        "N8"                    # (
+#   "LS(N0)"             "LS"        "N9"                    # )
+#   "LBKT"               "RA"        "N8"                    # [
+#   "LS(LBKT)"           "RA"        "N7"                    # {
+#   "LS(RBKT)"           "RA"        "N0"                    # }
+#   "RBKT"               "RA"        "N9"                    # ]
+#   "LS(FSLH)"           "LS"        "MINUS"                 # ?
+#   "LS(GRAVE)"          "RA"        "RBKT"                  # ~ (dead key)
+#   "LS(COMMA)"          "NON_US_BSLH" null                  # <
+#   "LS(BSLH)"           "RA"        "NON_US_BSLH"           # |
+#   "LS(DOT)"            "LS"        "NON_US_BSLH"           # >
+#   "FSLH"               "LS"        "N7"                    # /
+#   "LS(SEMI)"           "LS"        "DOT"                   # :
+#   "LS(N2)"             "RA"        "N2"                    # @
 #
 # ==============================================================================
-# 1. SWEDISH SYMBOL DICTIONARY (Edit your keys here)
+
+# ==============================================================================
+# TECHNICAL ENGINE DECK (Tells the computer how to read the text above)
+# ==============================================================================
+
+def get_full_value:
+  if .params == [] or .params == null then .value | tostring
+  else "\(.value)(\(.params[0] | get_full_value))" end;
+
+def to_param($val): { "value": $val, "params": [] };
+def to_param($val; $nested): { "value": $val, "params": [to_param($nested)] };
+
+def translation($from; $to_val; $to_nested):
+  { "key": $from, "value": (if $to_nested then [to_param($to_val; $to_nested)] else [to_param($to_val)] end) };
+
+# ==============================================================================
+# CELL 1: ACTIVE DICTIONARY LIST (This must match the blueprint above)
 # ==============================================================================
 
 [
-  #    When you want:     Send this Swedish combination:      Target Character
-  translation("GRAVE";     "LS";       "EQUAL"),               # `
-  translation("SEMI";      "LS";       "COMMA"),               # ;
-  translation("LS(N6)";    "LS";       "RBKT"),                # ^ (dead key)
-  translation("EQUAL";     "LS";       "N0"),                  # =
-  translation("LS(MINUS)"; "LS";       "FSLH"),                # _
-  translation("LS(N4)";    "RA";       "N4"),                  # $
-  translation("LS(EQUAL)"; "MINUS";    null),                  # +
-  translation("SQT";       "NON_US_HASH"; null),               # '
-  translation("LS(SQT)";   "LS";       "N2"),                  # "
-  translation("LS(N9)";    "LS";       "N8"),                  # (
-  translation("LS(N0)";    "LS";       "N9"),                  # )
-  translation("LBKT";      "RA";       "N8"),                  # [
-  translation("LS(LBKT)";  "RA";       "N7"),                  # {
-  translation("LS(RBKT)";  "RA";       "N0"),                  # }
-  translation("RBKT";      "RA";       "N9"),                  # ]
-  translation("LS(FSLH)";  "LS";       "MINUS"),               # ?
-  translation("LS(GRAVE)"; "RA";       "RBKT"),                # ~ (dead key)
-  translation("LS(COMMA)"; "NON_US_BSLH"; null),               # <
-  translation("LS(BSLH)";  "RA";       "NON_US_BSLH"),         # |
-  translation("LS(DOT)";   "LS";       "NON_US_BSLH"),         # >
-  translation("FSLH";      "LS";       "N7"),                  # /
-  translation("LS(SEMI)";  "LS";       "DOT"),                 # :
-  translation("LS(N2)";    "RA";       "N2")                   # @
+  translation("GRAVE";     "LS";       "EQUAL"),
+  translation("SEMI";      "LS";       "COMMA"),
+  translation("LS(N6)";    "LS";       "RBKT"),
+  translation("EQUAL";     "LS";       "N0"),
+  translation("LS(MINUS)"; "LS";       "FSLH"),
+  translation("LS(N4)";    "RA";       "N4"),
+  translation("LS(EQUAL)"; "MINUS";    null),
+  translation("SQT";       "NON_US_HASH"; null),
+  translation("LS(SQT)";   "LS";       "N2"),
+  translation("LS(N9)";    "LS";       "N8"),
+  translation("LS(N0)";    "LS";       "N9"),
+  translation("LBKT";      "RA";       "N8"),
+  translation("LS(LBKT)";  "RA";       "N7"),
+  translation("LS(RBKT)";  "RA";       "N0"),
+  translation("RBKT";      "RA";       "N9"),
+  translation("LS(FSLH)";  "LS";       "MINUS"),
+  translation("LS(GRAVE)"; "RA";       "RBKT"),
+  translation("LS(COMMA)"; "NON_US_BSLH"; null),
+  translation("LS(BSLH)";  "RA";       "NON_US_BSLH"),
+  translation("LS(DOT)";   "LS";       "NON_US_BSLH"),
+  translation("FSLH";      "LS";       "N7"),
+  translation("LS(SEMI)";  "LS";       "DOT"),
+  translation("LS(N2)";    "RA";       "N2")
 ] 
 | from_entries as $swedish_symbol_map |
 
-# ==============================================================================
-# 2. CONFIGURATION (Target Layer)
-# ==============================================================================
-
+# SET TARGET DETAILS
 .locale = "sv-SE" |
 "Symbol" as $layer_to_translate |
 
 # ==============================================================================
-# 3. BEHIND-THE-SCENES TRANSLATION LOGIC (Do not edit unless fixing engine)
+# CELL 2: PROCESS AND SAVE UPDATES
 # ==============================================================================
 
-# Helper: Combines nested layout arrays back into a single readable string
-def get_full_value:
-  if .params == [] or .params == null then
-    .value | tostring
-  else
-    "\(.value)(\(.params[0] | get_full_value))"
-  end;
-
-# Helpers: Packages up plain text names into the rigid layout data formats
-def to_param($val): { "value": $val, "params": [] };
-def to_param($val; $nested): { "value": $val, "params": [to_param($nested)] };
-
-# Helper: Formats the "From -> To" lines into a valid database entry
-def translation($from; $to_val; $to_nested):
-  { 
-    "key": $from, 
-    "value": (if $to_nested then [to_param($to_val; $to_nested)] else [to_param($to_val)] end) 
-  };
-
-# Find where your layer names are stored in the file layout
 (.layer_names // .keymap.layer_names) as $all_layers |
 
 if $all_layers == null then
   "Error: Could not find any keyboard layer names in this file." | halt_error
 end;
 
-# Find the exact folder location of your target layer (e.g., "Symbol")
 ($all_layers | index($layer_to_translate)) as $layer_index |
 
 if $layer_index == null then
   "Error: The layer named '\($layer_to_translate)' does not exist in your layout profile." | halt_error
 end;
 
-# Go into the data structure, find the keys, and swap matching symbols
 if .keymap.layers then .keymap.layers else .layers end |= (
   if . == null then "Error: Your file is missing the 'layers' configuration canvas entirely." | halt_error else . end |
   .[$layer_index] |= map(
