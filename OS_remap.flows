@@ -71,5 +71,5 @@ for_every_binding(pass_2_swap($r))
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 [config]
-foo = "Base Setup"
+category = "Base Setup"
 num = 123
