@@ -1,7 +1,7 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "🪳Urob timeless GACS"
+title = "Urob timeless CAGS"
 subtitle = "Add HRM for macOS"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
@@ -30,7 +30,7 @@ def PRESERVE_DECORATORS: true;
 # ------------------------------------------------------------------------------
 
 2 as $target_version |          # Options: 1, 2, or 3
-"GACS" as $mod_preset |         # Options: "GACS" or "CAGS"
+"CAGS" as $mod_preset |         # Options: "GACS" or "CAGS"
 
 # Modifier sequences
 {
