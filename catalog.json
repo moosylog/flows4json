@@ -207,6 +207,25 @@
     "mediaUrl": null
   },
   {
+    "uid": "l_qwerty_swap",
+    "title": "🚀 QWERTY Swap App",
+    "subtitle": "Launch App",
+    "description": "Replace QWERTY with any alt layout Instantly with an easy to use app.\nSwitch from QWERTY to an alternative layout like Colemak-DH with a single click, keeping your entire custom setup intact. Supports multi-layer configurations and advanced Home Row Mods (HRM) from TailorKey.",
+    "script": "",
+    "category": "Base Setup",
+    "appUrl": "https://sites.google.com/view/tailorkey/moergo/qwerty_swap",
+    "author": "moosyresearch",
+    "devices": [
+      "go60",
+      "glove80"
+    ],
+    "config": {
+      "category": "Base Setup",
+      "num": "123"
+    },
+    "mediaUrl": null
+  },
+  {
     "uid": "macro_string",
     "title": "Sample: String macro",
     "subtitle": "Macro: Create a string❓",
@@ -242,25 +261,6 @@
       "num": "123"
     },
     "mediaUrl": "https://moosylog.github.io/flows4json/mouse.png"
-  },
-  {
-    "uid": "qwerty_swap",
-    "title": "🚀 QWERTY Swap App",
-    "subtitle": "Launch App",
-    "description": "Replace QWERTY with any alt layout Instantly with an easy to use app.\nSwitch from QWERTY to an alternative layout like Colemak-DH with a single click, keeping your entire custom setup intact. Supports multi-layer configurations and advanced Home Row Mods (HRM) from TailorKey.",
-    "script": "",
-    "category": "Base Setup",
-    "appUrl": "https://sites.google.com/view/tailorkey/moergo/qwerty_swap",
-    "author": "moosyresearch",
-    "devices": [
-      "go60",
-      "glove80"
-    ],
-    "config": {
-      "category": "Base Setup",
-      "num": "123"
-    },
-    "mediaUrl": null
   },
   {
     "uid": "os_remap",
