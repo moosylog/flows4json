@@ -29,7 +29,7 @@
       "go60"
     ],
     "config": {
-      "category": "Smart Typing",
+      "foo": "Smart Typing",
       "num": "123"
     },
     "mediaUrl": null
