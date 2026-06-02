@@ -13,6 +13,7 @@ This will change your keyboard layout to an alternative to the QWERTY layout.
 -Keeps these layers out of scope: Gaming, Numbers, Navigation, Media, Keypad, Mouse, and Magic.
 
 ⚠️ Thumb-letter mappings are not supported to ensure safe configuration.
+
 ⚠️ TailorKey Bilateral HRM is not included; the QWERTY Swap tool can be used instead.
 """
 
