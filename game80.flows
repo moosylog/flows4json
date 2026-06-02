@@ -105,6 +105,8 @@ script = """
 [manifest]
 author = "moosyresearch"
 keyboards = ["glove80"]
-
+icon = "🎮"      
+# Optional: red, green, blue, purple, yellow, orange
+theme = "purple" 
 [config]
 category = "Gaming"
