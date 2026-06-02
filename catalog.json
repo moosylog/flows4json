@@ -11,7 +11,8 @@
       "author": "moosyresearch",
       "keyboards": [
         "go60"
-      ]
+      ],
+      "icon": "🎛️"
     },
     "config": {
       "category": "Special keys",
