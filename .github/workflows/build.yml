@@ -31,9 +31,9 @@ jobs:
               const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
               const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
               
-              // Parse the [config] block cleanly for custom settings variables
+              // Parse the [config] block
               let cfg = {};
-              const mCfg = content.match(/\[config\]([\s\S]*?)(?:\[|$)/);
+              const mCfg = content.match(/\[config\]([\s\S]*?)(?=\n\[|$)/);
               if (mCfg) {
                 mCfg[1].split('\n').forEach(l => {
                   const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
@@ -42,6 +42,33 @@ jobs:
                     if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1);
                     cfg[kv[1]] = v;
                   }
+                });
+              }
+
+              // --- NEW: Parse the [[param]] blocks ---
+              let params = [];
+              const paramMatches = content.match(/\[\[param\]\]([\s\S]*?)(?=\n\[|$)/g);
+              if (paramMatches) {
+                paramMatches.forEach(block => {
+                  let paramObj = {};
+                  block.split('\n').forEach(l => {
+                    const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
+                    if (kv) {
+                      let k = kv[1].trim();
+                      let v = kv[2].trim();
+                      
+                      // Type casting for parameters
+                      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1); // String
+                      else if (v === 'true') v = true;                              // Boolean True
+                      else if (v === 'false') v = false;                            // Boolean False
+                      else if (v.startsWith('[') && v.endsWith(']')) {              // Array (for dropdown options)
+                        v = v.slice(1, -1).split(',').map(s => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+                      }
+                      
+                      paramObj[k] = v;
+                    }
+                  });
+                  if (paramObj.id) params.push(paramObj);
                 });
               }
 
@@ -54,11 +81,12 @@ jobs:
                 subtitle: extVal("subtitle"),
                 description: extMulti("description"), 
                 script: extMulti("script"), 
-                category: extVal("category") || "Utilities", // Now parses root level cleanly
-                appUrl: extVal("appUrl") || null,            // Added to parse the external launch link
+                category: extVal("category") || "Utilities",
+                appUrl: extVal("appUrl") || null,
                 author: extVal("author"), 
                 devices: extDev(), 
                 config: cfg,
+                param: params, // --- Now safely attached to the final JSON! ---
                 mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null
               };
             });
