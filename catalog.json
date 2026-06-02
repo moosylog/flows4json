@@ -417,7 +417,9 @@
       "keyboards": [
         "go60",
         "glove80"
-      ]
+      ],
+      "icon": "🇸🇪",
+      "theme": "orange"
     },
     "config": {
       "category": "Languages & Symbols",
