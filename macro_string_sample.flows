@@ -1,7 +1,7 @@
 uid = "macro_string"
 type = "mutation"
 language = "us"
-title = "Sample: String macro⭐📦📦🚀🚀"
+title = "Sample: String macro"
 subtitle = "Macro: Create a string❓"
 description = """
 This is an example to create a string macros.
@@ -62,19 +62,20 @@ script = """
   }
 ) as $new_macro |
 
-# Safely inject into the AST
 "&\($macro_id)" as $macro_name |
 
-# Safely grab the macros array, defaulting to an empty array if it doesn't exist yet
-(.keymap.macros // []) as $existing_macros |
-($existing_macros | map(.name) | index($macro_name)) as $idx |
+# Safely inject into the AST context (handles both flat and nested keymaps!)
+(.keymap // .) |= (
+  (.macros // []) as $existing_macros |
+  ($existing_macros | map(.name) | index($macro_name)) as $idx |
 
-# Update if it exists, append if it's new
-if $idx != null then
-  .keymap.macros[$idx] = $new_macro
-else
-  .keymap.macros = $existing_macros + [$new_macro]
-end
+  # Update if it exists, append if it's new
+  if $idx != null then
+    .macros[$idx] = $new_macro
+  else
+    .macros = $existing_macros + [$new_macro]
+  end
+)
 """
 
 # ==============================================================================
