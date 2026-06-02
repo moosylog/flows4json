@@ -1,7 +1,7 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "🔥Add Sunaku CAGS"
+title = "⭐⭐Add Sunaku CAGS"
 subtitle = "Add HRM for macOS"
 description = """
 Sunaku's per finger home-row mods
@@ -15,40 +15,8 @@ GACS = Windows and Linux
 CAGS = MacOS
 """
 
-[manifest]
-author = "moosyresearch"
-keyboards = ["go60","glove80"]
-
-[config]
-category = "Home-Row Mods"
-
 # ==============================================================================
-# UI PARAMETERS (The App will turn these into dropdowns/toggles)
-# ==============================================================================
-
-[[param]]
-id = "target_version"
-label = "HRM Version"
-type = "select"
-options = ["1", "2", "3"]
-default = "3"
-
-[[param]]
-id = "mod_preset"
-label = "Modifier Preset (OS)"
-type = "select"
-options = ["GACS", "CAGS"]
-default = "CAGS"
-
-[[param]]
-id = "preserve_decorators"
-label = "Preserve UI Decorators"
-type = "boolean"
-default = true
-
-
-# ==============================================================================
-# JQ SCRIPT (No hardcoded variables at the top anymore!)
+# JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
 script = """
 # Modifier sequences
@@ -239,3 +207,38 @@ def GetHardware:
   ]
 )
 """
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "target_version"
+label = "HRM Version"
+type = "select"
+options = ["1", "2", "3"]
+default = "3"
+
+[[param]]
+id = "mod_preset"
+label = "Modifier Preset (OS)"
+type = "select"
+options = ["GACS", "CAGS"]
+default = "CAGS"
+
+[[param]]
+id = "preserve_decorators"
+label = "Preserve UI Decorators"
+type = "boolean"
+default = true
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+
+[config]
+category = "Home-Row Mods"
