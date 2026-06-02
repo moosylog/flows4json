@@ -83,7 +83,7 @@ script = """
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60"]
-icon = "🎛️"      
+icon = "🎹"      
 # Optional: red, green, blue, purple, yellow, orange
 # theme = "green" 
 [config]
