@@ -1,7 +1,7 @@
 uid = "macro_string"
 type = "mutation"
 language = "us"
-title = "⚠️Sample: String macro"
+title = "Sample: String macro"
 subtitle = "Macro: Create a string❓"
 description = """
 This is an example to create a string macros.
@@ -46,8 +46,8 @@ def zmk_sym($c):
   elif $c == "?" then "QMARK"
   elif $c == "`" then "GRAVE"
   elif $c == "~" then "TILDE"
-  elif $c == "\\\\" then "BSLH"
-  elif $c == "\\"" then "DQT"
+  elif $c == "\\" then "BSLH"
+  elif $c == "\"" then "DQT"
   else "NONE" end;
 
 # Generate the new macro object
