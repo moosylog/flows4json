@@ -281,7 +281,9 @@
       "keyboards": [
         "go60",
         "glove80"
-      ]
+      ],
+      "icon": "🦌",
+      "theme": "blue"
     },
     "config": {
       "category": "ZSA Migration",
