@@ -123,9 +123,8 @@
         .param-group { background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
         .param-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
         .param-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-.param-input { background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; min-width: 180px; max-width: 50%; color-scheme: dark; }
-.param-input option { background: var(--bg-card); color: var(--text-primary); }
-
+        .param-input { background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; min-width: 180px; max-width: 50%; color-scheme: dark; }
+        .param-input option { background: var(--bg-card); color: var(--text-primary); }
         .param-input:focus { border-color: var(--accent-blue); }
         .param-checkbox { width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer; }
 
@@ -151,14 +150,17 @@
         .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 0; min-width: 0; width: 100%; max-width: 100%; }
         .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;}
         
+        /* UNIFIED TYPOGRAPHY: Editor and Code Block */
         .code-matrix { position: relative; flex: 1; overflow: hidden; background: var(--ide-bg); min-height: 0; min-width: 0; display: block; width: 100%; max-width: 100%; }
-        .code-matrix textarea, .code-matrix pre { margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; max-width: 100%; position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2; }
+        .code-matrix textarea, .code-matrix pre { margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; max-width: 100%; position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; }
         .code-matrix textarea { color: transparent; background: transparent; caret-color: #fff; z-index: 2; resize: none; outline: none;}
         .code-matrix pre { z-index: 1; pointer-events: none; }
-        .code-matrix code { font-family: var(--font-mono); text-shadow: none; }
+        .code-matrix code { font-family: var(--font-mono); font-size: 12px; line-height: 1.5; text-shadow: none; }
 
-        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: scroll; overflow-x: hidden; font-family: var(--font-mono); font-size: 12px; display: flex; flex-direction: column; gap: 4px; min-height: 0; min-width: 0; max-width: 100%; word-wrap: break-word; word-break: break-all; }
-        .log-entry { padding: 4px 8px; line-height: 1.5; white-space: pre-wrap; color: #cccccc; word-wrap: break-word; border-radius: 4px; margin-bottom: 4px;}
+        /* UNIFIED TYPOGRAPHY: Terminal Log Panel */
+        .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: scroll; overflow-x: hidden; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; display: flex; flex-direction: column; gap: 4px; min-height: 0; min-width: 0; max-width: 100%; word-wrap: break-word; word-break: break-all; }
+        .log-entry { padding: 4px 8px; white-space: pre-wrap; color: #cccccc; word-wrap: break-word; border-radius: 4px; margin-bottom: 4px;}
+        
         .log-time { color: var(--ide-dim); margin-right: 8px; font-size: 11px; }
         .log-success { color: var(--accent-green); background: rgba(48, 209, 88, 0.05); }
         .log-danger { color: var(--accent-red); background: rgba(255, 69, 58, 0.1); border-left: 2px solid var(--accent-red); }
@@ -495,11 +497,9 @@
                     mediaContainer.style.display = 'none';
                 }
 
-                // Render Dynamic Parameters if they exist
                 const paramsContainer = document.getElementById('dynamicParamsContainer');
                 paramsContainer.innerHTML = '';
                 
-                // Safely extract parameters whether they are at the root or nested inside [config]
                 const flowParams = flowData.param || (flowData.config && flowData.config.param) || [];
                 
                 if (Array.isArray(flowParams) && flowParams.length > 0 && !isLauncher) {
@@ -513,7 +513,6 @@
                             paramsHtml += `<select class="param-input" id="param_${p.id}">`;
                             p.options.forEach((opt, idx) => {
                                 const isSelected = (opt == p.default) ? "selected" : "";
-                                // Check if an alternative label exists for this option
                                 const displayLabel = (p.labels && p.labels[idx]) ? p.labels[idx] : opt;
                                 paramsHtml += `<option value="${opt}" ${isSelected}>${displayLabel}</option>`;
                             });
@@ -691,7 +690,6 @@
             async runFlow() {
                 if (!this.sourceAST) return;
                 
-                // Extract Dynamic Parameters into a JQ prefix string
                 let paramPrefix = "";
                 const flowParams = this.activeFlow.param || (this.activeFlow.config && this.activeFlow.config.param) || [];
                 
@@ -703,7 +701,7 @@
                             if (p.type === "boolean") {
                                 val = el.checked ? "true" : "false";
                             } else if (p.type !== "number") {
-                                val = `"${val}"`; // wrap strings in quotes
+                                val = `"${val}"`;
                             }
                             paramPrefix += `${val} as $${p.id} | \n`;
                         }
@@ -713,15 +711,14 @@
                     }
                 }
 
-                // Prepend the parameters to whatever the user has in the IDE
                 const script = paramPrefix + document.getElementById('jqInput').value.trim();
                 
                 this.wizardState = "loading"; this.renderWizard();
                 terminal.verbose("Executing compilation via jq.wasm bridge...");
 
                 try {
-                    window.jqCompilerLogs = []; // Wipe clean
-                    window.isJqCompiling = true; // TRAP ACTIVATED
+                    window.jqCompilerLogs = [];
+                    window.isJqCompiling = true;
 
                     const snapshot = JSON.parse(JSON.stringify(this.sourceAST));
                     const result = await jq.json(this.sourceAST, script);
@@ -758,7 +755,7 @@
                     
                     this.forceOpenIDE();
                 } finally {
-                    window.isJqCompiling = false; // TRAP DEACTIVATED
+                    window.isJqCompiling = false;
                 }
             }
 
