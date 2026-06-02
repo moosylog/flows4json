@@ -24,6 +24,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jq.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
         :root {
@@ -116,8 +118,19 @@
         .product-media img { max-width: 100%; max-height: 320px; object-fit: contain; display: block; }
         
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
-        .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: pre-wrap; }
-
+        
+         /* MARKDOWN STYLES */
+        .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: normal; }
+        .product-desc p { margin-bottom: 12px; margin-top: 0; }
+        .product-desc p:last-child { margin-bottom: 0; }
+        .product-desc ul, .product-desc ol { padding-left: 20px; margin-bottom: 16px; margin-top: 4px; }
+        .product-desc li { margin-bottom: 4px; }
+        .product-desc strong { color: #fff; font-weight: 600; }
+        .product-desc code { background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; color: var(--accent-blue); border: 1px solid var(--border); }
+        .product-desc h1, .product-desc h2, .product-desc h3, .product-desc h4 { color: #fff; margin-top: 24px; margin-bottom: 12px; font-weight: 600; line-height: 1.2; }
+        .product-desc a { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
+        .product-desc a:hover { text-decoration: underline; }
+		
         /* PARAMETERS UI */
         .param-section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--text-primary); }
         .param-group { background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
@@ -524,7 +537,9 @@
                 document.getElementById('studioTitle').innerText = flowData.title;
                 document.getElementById('studioSub').innerText = flowData.subtitle || category;
                 document.getElementById('studioAuthor').innerText = `Developer: ${author}`;
-                document.getElementById('studioDesc').innerText = flowData.description || 'No detailed description provided.';
+                
+                // INJECT MARKED.JS PARSER FOR DESCRIPTION
+                document.getElementById('studioDesc').innerHTML = marked.parse(flowData.description || 'No detailed description provided.');
                 
                 const tagsHtml = devices.map(d => `<span class="device-tag ${d.toLowerCase() === 'go60' || d.toLowerCase() === 'glove80' ? d.toLowerCase() : ''}">${d}</span>`).join('');
                 document.getElementById('studioTags').innerHTML = tagsHtml;
