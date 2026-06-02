@@ -2,11 +2,19 @@ uid = "macro_string"
 type = "mutation"
 language = "us"
 title = "Sample: String macro"
-subtitle = "Macro: Create a string❓"
+subtitle = "Macro: Create a string"
 description = """
-This is an example to create a string macros.
+This is an example to create a string macros based on the en-US language settings. 
 
-🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
+❌ Do not store secrets or personal data in your layout. MoErgo Layout Editor files are always accessible via a URL—there is no “private” mode, whether published in the catalog or not.
+
+Supported Characters
+Lowercase Letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+Uppercase Letters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+Numbers: 0 1 2 3 4 5 6 7 8 9
+Punctuation & Math: . , ; : ' " - _ = + / \ |
+Brackets & Grouping: ( ) [ ] { } < >
+Special Symbols: ! @ # $ % ^ & * ?  ~`
 """
 
 # ==============================================================================
@@ -122,21 +130,21 @@ def zmk_sym($c):
 
 [[param]]
 id = "macro_id"
-label = "Macro ID (Name)"
+label = "Macro Name"
 type = "text"
-default = "my_macro_string"
+default = "flows_macro_string"
 
 [[param]]
 id = "macro_string"
-label = "String to Type"
+label = "Text to Type"
 type = "text"
-default = "Helloworld@!1"
+default = "Tr0ub4doR12@#$%"
 
 [[param]]
 id = "overwrite_macro"
 label = "Overwrite if exists?"
 type = "boolean"
-default = false
+default = true
 
 # ==============================================================================
 # METADATA & CONFIG
