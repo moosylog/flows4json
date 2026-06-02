@@ -372,8 +372,8 @@
         "go60",
         "glove80"
       ],
-      "icon": "\"🇩🇪\"         # Optional: use any emoji or unicode",
-      "theme": "\"blue\"       # Optional: red, green, blue, purple, yellow, orange"
+      "icon": "🇩🇪",
+      "theme": "blue"
     },
     "config": {
       "category": "Languages & Symbols",
