@@ -414,10 +414,35 @@
             getAuthor(f)   { return (f.manifest && f.manifest.author) || f.author || "moosyresearch"; }
 
             bindEvents() {
-                const handleSidebarNav = () => { this.interceptSidebarNav(); this.renderGrid(); };
-                document.getElementById('searchInput').addEventListener('input', handleSidebarNav);
-                document.querySelectorAll('input[name="device"]').forEach(r => r.addEventListener('change', handleSidebarNav));
+                const handleSearchNav = () => {
+                    this.interceptSidebarNav();
+                    this.renderGrid();
+                    
+                    // Update URL with search query silently (replaceState)
+                    const searchQ = document.getElementById('searchInput').value;
+                    const newUrl = new URL(window.location);
+                    if (searchQ) newUrl.searchParams.set('q', searchQ);
+                    else newUrl.searchParams.delete('q');
+                    
+                    if (!newUrl.searchParams.get('id')) {
+                        window.history.replaceState({}, '', newUrl);
+                    }
+                };
+                document.getElementById('searchInput').addEventListener('input', handleSearchNav);
+                document.querySelectorAll('input[name="device"]').forEach(r => r.addEventListener('change', () => { this.interceptSidebarNav(); this.renderGrid(); }));
                 document.getElementById('layoutFile').addEventListener('change', (e) => this.loadTargetJSON(e));
+
+                // Handle Browser Back/Forward navigation
+                window.addEventListener('popstate', () => {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const flowId = urlParams.get('id');
+                    if (flowId) {
+                        const targetFlow = this.catalog.find(f => f.uid === flowId);
+                        if (targetFlow) this.showStudio(targetFlow, true);
+                    } else {
+                        this.showLibrary(true);
+                    }
+                });
             }
 
             interceptSidebarNav() {
@@ -455,15 +480,24 @@
                 pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft;
             }
 
-            showLibrary() {
+            showLibrary(skipHistory = false) {
                 document.getElementById('viewStudio').classList.remove('active');
                 document.getElementById('viewLibrary').classList.add('active');
                 this.activeFlow = null; this.sourceAST = null;
                 document.getElementById('devPane').classList.remove('active');
                 document.getElementById('resizerH').classList.remove('active');
+
+                // Revert URL to grid view
+                if (!skipHistory) {
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.delete('id');
+                    const currentSearch = document.getElementById('searchInput').value;
+                    if (currentSearch) newUrl.searchParams.set('q', currentSearch);
+                    window.history.pushState({}, '', newUrl);
+                }
             }
 
-            showStudio(flowData) {
+            showStudio(flowData, skipHistory = false) {
                 this.activeFlow = flowData;
                 this.sourceAST = null;
 
@@ -472,6 +506,14 @@
 
                 document.getElementById('viewLibrary').classList.remove('active');
                 document.getElementById('viewStudio').classList.add('active');
+
+                // Update URL to match specific flow
+                if (!skipHistory) {
+                    const newUrl = new URL(window.location);
+                    newUrl.searchParams.set('id', flowData.uid);
+                    newUrl.searchParams.delete('q');
+                    window.history.pushState({ id: flowData.uid }, '', newUrl);
+                }
 
                 const category = this.getCategory(flowData);
                 const author = this.getAuthor(flowData);
@@ -600,8 +642,28 @@
                     if (!response.ok) throw new Error("Could not reach the App Store server.");
                     
                     this.catalog = await response.json();
+
+                    // URL Route Check (Deep Linking logic)
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const flowId = urlParams.get('id');
+                    const searchQ = urlParams.get('q');
+
+                    if (searchQ) {
+                        document.getElementById('searchInput').value = searchQ;
+                    }
+
+                    if (flowId) {
+                        const targetFlow = this.catalog.find(f => f.uid === flowId);
+                        if (targetFlow) {
+                            this.renderCategories();
+                            this.showStudio(targetFlow, true);
+                            return; 
+                        }
+                    }
+
                     this.renderCategories();
                     this.renderGrid();
+
                 } catch (err) { 
                     grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p></div>`; 
                 }
