@@ -1,12 +1,12 @@
 uid = "hrmbasic"
 type = "mutation"
 language = "us"
-title = "⭐⭐Add Sunaku CAGS"
-subtitle = "Add HRM for macOS"
+title = "Add Home-Row Mods"
+subtitle = "Option available"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
 
-ℹ️ Urob Timeless is the safest choice, using a balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.
+ℹ️ Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.
 """
 
 # ==============================================================================
