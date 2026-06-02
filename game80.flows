@@ -1,7 +1,7 @@
 uid = "glove80_gaming"
 type = "mutation"
 language = "us"
-title = "🎮 TK Gaming Layer 80"
+title = "TK Gaming Layer 80"
 subtitle = "Adds a custom Gaming layer"
 description = """
 Injects a dedicated left-hand focused Gaming layer for the Glove80 with then name 'Gaming_flows'.
