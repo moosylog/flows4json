@@ -133,6 +133,8 @@ end
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
+icon = "🇩🇪"         # Optional: use any emoji or unicode
+theme = "blue"       # Optional: red, green, blue, purple, yellow, orange
 [config]
 category = "Languages & Symbols"
 num = 123
