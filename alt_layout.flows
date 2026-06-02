@@ -7,46 +7,15 @@ description = """
 This will change your keyboard layout to an alternative to the QWERTY layout.
 
 Highlights:
-• Multiple Layout Support: Easily switch between layouts such as Colemak-DH, Aptmak Blue, and Enthium through simple configuration.
-• Intelligent Remapping: Focuses on alpha layers while preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., gaming setups).
-• Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
+• Easily switch to another alt.layouts such as Colemak-DH, Aptmak Blue, and Enthium or other.
+• Keeps these layers out of scope: Gaming, Numbers, Navigation, Media, Keypad, Mouse, and Magic.
 
 ⚠️ Thumb-letter mappings are not supported to ensure safe configuration.
 ⚠️ TailorKey Bilateral HRM is not included; the QWERTY Swap tool can be used instead.
-
-
 """
 
 # ==============================================================================
-# UI PARAMETERS 
-# ==============================================================================
-
-[[param]]
-id = "layout_name"
-label = "Target Layout"
-type = "select"
-options = [
-  "aptmak", 
-  "aptmak_blue", 
-  "azerty", 
-  "canary", 
-  "colemak-dh", 
-  "dvorak", 
-  "engram", 
-  "engrammer", 
-  "enthium_v13", 
-  "enthium_v14", 
-  "gallium", 
-  "graphite", 
-  "hands-down-neu", 
-  "maltron", 
-  "qwerty", 
-  "workman"
-]
-default = "colemak-dh"
-
-# ==============================================================================
-# JQ SCRIPT
+# JQ SCRIPT (Must be above ALL [[param]] and [config] tags!)
 # ==============================================================================
 script = """
 # ==========================================
@@ -181,6 +150,34 @@ def keyboards: {
   )
 )
 """
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "layout_name"
+label = "Target Layout"
+type = "select"
+options = [
+  "aptmak", 
+  "aptmak_blue", 
+  "azerty", 
+  "canary", 
+  "colemak-dh", 
+  "dvorak", 
+  "engram", 
+  "engrammer", 
+  "enthium_v13", 
+  "enthium_v14", 
+  "gallium", 
+  "graphite", 
+  "hands-down-neu", 
+  "maltron", 
+  "qwerty", 
+  "workman"
+]
+default = "colemak-dh"
 
 # ==============================================================================
 # METADATA & CONFIG
