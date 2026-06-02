@@ -6,10 +6,10 @@ subtitle = "Adds the Autoshift Layer"
 description = """
 Autoshift lets one key type two characters based on how long you press it.
 Tap the key to type the normal character (like a).
-Hold the key a bit longer to type the shifted character (like A).
+Hold the key a bit longer to type the shifted character (like A). [Watch video](https://youtu.be/S9MSCUjT1MA)
 
 How it works:
-Autoshift does nothing until you switch to the Autoshift layer.
+Autoshift does nothing until you switch to the Autoshift layer. 
 1. Creates AutoShift layer based on base layer0
 2. Create Behaviors &AS_v1_TKZ,  &AS_Shifted_v1_TKZ, and &AS_HT_v2_TKZ
 🚩 To turn it on, you manually add a layer switch using &to or &tog or &layer.
