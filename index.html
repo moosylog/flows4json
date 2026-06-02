@@ -82,7 +82,7 @@
         .app-card { display: flex; align-items: flex-start; gap: 16px; padding: 16px; border-radius: var(--radius-lg); background: transparent; cursor: pointer; transition: 0.2s; border: 1px solid transparent; }
         .app-card:hover { background: var(--bg-card); border-color: rgba(255,255,255,0.05); }
         
-        .app-icon { width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0; background: linear-gradient(135deg, #43CBFF 10%, #9708CC 100%); display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .app-icon { width: 64px; height: 64px; border-radius: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
         .app-info { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; overflow: hidden; padding-top: 2px;}
         .app-title { font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-primary); }
         .app-sub { font-size: 13px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -119,7 +119,7 @@
         
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         
-         /* MARKDOWN STYLES */
+        /* MARKDOWN STYLES */
         .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: normal; }
         .product-desc p { margin-bottom: 12px; margin-top: 0; }
         .product-desc p:last-child { margin-bottom: 0; }
@@ -130,7 +130,7 @@
         .product-desc h1, .product-desc h2, .product-desc h3, .product-desc h4 { color: #fff; margin-top: 24px; margin-bottom: 12px; font-weight: 600; line-height: 1.2; }
         .product-desc a { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
         .product-desc a:hover { text-decoration: underline; }
-		
+
         /* PARAMETERS UI */
         .param-section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--text-primary); }
         .param-group { background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
@@ -397,16 +397,41 @@
         }
         const terminal = new Logger('logPanel');
 
-        function getGradient(str) {
-            const colors = [ ['#FF3B30', '#FF9500'], ['#34C759', '#30D158'], ['#007AFF', '#5AC8FA'], ['#AF52DE', '#FF2D55'], ['#FF9500', '#FFCC00'] ];
+        // REVISED THEME MANAGER (Reads TOML settings or falls back to Math Hash)
+        function getGradient(flow) {
+            const themeMap = {
+                'red': 'linear-gradient(135deg, #FF3B30 0%, #FF9500 100%)',
+                'green': 'linear-gradient(135deg, #34C759 0%, #30D158 100%)',
+                'blue': 'linear-gradient(135deg, #007AFF 0%, #5AC8FA 100%)',
+                'purple': 'linear-gradient(135deg, #AF52DE 0%, #FF2D55 100%)',
+                'yellow': 'linear-gradient(135deg, #FF9500 0%, #FFCC00 100%)',
+                'orange': 'linear-gradient(135deg, #FF9500 0%, #FF3B30 100%)'
+            };
+            
+            // Check for developer override in manifest or config
+            const userTheme = (flow.manifest && flow.manifest.theme) || (flow.config && flow.config.theme) || flow.theme;
+            if (userTheme && themeMap[userTheme.toLowerCase()]) {
+                return themeMap[userTheme.toLowerCase()];
+            }
+
+            // Fallback: Math Hash on UID
+            const colors = Object.values(themeMap);
+            const str = flow.uid || flow.title || "default";
             let hash = 0; for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-            const pair = colors[Math.abs(hash) % colors.length];
-            return `linear-gradient(135deg, ${pair[0]} 0%, ${pair[1]} 100%)`;
+            return colors[Math.abs(hash) % colors.length];
         }
-        function getEmoji(cat) {
-            const map = { 'colemak': '⌨️', 'automation': '🤖', 'gaming': '🎮', 'mac': '🍎', 'windows': '🪟' };
-            for (let k in map) if (cat && cat.toLowerCase().includes(k)) return map[k];
-            return '✨';
+
+        // REVISED EMOJI MANAGER (Reads TOML settings or falls back to Math Hash)
+        function getEmoji(flow) {
+            // Check for developer override in manifest or config
+            const userIcon = (flow.manifest && flow.manifest.icon) || (flow.config && flow.config.icon) || flow.icon;
+            if (userIcon) return userIcon;
+            
+            // Fallback: Math Hash on UID to assign a stable generic tool emoji
+            const fallbacks = ['✨', '🛠️', '🚀', '🧩', '⚙️', '⚡', '⌨️', '🤖', '📦', '🎮'];
+            const str = flow.uid || flow.title || "default";
+            let hash = 0; for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            return fallbacks[Math.abs(hash) % fallbacks.length];
         }
 
         class FlowsStoreApp {
@@ -532,8 +557,8 @@
                 const author = this.getAuthor(flowData);
                 const devices = this.getDevices(flowData);
 
-                document.getElementById('studioIcon').style.background = getGradient(flowData.title);
-                document.getElementById('studioIcon').innerText = getEmoji(category);
+                document.getElementById('studioIcon').style.background = getGradient(flowData);
+                document.getElementById('studioIcon').innerText = getEmoji(flowData);
                 document.getElementById('studioTitle').innerText = flowData.title;
                 document.getElementById('studioSub').innerText = flowData.subtitle || category;
                 document.getElementById('studioAuthor').innerText = `Developer: ${author}`;
@@ -725,7 +750,7 @@
                     const card = document.createElement('div'); card.className = 'app-card'; card.onclick = () => this.showStudio(flow);
                     const tagsHtml = devices.map(d => `<span class="device-tag ${d.toLowerCase() === 'go60' || d.toLowerCase() === 'glove80' ? d.toLowerCase() : ''}">${d}</span>`).join('');
                     card.innerHTML = `
-                        <div class="app-icon" style="background: ${getGradient(flow.title)};">${getEmoji(cat)}</div>
+                        <div class="app-icon" style="background: ${getGradient(flow)};">${getEmoji(flow)}</div>
                         <div class="app-info"><div class="app-title">${flow.title}</div><div class="app-sub">${flow.subtitle || cat}</div><div class="app-tags">${tagsHtml}</div></div>
                         <div class="app-action"><button>View</button></div>
                     `;
