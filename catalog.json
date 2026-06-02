@@ -147,7 +147,9 @@
       "author": "moosyresearch",
       "keyboards": [
         "glove80"
-      ]
+      ],
+      "icon": "🎮",
+      "theme": "purple"
     },
     "config": {
       "category": "Gaming"
