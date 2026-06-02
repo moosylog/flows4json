@@ -1,4 +1,4 @@
-uid = "hrmbasic"
+uid = "hrm_add"
 type = "mutation"
 language = "us"
 title = "Add Home-Row Mods"
