@@ -56,7 +56,7 @@
       "num": "123"
     },
     "param": [],
-    "mediaUrl": "https://moosylog.github.io/flows4json/alphaswap_colemk_dh.png"
+    "mediaUrl": null
   },
   {
     "uid": "alphaswap",
@@ -120,7 +120,7 @@
         "default": "colemak-dh"
       }
     ],
-    "mediaUrl": null
+    "mediaUrl": "https://moosylog.github.io/flows4json/alt_layout.png"
   },
   {
     "uid": "autoshift",
