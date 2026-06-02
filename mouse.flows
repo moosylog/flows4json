@@ -221,6 +221,8 @@ script = """
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60"]
+icon = "🖱️"         # Optional: use any emoji or unicode
+theme = "blue"       # Optional: red, green, blue, purple, yellow, orange
 [config]
 category = "Mouse Controls"
 num = 123
