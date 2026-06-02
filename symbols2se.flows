@@ -103,7 +103,7 @@ author = "moosyresearch"
 keyboards = ["go60","glove80"]
 icon = "🇸🇪"      
 # Optional: red, green, blue, purple, yellow, orange
-theme = "orange" 
+theme = "purple" 
 [config]
 category = "Languages & Symbols"
 num = 123
