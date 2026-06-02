@@ -1,0 +1,109 @@
+uid = "glove80_gaming"
+type = "mutation"
+language = "us"
+title = "Glove80 Gaming Layer"
+subtitle = "Adds a custom Gaming layer"
+description = """
+Injects a dedicated left-hand focused Gaming layer for the Glove80.
+Includes an extended macro/number cluster on the left and F-keys on the right.
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+# 1. SCOPE FINDER
+(if .keymap then .keymap else . end) |= (
+
+  # ----------------------------------------------------------------------------
+  # 🛑 SAFETY CHECKS (FAIL FAST)
+  # ----------------------------------------------------------------------------
+
+  # Check 1: Hardware Match
+  ((.keyboard // "unknown") | ascii_downcase) as $hw_sig |
+  if ($hw_sig != "glove80") then
+    "Err: Hardware mismatch. Target: 'glove80', Found: '\\($hw_sig)'." | halt_error
+  else . end |
+
+  # Check 2: Duplication Guard
+  if (.layer_names | index("Gaming")) then
+    "Err: Gaming layer exists" | halt_error
+  else . end |
+
+  # ----------------------------------------------------------------------------
+  # 🛠️ HELPERS
+  # ----------------------------------------------------------------------------
+
+  def kp($code):
+    { "value": "&kp", "params": [{ "value": $code, "params": [] }] };
+
+  def kp_mod($code; $modifier):
+    { "value": "&kp", "params": [{ "value": $modifier, "params": [{ "value": $code, "params": [] }] }] };
+
+  # ----------------------------------------------------------------------------
+  # 📝 KEYBOARD DATA MAPPING (Glove80 80-Key Matrix)
+  # ----------------------------------------------------------------------------
+
+  [
+    # Row 1 (0-9)
+    [0,"ESC"], [1,"P"], [2,"O"], [3,"N"], [4,"BSPC"],
+    [5,"F1"], [6,"F2"], [7,"F3"], [8,"F4"], [9,"F5"],
+
+    # Row 2 (10-21)
+    [10,"M"], [11,"N6"], [12,"N7"], [13,"N8"], [14,"N9"], [15,"N0"],
+    [16,"F6"], [17,"F7"], [18,"F8"], [19,"F9"], [20,"F10"], [21,"F11"],
+
+    # Row 3 (22-33)
+    [22,"I"], [23,"N1"], [24,"N2"], [25,"N3"], [26,"N4"], [27,"N5"],
+    [28,"Y"], [29,"U"], [30,"I"], [31,"O"], [32,"P"], [33,"F12"],
+
+    # Row 4 (34-45)
+    [34,"T"], [35,"TAB"], [36,"Q"], [37,"W"], [38,"E"], [39,"R"],
+    [40,"H"], [41,"J"], [42,"K"], [43,"L"], [44,"SEMI"], [45,"SQT"],
+
+    # Row 5 (46-63) including Upper Thumbs
+    [46,"G"], [47,"LSHFT"], [48,"A"], [49,"S"], [50,"D"], [51,"F"],
+    [52,"LSHFT"], [53,"LALT"], [54,"V"],          # Left Thumb (Upper)
+    [55,"ESC"], [56,"UP"], [57,"RET"],            # Right Thumb (Upper)
+    [58,"N"], [59,"M"], [60,"COMMA"], [61,"DOT"], [62,"FSLH"], [63,"BSLH"],
+
+    # Row 6 (64-79) including Lower Thumbs
+    [64,"B"], [65,"LCTRL"], [66,"Z"], [67,"X"], [68,"C"],
+    [69,"SPACE"], [70,"LCTRL"], [71,"RET"],       # Left Thumb (Lower)
+    [72,"LEFT"], [73,"DOWN"], [74,"RIGHT"],       # Right Thumb (Lower)
+    [75,"MINUS"], [76,"LBKT"], [77,"RBKT"], [78,"EQUAL"], [79,"GRAVE"]
+  ] as $mapping |
+
+  # ----------------------------------------------------------------------------
+  # 🚀 EXECUTION PHASE
+  # ----------------------------------------------------------------------------
+
+  (.layers | length) as $new_idx |
+
+  .creator = "moosy" |
+  .layer_names += ["Gaming"] |
+
+  # Initialize layer with transparent keys (80 keys for Glove80)
+  .layers[$new_idx] = [range(80) | { "value": "&trans", "params": [] }] |
+
+  # Fill keys
+  reduce $mapping[] as $map (.;
+    if ($map | length) == 3 then
+      .layers[$new_idx][$map[0]] = kp_mod($map[1]; $map[2])
+    else
+      .layers[$new_idx][$map[0]] = kp($map[1])
+    end
+  )
+)
+"""
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["glove80"]
+
+[config]
+category = "Gaming"
