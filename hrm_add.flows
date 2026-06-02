@@ -208,7 +208,7 @@ def GetHardware:
 
 [[param]]
 id = "target_version"
-label = "HRM Version"
+label = "HRM flavor"
 type = "select"
 options = ["1", "2", "3"]
 labels = ["Urob timeless", "Urob faster index", "Sunaku per finger"]
@@ -216,7 +216,7 @@ default = "2"
 
 [[param]]
 id = "mod_preset"
-label = "Modifier Preset (OS)"
+label = "Recommended order"
 type = "select"
 options = ["GACS", "CAGS"]
 labels = ["Windows / Linux", "macOS"]
