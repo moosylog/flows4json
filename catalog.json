@@ -348,8 +348,8 @@
       "keyboards": [
         "go60"
       ],
-      "icon": "\"🖱️\"         # Optional: use any emoji or unicode",
-      "theme": "\"blue\"       # Optional: red, green, blue, purple, yellow, orange"
+      "icon": "🖱️",
+      "theme": "blue"
     },
     "config": {
       "category": "Mouse Controls",
