@@ -29,8 +29,29 @@ jobs:
               
               const extVal = (key) => { const m = content.match(new RegExp(`(?:^|\\n)${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
               const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
-              const extDev = () => { const m = content.match(/keyboards\s*=\s*\[(.*?)\]/); return m ? m[1].split(',').map(s => s.replace(/"/g, '').trim()).filter(Boolean) : []; };
               
+              // --- NEW: Parse the [manifest] block (icon, theme, author, keyboards) ---
+              let manifestObj = {};
+              const mManifest = content.match(/\[manifest\]([\s\S]*?)(?=\n\[|$)/);
+              if (mManifest) {
+                mManifest[1].split('\n').forEach(l => {
+                  const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
+                  if (kv) {
+                    let k = kv[1].trim();
+                    let v = kv[2].trim();
+                    
+                    if (v.startsWith('"') && v.endsWith('"')) {
+                      v = v.slice(1, -1); // String
+                    } else if (v.startsWith('[') && v.endsWith(']')) {
+                      // Array (like keyboards = ["go60", "glove80"])
+                      const strMatches = v.match(/"([^"]*)"/g);
+                      v = strMatches ? strMatches.map(s => s.slice(1, -1)) : v.slice(1, -1).split(',').map(s => s.trim()).filter(Boolean);
+                    }
+                    manifestObj[k] = v;
+                  }
+                });
+              }
+
               // Parse the [config] block
               let cfg = {};
               const mCfg = content.match(/\[config\]([\s\S]*?)(?=\n\[|$)/);
@@ -45,7 +66,7 @@ jobs:
                 });
               }
 
-              // --- NEW: Parse the [[param]] blocks ---
+              // Parse the [[param]] blocks
               let params = [];
               const paramMatches = content.match(/\[\[param\]\]([\s\S]*?)(?=\n\[|$)/g);
               if (paramMatches) {
@@ -93,10 +114,9 @@ jobs:
                 script: extMulti("script"), 
                 category: extVal("category") || "Utilities",
                 appUrl: extVal("appUrl") || null,
-                author: extVal("author"), 
-                devices: extDev(), 
+                manifest: manifestObj, // <-- Injects theme, icon, author, keyboards into JSON
                 config: cfg,
-                param: params, // Safely attached to the final JSON
+                param: params,
                 mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null
               };
             });
