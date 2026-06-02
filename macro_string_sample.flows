@@ -13,13 +13,51 @@ This is an example to create a string macros.
 # JQ SCRIPT (Must be above ALL [[param]] and [config] tags!)
 # ==============================================================================
 script = """
+# Map symbols to ZMK keycodes
+def zmk_sym($c):
+  if $c == " " then "SPACE"
+  elif $c == "!" then "EXCL"
+  elif $c == "@" then "AT"
+  elif $c == "#" then "HASH"
+  elif $c == "$" then "DLLR"
+  elif $c == "%" then "PRCNT"
+  elif $c == "^" then "CARET"
+  elif $c == "&" then "AMPS"
+  elif $c == "*" then "STAR"
+  elif $c == "(" then "LPAR"
+  elif $c == ")" then "RPAR"
+  elif $c == "-" then "MINUS"
+  elif $c == "_" then "UNDER"
+  elif $c == "=" then "EQUAL"
+  elif $c == "+" then "PLUS"
+  elif $c == "[" then "LBKT"
+  elif $c == "{" then "LBRC"
+  elif $c == "]" then "RBKT"
+  elif $c == "}" then "RBRC"
+  elif $c == "|" then "PIPE"
+  elif $c == ";" then "SEMI"
+  elif $c == ":" then "COLON"
+  elif $c == "'" then "SQT"
+  elif $c == "," then "COMMA"
+  elif $c == "<" then "LT"
+  elif $c == "." then "DOT"
+  elif $c == ">" then "GT"
+  elif $c == "/" then "FSLH"
+  elif $c == "?" then "QMARK"
+  elif $c == "`" then "GRAVE"
+  elif $c == "~" then "TILDE"
+  elif $c == "\\\\" then "BSLH"
+  elif $c == "\\\"" then "DQT"
+  else "NONE" end;
+
 # Generate the new macro object
 (
   {
-    "name": "&\($macro_id)",
-    "description": "Print \"\($macro_string)\"",
+    "name": "&\\($macro_id)",
+    "description": "Print \\"\\($macro_string)\\"",
     "bindings": (
       $macro_string | split("") | map(
+        . as $char |
         if test("^[A-Z]$") then
           {
             "value": "&kp",
@@ -28,10 +66,20 @@ script = """
                 "value": "LS",
                 "params": [
                   {
-                    "value": .,
+                    "value": $char,
                     "params": []
                   }
                 ]
+              }
+            ]
+          }
+        elif test("^[a-z]$") then
+          {
+            "value": "&kp",
+            "params": [
+              {
+                "value": ($char | ascii_upcase),
+                "params": []
               }
             ]
           }
@@ -40,7 +88,7 @@ script = """
             "value": "&kp",
             "params": [
               {
-                "value": ("N" + .),
+                "value": ("N" + $char),
                 "params": []
               }
             ]
@@ -50,7 +98,7 @@ script = """
             "value": "&kp",
             "params": [
               {
-                "value": (. | ascii_upcase),
+                "value": zmk_sym($char),
                 "params": []
               }
             ]
@@ -62,7 +110,7 @@ script = """
   }
 ) as $new_macro |
 
-"&\($macro_id)" as $macro_name |
+"&\\($macro_id)" as $macro_name |
 
 # Safely inject into the AST context (handles both flat and nested keymaps!)
 (.keymap // .) |= (
