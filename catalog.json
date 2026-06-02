@@ -130,8 +130,7 @@
       "keyboards": [
         "go60"
       ],
-      "icon": "🎮",
-      "theme": "blue"
+      "icon": "🎮"
     },
     "config": {
       "category": "Gaming",
