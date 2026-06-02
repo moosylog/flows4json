@@ -8,13 +8,13 @@ This is an example to create a string macros based on the en-US language setting
 
 ❌ Do not store secrets or personal data in your layout. MoErgo Layout Editor files are always accessible via a URL—there is no “private” mode, whether published in the catalog or not.
 
-Supported Characters
-Lowercase Letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
-Uppercase Letters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
-Numbers: 0 1 2 3 4 5 6 7 8 9
-Punctuation & Math: . , ; : ' " - _ = + / \ |
-Brackets & Grouping: ( ) [ ] { } < >
-Special Symbols: ! @ # $ % ^ & * ?  ~`
+**Supported Characters:**
+- Lowercase Letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
+- Uppercase Letters: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+- Numbers: 0 1 2 3 4 5 6 7 8 9
+- Punctuation & Math: . , ; : ' " - _ = + / \ |
+- Brackets & Grouping: ( ) [ ] { } < >
+- Special Symbols: ! @ # $ % ^ & * ?  ~`
 """
 
 # ==============================================================================
