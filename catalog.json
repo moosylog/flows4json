@@ -237,42 +237,7 @@
     "config": {
       "category": "Home-Row Mods"
     },
-    "param": [
-      {
-        "id": "target_version",
-        "label": "HRM flavor",
-        "type": "select",
-        "options": [
-          "2",
-          "3"
-        ],
-        "labels": [
-          "Urob timeless",
-          "Sunaku per finger"
-        ],
-        "default": "2"
-      },
-      {
-        "id": "mod_preset",
-        "label": "Recommended order",
-        "type": "select",
-        "options": [
-          "GACS",
-          "CAGS"
-        ],
-        "labels": [
-          "Windows / Linux",
-          "macOS"
-        ],
-        "default": "GACS"
-      },
-      {
-        "id": "preserve_decorators",
-        "label": "Preserve UI Decorators",
-        "type": "boolean",
-        "default": true
-      }
-    ],
+    "param": [],
     "mediaUrl": null
   },
   {
