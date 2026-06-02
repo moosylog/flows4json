@@ -4,7 +4,7 @@ language = "us"
 title = "Sample: String macro"
 subtitle = "Macro: Create a string❓"
 description = """
-This is an example to create a string macros.
+This is an example to create a string macro for an US keyboard layout. 
 
 🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
 """
