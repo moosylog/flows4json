@@ -163,6 +163,11 @@
           "2",
           "3"
         ],
+        "labels": [
+          "Urob timeless",
+          "Urob faster index",
+          "Sunaku per finger"
+        ],
         "default": "3"
       },
       {
@@ -172,6 +177,10 @@
         "options": [
           "GACS",
           "CAGS"
+        ],
+        "labels": [
+          "Windows / Linux",
+          "macOS"
         ],
         "default": "CAGS"
       },
