@@ -1,28 +1,58 @@
-uid = "alphaswap"
+uid = "alt_layout"
 type = "mutation"
 language = "us"
-title = "Remap to Gallium"
-subtitle = "Or any other alt.layouts"
+title = "Alternative Layouts"
+subtitle = "Pre-selected list"
 description = """
-This helps you switch your keyboard layout to a another alpha layer. 
+This will change your keyboard layout to an alternative to the QWERTY layout.
 
 Highlights:
-Multiple Alternative Layouts: Supports multiple alternative keyboard layouts (e.g., Colemak-DH, Aptmak Blue, Enthium) with simple configuration-based switching.
-Multi-Layer Support: The all_layers option enables remapping across all alpha layers. 
+• Multiple Layout Support: Easily switch between layouts such as Colemak-DH, Aptmak Blue, and Enthium through simple configuration.
+• Intelligent Remapping: Focuses on alpha layers while preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., gaming setups).
+• Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
 
-Protection: Safeguards ensure only alpha layers are converted, preserving hold-taps, modifiers, and macros, with optional layer exclusions (e.g., Gaming).
+⚠️ Thumb-letter mappings are not supported to ensure safe configuration.
+⚠️ TailorKey Bilateral HRM is not included; the QWERTY Swap tool can be used instead.
 
-⚠️ Thumb: Letters on the thumb are not supported due to the risk of overwriting.
-⚠️ TailorKey Bilateral HRM is currently unsupported. Please use the QWERTY Swap tool instead.
 
-🚩 Configure alpha layer and layers to include or exclude in the first lines of the script
 """
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "layout_name"
+label = "Target Layout"
+type = "select"
+options = [
+  "aptmak", 
+  "aptmak_blue", 
+  "azerty", 
+  "canary", 
+  "colemak-dh", 
+  "dvorak", 
+  "engram", 
+  "engrammer", 
+  "enthium_v13", 
+  "enthium_v14", 
+  "gallium", 
+  "graphite", 
+  "hands-down-neu", 
+  "maltron", 
+  "qwerty", 
+  "workman"
+]
+default = "colemak-dh"
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
 script = """
 # ==========================================
 # SETTINGS
 # ==========================================
 
-"gallium" as $layout_name |
 true as $all_layers |
 ["Gaming","Numbers","Navigation","Media","Keypad","Mouse","Magic"] as $excluded |
 
@@ -83,7 +113,7 @@ def keyboards: {
 (layouts[$layout_name]) as $layout |
 
 # Build the Remap Dictionary (ID -> New Key)
-(]
+(
   reduce range(0;36) as $i (
     {};
     if ($layout[$i] != "" and $cfg.ids[$i] != null)
@@ -151,9 +181,15 @@ def keyboards: {
   )
 )
 """
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
+
 [config]
 category = "QWERTY Alternatives"
 num = 123
