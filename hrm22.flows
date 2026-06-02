@@ -217,6 +217,7 @@ id = "target_version"
 label = "HRM Version"
 type = "select"
 options = ["1", "2", "3"]
+labels = ["Urob timeless", "Urob faster index", "Sunaku per finger"]
 default = "3"
 
 [[param]]
@@ -224,6 +225,7 @@ id = "mod_preset"
 label = "Modifier Preset (OS)"
 type = "select"
 options = ["GACS", "CAGS"]
+labels = ["Windows / Linux", "macOS"]
 default = "CAGS"
 
 [[param]]
