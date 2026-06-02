@@ -99,7 +99,24 @@
         "id": "layout_name",
         "label": "Target Layout",
         "type": "select",
-        "options": "[",
+        "options": [
+          "aptmak",
+          "aptmak_blue",
+          "azerty",
+          "canary",
+          "colemak-dh",
+          "dvorak",
+          "engram",
+          "engrammer",
+          "enthium_v13",
+          "enthium_v14",
+          "gallium",
+          "graphite",
+          "hands-down-neu",
+          "maltron",
+          "qwerty",
+          "workman"
+        ],
         "default": "colemak-dh"
       }
     ],
