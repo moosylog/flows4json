@@ -156,7 +156,7 @@
     "param": [
       {
         "id": "target_version",
-        "label": "HRM Version",
+        "label": "HRM flavor",
         "type": "select",
         "options": [
           "1",
@@ -172,7 +172,7 @@
       },
       {
         "id": "mod_preset",
-        "label": "Modifier Preset (OS)",
+        "label": "Recommended order",
         "type": "select",
         "options": [
           "GACS",
