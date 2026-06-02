@@ -4,7 +4,7 @@ language = "us"
 title = "Sample: String macro"
 subtitle = "Macro: Create a string"
 description = """
-This is an example to create a string macros based on the en-US language settings. 
+This is an example to create a string macros based on the **en-US language settings**. 
 
 ❌ Do not store secrets or personal data in your layout. MoErgo Layout Editor files are always accessible via a URL—there is no “private” mode, whether published in the catalog or not.
 
@@ -153,7 +153,7 @@ default = true
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
-icon = "🤖"      
+icon = "🧙🏼‍♂️"      
 # Optional: red, green, blue, purple, yellow, orange
 theme = "purple" 
 
