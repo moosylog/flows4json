@@ -170,7 +170,9 @@
       "keyboards": [
         "go60",
         "glove80"
-      ]
+      ],
+      "icon": "🏠",
+      "theme": "green"
     },
     "config": {
       "category": "Home-Row Mods"
