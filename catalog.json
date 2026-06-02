@@ -168,7 +168,7 @@
           "Urob faster index",
           "Sunaku per finger"
         ],
-        "default": "3"
+        "default": "2"
       },
       {
         "id": "mod_preset",
@@ -182,7 +182,7 @@
           "Windows / Linux",
           "macOS"
         ],
-        "default": "CAGS"
+        "default": "GACS"
       },
       {
         "id": "preserve_decorators",
