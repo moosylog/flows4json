@@ -4,7 +4,10 @@ language = "us"
 title = "Add Home-Row Mods"
 subtitle = "Configurable"
 description = """
-Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. [Watch video](https://youtu.be/gFW0tgQwnHQ)
+Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
+
+See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
+
 
 ℹ️ Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.
 """
