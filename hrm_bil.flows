@@ -13,14 +13,6 @@ WORK IN PRGRESS
 # ==============================================================================
 script = """
 
-"CAGS" as $mode |  # Switch to "GACS" here to swap configurations
-
-(if $mode == "GACS" then
-  ["LGUI", "LALT", "LCTRL", "LSHFT", "RSHFT", "RCTRL", "LALT", "RGUI"]
-else
-  ["LCTRL", "LALT", "LGUI", "LSHFT", "RSHFT", "RGUI", "LALT", "RCTRL"]
-end) as $mods |
-
 (if .keymap then .keymap else . end) |= (
   # 1. Update Behaviors
   .holdTaps = [
@@ -85,15 +77,15 @@ end) as $mods |
       {"value":"&kp","params":[{"value":"EQUAL"}]},{"value":"&kp","params":[{"value":"N1"}]},{"value":"&kp","params":[{"value":"N2"}]},{"value":"&kp","params":[{"value":"N3"}]},{"value":"&kp","params":[{"value":"N4"}]},{"value":"&kp","params":[{"value":"N5"}]},{"value":"&kp","params":[{"value":"N6"}]},{"value":"&kp","params":[{"value":"N7"}]},{"value":"&kp","params":[{"value":"N8"}]},{"value":"&kp","params":[{"value":"N9"}]},{"value":"&kp","params":[{"value":"N0"}]},{"value":"&kp","params":[{"value":"MINUS"}]},
       {"value":"&kp","params":[{"value":"TAB"}]},{"value":"&kp","params":[{"value":"Q"}]},{"value":"&kp","params":[{"value":"W"}]},{"value":"&kp","params":[{"value":"E"}]},{"value":"&kp","params":[{"value":"R"}]},{"value":"&kp","params":[{"value":"T"}]},{"value":"&kp","params":[{"value":"Y"}]},{"value":"&kp","params":[{"value":"U"}]},{"value":"&kp","params":[{"value":"I"}]},{"value":"&kp","params":[{"value":"O"}]},{"value":"&kp","params":[{"value":"P"}]},{"value":"&kp","params":[{"value":"BSLH"}]},
       {"value":"&kp","params":[{"value":"ESC"}]},
-      {"value":"&HRM_left_pinky_v1B_TKZ","params":[{"value": $mods[0]},{"value":"A"}],"decoration":{"background":"#fbe6fe"}},
-      {"value":"&HRM_left_ring_v1B_TKZ","params":[{"value": $mods[1]},{"value":"S"}],"decoration":{"background":"#e5feff"}},
-      {"value":"&HRM_left_middy_v1B_TKZ","params":[{"value": $mods[2]},{"value":"D"}],"decoration":{"background":"#d9f9c9"}},
-      {"value":"&HRM_left_index_v1B_TKZ","params":[{"value": $mods[3]},{"value":"F"}],"decoration":{"background":"#fffec9"}},
+      {"value":"&HRM_left_pinky_v1B_TKZ","params":[{"value":"LGUI"},{"value":"A"}],"decoration":{"background":"#fbe6fe"}},
+      {"value":"&HRM_left_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"S"}],"decoration":{"background":"#e5feff"}},
+      {"value":"&HRM_left_middy_v1B_TKZ","params":[{"value":"LCTRL"},{"value":"D"}],"decoration":{"background":"#d9f9c9"}},
+      {"value":"&HRM_left_index_v1B_TKZ","params":[{"value":"LSHFT"},{"value":"F"}],"decoration":{"background":"#fffec9"}},
       {"value":"&kp","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},
-      {"value":"&HRM_right_index_v1B_TKZ","params":[{"value": $mods[4]},{"value":"J"}],"decoration":{"background":"#fffec9"}},
-      {"value":"&HRM_right_middy_v1B_TKZ","params":[{"value": $mods[5]},{"value":"K"}],"decoration":{"background":"#d9f9c9"}},
-      {"value":"&HRM_right_ring_v1B_TKZ","params":[{"value": $mods[6]},{"value":"L"}],"decoration":{"background":"#e5feff"}},
-      {"value":"&HRM_right_pinky_v1B_TKZ","params":[{"value": $mods[7]},{"value":"SEMI"}],"decoration":{"background":"#fbe6fe"}},
+      {"value":"&HRM_right_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}],"decoration":{"background":"#fffec9"}},
+      {"value":"&HRM_right_middy_v1B_TKZ","params":[{"value":"RCTRL"},{"value":"K"}],"decoration":{"background":"#d9f9c9"}},
+      {"value":"&HRM_right_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}],"decoration":{"background":"#e5feff"}},
+      {"value":"&HRM_right_pinky_v1B_TKZ","params":[{"value":"RGUI"},{"value":"SEMI"}],"decoration":{"background":"#fbe6fe"}},
       {"value":"&kp","params":[{"value":"SQT"}]},{"value":"&kp","params":[{"value":"GRAVE"}]},{"value":"&kp","params":[{"value":"Z"}]},{"value":"&kp","params":[{"value":"X"}]},{"value":"&kp","params":[{"value":"C"}]},{"value":"&kp","params":[{"value":"V"}]},{"value":"&kp","params":[{"value":"B"}]},
       {"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"LCTRL"}]},{"value":"&lower"},{"value":"&kp","params":[{"value":"LGUI"}]},{"value":"&kp","params":[{"value":"RCTRL"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},
       {"value":"&kp","params":[{"value":"N"}]},{"value":"&kp","params":[{"value":"M"}]},{"value":"&kp","params":[{"value":"COMMA"}]},{"value":"&kp","params":[{"value":"DOT"}]},{"value":"&kp","params":[{"value":"FSLH"}]},{"value":"&kp","params":[{"value":"PG_UP"}]},
@@ -107,15 +99,15 @@ end) as $mods |
       {"value":"&kp","params":[{"value":"EQUAL"}]},{"value":"&kp","params":[{"value":"N1"}]},{"value":"&kp","params":[{"value":"N2"}]},{"value":"&kp","params":[{"value":"N3"}]},{"value":"&kp","params":[{"value":"N4"}]},{"value":"&kp","params":[{"value":"N5"}]},{"value":"&kp","params":[{"value":"N6"}]},{"value":"&kp","params":[{"value":"N7"}]},{"value":"&kp","params":[{"value":"N8"}]},{"value":"&kp","params":[{"value":"N9"}]},{"value":"&kp","params":[{"value":"N0"}]},{"value":"&kp","params":[{"value":"MINUS"}]},
       {"value":"&kp","params":[{"value":"TAB"}]},{"value":"&kp","params":[{"value":"Q"}]},{"value":"&kp","params":[{"value":"W"}]},{"value":"&kp","params":[{"value":"E"}]},{"value":"&kp","params":[{"value":"R"}]},{"value":"&kp","params":[{"value":"T"}]},{"value":"&kp","params":[{"value":"Y"}]},{"value":"&kp","params":[{"value":"U"}]},{"value":"&kp","params":[{"value":"I"}]},{"value":"&kp","params":[{"value":"O"}]},{"value":"&kp","params":[{"value":"P"}]},{"value":"&kp","params":[{"value":"BSLH"}]},
       {"value":"&kp","params":[{"value":"ESC"}]},
-      {"value":"&HRM_left_pinky_v1B_TKZ","params":[{"value": $mods[0]},{"value":"A"}],"decoration":{"background":"#fbe6fe"}},
-      {"value":"&HRM_left_ring_v1B_TKZ","params":[{"value": $mods[1]},{"value":"S"}],"decoration":{"background":"#e5feff"}},
-      {"value":"&HRM_left_middy_v1B_TKZ","params":[{"value": $mods[2]},{"value":"D"}],"decoration":{"background":"#d9f9c9"}},
-      {"value":"&HRM_left_index_v1B_TKZ","params":[{"value": $mods[3]},{"value":"F"}],"decoration":{"background":"#fffec9"}},
+      {"value":"&HRM_left_pinky_v1B_TKZ","params":[{"value":"LGUI"},{"value":"A"}],"decoration":{"background":"#fbe6fe"}},
+      {"value":"&HRM_left_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"S"}],"decoration":{"background":"#e5feff"}},
+      {"value":"&HRM_left_middy_v1B_TKZ","params":[{"value":"LCTRL"},{"value":"D"}],"decoration":{"background":"#d9f9c9"}},
+      {"value":"&HRM_left_index_v1B_TKZ","params":[{"value":"LSHFT"},{"value":"F"}],"decoration":{"background":"#fffec9"}},
       {"value":"&kp","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},
-      {"value":"&HRM_right_index_v1B_TKZ","params":[{"value": $mods[4]},{"value":"J"}],"decoration":{"background":"#fffec9"}},
-      {"value":"&HRM_right_middy_v1B_TKZ","params":[{"value": $mods[5]},{"value":"K"}],"decoration":{"background":"#d9f9c9"}},
-      {"value":"&HRM_right_ring_v1B_TKZ","params":[{"value": $mods[6]},{"value":"L"}],"decoration":{"background":"#e5feff"}},
-      {"value":"&HRM_right_pinky_v1B_TKZ","params":[{"value": $mods[7]},{"value":"SEMI"}],"decoration":{"background":"#fbe6fe"}},
+      {"value":"&HRM_right_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}],"decoration":{"background":"#fffec9"}},
+      {"value":"&HRM_right_middy_v1B_TKZ","params":[{"value":"RCTRL"},{"value":"K"}],"decoration":{"background":"#d9f9c9"}},
+      {"value":"&HRM_right_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}],"decoration":{"background":"#e5feff"}},
+      {"value":"&HRM_right_pinky_v1B_TKZ","params":[{"value":"RGUI"},{"value":"SEMI"}],"decoration":{"background":"#fbe6fe"}},
       {"value":"&kp","params":[{"value":"SQT"}]},{"value":"&kp","params":[{"value":"GRAVE"}]},{"value":"&kp","params":[{"value":"Z"}]},{"value":"&kp","params":[{"value":"X"}]},{"value":"&kp","params":[{"value":"C"}]},{"value":"&kp","params":[{"value":"V"}]},{"value":"&kp","params":[{"value":"B"}]},
       {"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"LCTRL"}]},{"value":"&lower"},{"value":"&kp","params":[{"value":"LGUI"}]},{"value":"&kp","params":[{"value":"RCTRL"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},
       {"value":"&kp","params":[{"value":"N"}]},{"value":"&kp","params":[{"value":"M"}]},{"value":"&kp","params":[{"value":"COMMA"}]},{"value":"&kp","params":[{"value":"DOT"}]},{"value":"&kp","params":[{"value":"FSLH"}]},{"value":"&kp","params":[{"value":"PG_UP"}]},
@@ -124,6 +116,8 @@ end) as $mods |
     ]]
   end
 )
+
+
 """
 
 
