@@ -1,4 +1,4 @@
-uid = "hrm_add"
+uid = "hrm_bil"
 type = "mutation"
 language = "us"
 title = "🛠️Bil Home-Row Mods🛠️"
@@ -13,160 +13,20 @@ WORK IN PRGRESS
 # JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
 script = """
-# 1. SCOPE FINDER
-(if .keymap then .keymap else . end) |= (
-
-  # ----------------------------------------------------------------------------
+# ----------------------------------------------------------------------------
   # 🛑 SAFETY CHECKS (FAIL FAST)
   # ----------------------------------------------------------------------------
-  
+
+  # Check 1: Hardware Match
   ((.keyboard // "unknown") | ascii_downcase) as $hw_sig |
   if ($hw_sig != "glove80") then
-    "Err: Hardware mismatch. Target: 'glove80', Found: '\\($hw_sig)'." | halt_error
+    ("Err: Hardware mismatch. Target: 'glove80', Found: " + $hw_sig) | halt_error
   else . end |
 
+  # Check 2: Duplication Guard (Prevents double-injection)
   if (.layer_names | index("LeftPinky")) then
     "Err: Home-Row Mod layers already exist in this configuration." | halt_error
   else . end |
-
-  # ----------------------------------------------------------------------------
-  # 🛠️ HELPERS
-  # ----------------------------------------------------------------------------
-  
-  def kp($code):
-    { "value": "&kp", "params": [{ "value": $code, "params": [] }] };
-
-  def kp_mod($code; $modifier):
-    { "value": "&kp", "params": [{ "value": $modifier, "params": [{ "value": $code, "params": [] }] }] };
-
-  def tk($behavior; $code):
-    { "value": $behavior, "params": [{ "value": $code, "params": [] }] };
-
-  # ----------------------------------------------------------------------------
-  # 💎 BEHAVIORS & MACROS INJECTION PHASE (GENERATES ALL 32 + MACROS)
-  # ----------------------------------------------------------------------------
-  
-  .holdTaps = [
-    "left", "right" as $side |
-    "index", "middy", "pinky", "ring" as $f1 |
-    ((["index", "middy", "pinky", "ring"] | del(.[] | select(. == $f1)) | sort) + [""])[] as $f2 |
-    
-    # Timing configurations
-    (if $f1 == "index" then {t: 180, i: 100}
-     elif $f1 == "middy" then {t: 210, i: 150}
-     elif $f1 == "ring" then {t: 240, i: 100}
-     else {t: 270, i: 150} end) as $cfg |
-     
-    # Key position exception handling
-    (if $side == "left" then 
-       [57,56,55,72,73,74,5,6,7,8,16,17,18,19,20,28,29,30,31,32,40,41,42,43,44,58,59,60,61,62,75,76,77,78,9,21,33,45,63,79,52,53,54,70,71,69]
-     elif $side == "right" and $f1 == "middy" and $f2 == "pinky" then
-       [0,10,22,46,64,65,47,52,51,39,27,15,4,3,2,1,11,23,35,34,48,66,69,70,71,54,53,55,56,57,74,73,72,68,67,49,50,38,26,14,13,25,37,24,12,36]
-     else 
-       [0,10,22,34,46,64,65,47,35,23,1,2,12,11,24,36,48,66,67,49,37,25,13,3,4,14,15,27,26,38,39,51,50,68,52,53,54,71,70,69,55,56,57,74,73,72]
-     end) as $positions |
-
-    # Syntax spelling exception logic
-    (if $side == "left" and $f1 == "index" and $f2 == "ring" then "&HRM_left_index_ringv1_TKZ" 
-     elif $f2 == "" then "&HRM_\($side)_\($f1)_v1B_TKZ" 
-     else "&HRM_\($side)_\($f1)_\($f2)_v1B_TKZ" end) as $name |
-
-    # Dynamic Descriptions
-    (if $f2 == "" then
-       (if $f1 == "middy" then "HRM_\($side)_middy_bilateral -> &HRM_\($side)_index_hold -> &kp - TailorKey"
-        elif $f1 == "index" then "HRM_\($side)_index_bilateral -> &HRM_\($side)_index_hold -> &kp - TailorKey"
-        else "HRM_\($side)_\($f1)_bilateral  - &HRM_\($side)_\($f1)_hold -> &kp - TailorKey" end)
-     else
-       (if $f1 == "middy" and $f2 == "index" then "HRM_\($side)_middy_index_bilateral  -> &kp ->&HRM_\($side)_middy_tap - TailorKey"
-        elif $f1 == "pinky" and $f2 == "index" then "HRM_\($side)_pinky_index_bilateral  -> &kp ->&HRM_\($side)_pinky_tap - TailorKey"
-        elif $f1 == "ring" and $f2 == "index" then "HRM_\($side)_ring_index_bilateral  -> &kp ->&HRM_\($side)_ring_tap - TailorKey"
-        elif $f1 == "middy" and $f2 == "pinky" then "HRM_\($side)_middy_pinky_bilateral -> &kp - &HRM_\($side)_pinky_tap - TailorKey"
-        else "HRM_\($side)_\($f1)_\($f2)_bilateral -> &kp - &HRM_\($side)_\($f1)_tap - TailorKey" end)
-     end) as $desc |
-
-    (if $f2 == "" then ["&HRM_\($side)_\($f1)_hold_v1B_TKZ", "&kp"] else ["&kp", "&HRM_\($side)_\($f1)_tap_v1B_TKZ"] end) as $bindings |
-
-    { name: $name, description: $desc, bindings: $bindings, tappingTermMs: $cfg.t, flavor: "tap-preferred", quickTapMs: 300, requirePriorIdleMs: $cfg.i, holdTriggerOnRelease: true, holdTriggerKeyPositions: $positions }
-  ] + [
-    {
-      "name": "&thumb_v2_TKZ",
-      "description": "thumb_layer_access - TailorKey",
-      "bindings": ["&mo", "&kp"],
-      "tappingTermMs": 200,
-      "flavor": "balanced",
-      "quickTapMs": 300,
-      "requirePriorIdleMs": 0
-    }
-  ] |
-
-  .macros = [
-    "left", "right" as $side | "index", "middy", "pinky", "ring" as $f1 |
-    {
-      "name": "&HRM_\($side)_\($f1)_hold_v1B_TKZ",
-      "description": "HRM_\($side)_\($f1)_hold -> switch layer - TailorKey",
-      "waitMs": 0,
-      "tapMs": 0,
-      "bindings": [
-        {"value": "&macro_press"}, {"value": "&macro_param_1to1"}, {"value": "&kp", "params": [{"value": "A"}]}, {"value": "&mo", "params": [{"value": 4}]},
-        {"value": "&macro_pause_for_release"},
-        {"value": "&macro_release"}, {"value": "&macro_param_1to1"}, {"value": "&kp", "params": [{"value": "A"}]}, {"value": "&mo", "params": [{"value": 4}]}
-      ],
-      "params": ["code"]
-    }
-  ] |
-
-  # ----------------------------------------------------------------------------
-  # 📝 KEYBOARD DATA MAPPING (ALL 9 LAYERS)
-  # ----------------------------------------------------------------------------
-  # REPLACE THE PLACEHOLDERS BELOW WITH YOUR SPECIFIC 80-KEY ARRAYS
-  
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $left_pinky_map |
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $left_ringy_map |
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $left_middy_map |
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $left_index_map |
-  
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $right_index_map |
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $right_middy_map |
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $right_ringy_map |
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $right_pinky_map |
-  
-  [ [0, "ESC"], [4, "BSPC"], [69, "SPACE"] ] as $hrm_winlinx_map |
-
-  # ----------------------------------------------------------------------------
-  # 🚀 EXECUTION PHASE (ALL 9 LAYERS COMPILED IN SEQUENCE)
-  # ----------------------------------------------------------------------------
-  
-  .creator = "moosy" |
-
-  # Package all layers into a single array for processing
-  [
-    {"name": "LeftPinky", "map": $left_pinky_map},
-    {"name": "LeftRingy", "map": $left_ringy_map},
-    {"name": "LeftMiddy", "map": $left_middy_map},
-    {"name": "LeftIndex", "map": $left_index_map},
-    {"name": "RightIndex", "map": $right_index_map},
-    {"name": "RightMiddy", "map": $right_middy_map},
-    {"name": "RightRingy", "map": $right_ringy_map},
-    {"name": "RightPinky", "map": $right_pinky_map},
-    {"name": "HRM_WinLinx", "map": $hrm_winlinx_map}
-  ] as $all_layers |
-
-  # Execute loop to dynamically construct and push every layer safely
-  reduce $all_layers[] as $layer (.;
-    (.layers | length) as $new_idx |
-    .layer_names += [$layer.name] |
-    .layers[$new_idx] = [range(80) | { "value": "&trans", "params": [] }] |
-    
-    # Push individual keys to the active layer matrix
-    reduce $layer.map[] as $key_map (.;
-      if ($key_map | length) == 3 then
-        .layers[$new_idx][$key_map[0]] = tk($key_map[2]; $key_map[1])
-      elif ($key_map | length) == 2 then
-        .layers[$new_idx][$key_map[0]] = kp($key_map[1])
-      else . end
-    )
-  )
-)
 """
 
 
