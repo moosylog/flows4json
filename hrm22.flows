@@ -4,15 +4,9 @@ language = "us"
 title = "⭐⭐Add Sunaku CAGS"
 subtitle = "Add HRM for macOS"
 description = """
-Sunaku's per finger home-row mods
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held.
 
-How it works:
-1 = Urob timeless home-row mods
-2 = Urob timeless home-row mods with faster Index finger
-3 = Sunaku's per finger home-row mods
-GACS = Windows and Linux
-CAGS = MacOS
+ℹ️ Urob Timeless is the safest choice, using a balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.
 """
 
 # ==============================================================================
