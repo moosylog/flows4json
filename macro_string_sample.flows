@@ -7,18 +7,17 @@ description = """
 This is an example to create a string macros.
 
 🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
-🚩 CHANGE: You can set your string in the first line of the script! Toggle Developer Console to see the script.
 """
-script = """
-# 1. Set your configuration variables (keeps the AST root context clean)
-"my_macro_string" as $macro_id |
-"Helloworld@!1" as $macro_string |
 
-# 2. Generate the new macro object
+# ==============================================================================
+# JQ SCRIPT (Must be above ALL [[param]] and [config] tags!)
+# ==============================================================================
+script = """
+# Generate the new macro object
 (
   {
-    "name": "&\($macro_id)",
-    "description": "Print \"\($macro_string)\"",
+    "name": "&\\($macro_id)",
+    "description": "Print \\"\\($macro_string)\\"",
     "bindings": (
       $macro_string | split("") | map(
         if test("^[A-Z]$") then
@@ -63,8 +62,8 @@ script = """
   }
 ) as $new_macro |
 
-# 3. Safely inject into the AST
-"&\($macro_id)" as $macro_name |
+# Safely inject into the AST
+"&\\($macro_id)" as $macro_name |
 
 # Safely grab the macros array, defaulting to an empty array if it doesn't exist yet
 (.keymap.macros // []) as $existing_macros |
@@ -77,9 +76,31 @@ else
   .keymap.macros = $existing_macros + [$new_macro]
 end
 """
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "macro_id"
+label = "Macro ID (Name)"
+type = "text"
+default = "my_macro_string"
+
+[[param]]
+id = "macro_string"
+label = "String to Type"
+type = "text"
+default = "Helloworld@!1"
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
+
 [config]
 category = "Special keys"
 num = 123
