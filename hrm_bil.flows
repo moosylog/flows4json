@@ -1,12 +1,28 @@
 uid = "hrm_bil"
 type = "mutation"
 language = "us"
-title = "Bil Home-Row Mods 🛠️"
+title = "Bil Home-Row Mod 🛠️"
 subtitle = "🛠️in progress!!🛠️"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
 
-Limited tested, you can try, it's for Glov80 and QWERTY only
+🪳 Early version of Sunaku’s Bilateral HRM
+This is the Windows/Linux version.
+
+**Includes:**
+
+- Layer support
+
+- Hold-taps
+
+- Macros
+
+⚠️ No error handling has been implemented yet.
+
+After running this, you’ll need to manually reorder the layers in the Layout Editor.
+
+You can use QWERTY Swap to switch to another alpha layer.
+
 """
 
 # ==============================================================================
@@ -109,6 +125,6 @@ author = "moosyresearch"
 keyboards = ["glove80"]
 icon = "⚠️"      
 # Optional: red, green, blue, purple, yellow, orange
-theme = "green" 
+theme = "red" 
 [config]
 category = "Home-Row Mods"
