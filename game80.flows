@@ -1,7 +1,7 @@
 uid = "glove80_gaming"
 type = "mutation"
 language = "us"
-title = "Glove80 Gaming Layer"
+title = "TK Gaming Layer 80"
 subtitle = "Adds a custom Gaming layer"
 description = """
 Injects a dedicated left-hand focused Gaming layer for the Glove80.
@@ -26,7 +26,7 @@ script = """
   else . end |
 
   # Check 2: Duplication Guard
-  if (.layer_names | index("Gaming")) then
+  if (.layer_names | index("Gaming_flows")) then
     "Err: Gaming layer exists" | halt_error
   else . end |
 
