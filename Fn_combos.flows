@@ -9,6 +9,8 @@ Press a number key together with the key directly below it to trigger function k
 Keeps your layout compact while giving you fast access to shortcuts, media controls, IDE commands, and more.
 Perfect for users who want full function-row power without sacrificing desk space or portability.
 
+⚠️ Image does not match for F12. see F12 combo in the MoErgo Layout Editor
+
 """
 script = """
 # Moosy’s Playground Marketplace
