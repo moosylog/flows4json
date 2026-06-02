@@ -6,9 +6,9 @@ subtitle = "Pre-selected list"
 description = """
 This will change your keyboard layout to an alternative to the QWERTY layout.
 
-Highlights:
-• Easily switch to another alt.layouts such as Colemak-DH, Aptmak Blue, and Enthium or other.
-• Keeps these layers out of scope: Gaming, Numbers, Navigation, Media, Keypad, Mouse, and Magic.
+*Highlights:*
+-Easily switch to another alt.layouts such as Colemak-DH, Aptmak Blue, and Enthium or other.
+-Keeps these layers out of scope: Gaming, Numbers, Navigation, Media, Keypad, Mouse, and Magic.
 
 ⚠️ Thumb-letter mappings are not supported to ensure safe configuration.
 ⚠️ TailorKey Bilateral HRM is not included; the QWERTY Swap tool can be used instead.
