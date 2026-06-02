@@ -172,9 +172,9 @@ default = "colemak-dh"
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
-icon = "⇄"      
+icon = "🔠"      
 # Optional: red, green, blue, purple, yellow, orange
-theme = "purple" 
+theme = "yellow" 
 
 [config]
 category = "QWERTY Alternatives"
