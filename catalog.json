@@ -15,6 +15,7 @@
       "category": "Special keys",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -34,6 +35,7 @@
       "category": "macOS",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -53,6 +55,7 @@
       "category": "QWERTY Alternatives",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/alphaswap_colemk_dh.png"
   },
   {
@@ -72,6 +75,7 @@
       "category": "QWERTY Alternatives",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -91,6 +95,7 @@
       "category": "QWERTY Alternatives",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -110,6 +115,7 @@
       "category": "Autoshift",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/autoshift.png"
   },
   {
@@ -128,6 +134,7 @@
       "category": "Gaming",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/game60.png"
   },
   {
@@ -146,6 +153,35 @@
     "config": {
       "category": "Home-Row Mods"
     },
+    "param": [
+      {
+        "id": "target_version",
+        "label": "HRM Version",
+        "type": "select",
+        "options": [
+          "1",
+          "2",
+          "3"
+        ],
+        "default": "3"
+      },
+      {
+        "id": "mod_preset",
+        "label": "Modifier Preset (OS)",
+        "type": "select",
+        "options": [
+          "GACS",
+          "CAGS"
+        ],
+        "default": "CAGS"
+      },
+      {
+        "id": "preserve_decorators",
+        "label": "Preserve UI Decorators",
+        "type": "boolean",
+        "default": true
+      }
+    ],
     "mediaUrl": null
   },
   {
@@ -165,6 +201,7 @@
       "category": "Home-Row Mods",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -184,6 +221,7 @@
       "category": "Home-Row Mods",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -203,6 +241,7 @@
       "category": "Home-Row Mods",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -222,6 +261,7 @@
       "category": "Home-Row Mods",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -241,6 +281,7 @@
       "category": "Home-Row Mods",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -260,6 +301,7 @@
       "category": "Home-Row Mods",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/l_hrm_tuner.png"
   },
   {
@@ -279,6 +321,7 @@
       "category": "ZSA Migration",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/l_oryx_swap.png"
   },
   {
@@ -298,6 +341,7 @@
       "category": "QWERTY Alternatives",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/l_qwerty_swap.png"
   },
   {
@@ -317,6 +361,7 @@
       "category": "Special keys",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -335,6 +380,7 @@
       "category": "Mouse Controls",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/mouse.png"
   },
   {
@@ -354,6 +400,7 @@
       "category": "Languages & Symbols",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -373,6 +420,7 @@
       "category": "Languages & Symbols",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -392,6 +440,7 @@
       "category": "Languages & Symbols",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -411,6 +460,7 @@
       "category": "Languages & Symbols",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   },
   {
@@ -430,6 +480,7 @@
       "category": "Special keys",
       "num": "123"
     },
+    "param": [],
     "mediaUrl": null
   }
 ]
