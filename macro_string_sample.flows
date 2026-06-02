@@ -1,7 +1,7 @@
 uid = "macro_string"
 type = "mutation"
 language = "us"
-title = "Sample: String macro"
+title = "Sample: String macro🚀"
 subtitle = "Macro: Create a string❓"
 description = """
 This is an example to create a string macro for an US keyboard layout. 
