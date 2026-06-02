@@ -247,7 +247,7 @@
   {
     "uid": "l_hrm_tuner",
     "title": "HRM Configurator ⭐⭐",
-    "subtitle": "🚀 External App",
+    "subtitle": "External App",
     "description": "Advanced Home-Row Mod Configurator\nThis tool allows you to bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob or manual values to your entire layout at once.",
     "script": "",
     "category": "Home-Row Mods",
@@ -258,7 +258,7 @@
         "go60",
         "glove80"
       ],
-      "icon": "⚙️",
+      "icon": "🚀",
       "theme": "green"
     },
     "config": {
