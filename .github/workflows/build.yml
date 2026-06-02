@@ -58,11 +58,21 @@ jobs:
                       let v = kv[2].trim();
                       
                       // Type casting for parameters
-                      if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1); // String
-                      else if (v === 'true') v = true;                              // Boolean True
-                      else if (v === 'false') v = false;                            // Boolean False
-                      else if (v.startsWith('[') && v.endsWith(']')) {              // Array (for dropdown options)
-                        v = v.slice(1, -1).split(',').map(s => s.trim().replace(/^"|"$/g, '')).filter(Boolean);
+                      if (v.startsWith('"') && v.endsWith('"')) {
+                        v = v.slice(1, -1); // String
+                      } else if (v === 'true') {
+                        v = true;           // Boolean True
+                      } else if (v === 'false') {
+                        v = false;          // Boolean False
+                      } else if (v.startsWith('[') && v.endsWith(']')) { 
+                        // Advanced Array Parser: Extracts inside quotes so commas in labels don't break!
+                        const strMatches = v.match(/"([^"]*)"/g);
+                        if (strMatches) {
+                          v = strMatches.map(s => s.slice(1, -1));
+                        } else {
+                          // Fallback for non-string arrays
+                          v = v.slice(1, -1).split(',').map(s => s.trim()).filter(Boolean);
+                        }
                       }
                       
                       paramObj[k] = v;
@@ -86,7 +96,7 @@ jobs:
                 author: extVal("author"), 
                 devices: extDev(), 
                 config: cfg,
-                param: params, // --- Now safely attached to the final JSON! ---
+                param: params, // Safely attached to the final JSON
                 mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null
               };
             });
