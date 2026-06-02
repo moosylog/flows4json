@@ -104,6 +104,9 @@ script = """
 [manifest]
 author = "CasuGregSeries"
 keyboards = ["go60"]
+icon = "🎮"      
+# Optional: red, green, blue, purple, yellow, orange
+theme = "blue" 
 [config]
 category = "Gaming"
 num = 123
