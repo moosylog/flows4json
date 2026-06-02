@@ -94,31 +94,6 @@ script = """
 )
 """
 
-# ==============================================================================
-# UI PARAMETERS 
-# ==============================================================================
-
-[[param]]
-id = "target_version"
-label = "HRM flavor"
-type = "select"
-options = ["2", "3"]
-labels = ["Urob timeless", "Sunaku per finger"]
-default = "2"
-
-[[param]]
-id = "mod_preset"
-label = "Recommended order"
-type = "select"
-options = ["GACS", "CAGS"]
-labels = ["Windows / Linux", "macOS"]
-default = "GACS"
-
-[[param]]
-id = "preserve_decorators"
-label = "Preserve UI Decorators"
-type = "boolean"
-default = true
 
 # ==============================================================================
 # METADATA & CONFIG
