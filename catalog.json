@@ -486,7 +486,9 @@
       "keyboards": [
         "go60",
         "glove80"
-      ]
+      ],
+      "icon": "🤪",
+      "theme": "red"
     },
     "config": {
       "script": "\""
