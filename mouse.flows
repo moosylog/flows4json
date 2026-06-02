@@ -12,6 +12,7 @@ Lets you temporarily activate mouse mode for quick interactions and productivity
 Supports scroll, movement, and click behaviors all in one unified control system.
 Built for efficiency when coding, designing, or navigating without leaving the keyboard.
 Keeps controls intuitive while giving you advanced multi-speed cursor handling.
+
 🚩 To turn it on, you manually add a layer switch using &to or &tog or &layer.
 
 """
