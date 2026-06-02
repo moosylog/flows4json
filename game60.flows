@@ -1,7 +1,7 @@
 uid = "gaming60"
 type = "mutation"
 language = "us"
-title = "🎮 TK Gaming Layer"
+title = "🎮 TK Gaming Layer 60"
 subtitle = "Adds the TK Gaming Layer"
 description = """
 Adds the TailorKey Gaming Layer to your Go60 layout for faster, cleaner in-game controls.
@@ -41,7 +41,7 @@ script = """
   else . end |
 
   # Check 2: Duplication Guard
-  if (.layer_names | index("Gaming")) then
+  if (.layer_names | index("Gaming_flows")) then
     "Err: Gaming layer exists" | halt_error
   else . end |
 
