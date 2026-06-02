@@ -133,7 +133,7 @@ end
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
-icon = "🇫🇷"      
+icon = "🇩🇪"      
 # Optional: red, green, blue, purple, yellow, orange
 theme = "red" 
 [config]
