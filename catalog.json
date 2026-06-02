@@ -59,8 +59,8 @@
         "go60",
         "glove80"
       ],
-      "icon": "⇄",
-      "theme": "purple"
+      "icon": "🔠",
+      "theme": "yellow"
     },
     "config": {
       "script": "\""
