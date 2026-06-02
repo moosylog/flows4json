@@ -97,7 +97,7 @@ def GetRegistry($v):
       ]
     }
   }[$v | tostring]
-  // (log_err("FATAL: Version \\($v) not found") | halt);
+  // (log_err("FATAL: Version \($v) not found") | halt);
 
 # ==============================================================================
 # 3. HARDWARE ABSTRACTION LAYER (HAL)
@@ -151,10 +151,10 @@ def GetHardware:
         $cfg.profiles[] | {
           name:
             (if $cfg.naming == "simple"
-             then "&\\($side)_hand"
-             else "&HRM_\\($side)_\\(.id)" end),
+             then "&\($side)_hand"
+             else "&HRM_\($side)_\(.id)" end),
 
-          description: "Auto-gen \\($side) HRM (v\\($target_version))",
+          description: "Auto-gen \($side) HRM (v\($target_version))",
           bindings: ["&kp","&kp"],
           tappingTermMs: .term,
           quickTapMs: .quick,
@@ -190,8 +190,8 @@ def GetHardware:
       {
         value:
           (if $cfg.naming == "simple"
-           then "&\\($side)_hand"
-           else "&HRM_\\($side)_\\($cfg.map[$h_idx])"
+           then "&\($side)_hand"
+           else "&HRM_\($side)_\($cfg.map[$h_idx])"
            end),
 
         params: [
@@ -239,7 +239,6 @@ default = true
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 icon = "🏠"      
-# Optional: red, green, blue, purple, yellow, orange
 theme = "green" 
 [config]
 category = "Home-Row Mods"
