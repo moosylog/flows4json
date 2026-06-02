@@ -80,7 +80,7 @@
         "default": "colemak-dh"
       }
     ],
-    "mediaUrl": "https://moosylog.github.io/flows4json/alt_layout.png"
+    "mediaUrl": null
   },
   {
     "uid": "autoshift",
