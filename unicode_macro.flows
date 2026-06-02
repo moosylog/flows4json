@@ -1,4 +1,4 @@
-uid = "os_remap"
+uid = "emoji"
 type = "mutation"
 language = "us"
 title = "Emoji Macro"
@@ -18,8 +18,11 @@ Lets you express yourself faster with one-keystroke emoji and symbol insertion.
 A universal shortcut system for modern typing.
 
 🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
-🚩 You can set your OS in the first line of the script! Toggle Developer Console to see the script.
 """
+
+# ==============================================================================
+# JQ SCRIPT (Must be above ALL [[param]] and [config] tags!)
+# ==============================================================================
 script = """
 # -------------------------------------------------------------------------
 # ZMK UNICODE MACRO GENERATOR (Protocol v5.3)
@@ -34,8 +37,6 @@ script = """
 # =========================================================================
 # --- 1. CONFIGURATION & UNICODE DATA (USER EDITABLE) ---
 # =========================================================================
-
-"windows" as $target_os | # Options: "windows", "macos", "linux"
 
 [
   # --- BMP (Basic Multilingual Plane) ---
@@ -134,9 +135,27 @@ script = """
   )
 )
 """
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "target_os"
+label = "Operating System"
+type = "select"
+options = ["windows", "macos", "linux"]
+labels = ["Windows", "macOS", "Linux"]
+default = "windows"
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
+
 [config]
 category = "Special keys"
 num = 123
