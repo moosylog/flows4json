@@ -8,6 +8,8 @@ Modifies the number row to use dual-function keys.
 
 Inspired by ThePrimeagen, this maps specific programmer symbols directly onto the number row so you don't have to stretch for the Shift key. 
 
+**Warning: It replaces your current NumRow on layer0**
+
 Currently supports **Hold-Tap** (hold for symbol, tap for number). *Tap-Dance and Mod-Morph implementations are coming soon.*
 """
 
