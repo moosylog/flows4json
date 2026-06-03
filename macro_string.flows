@@ -1,8 +1,8 @@
 uid = "macro_string"
 type = "mutation"
 language = "us"
-title = "Sample: String macro"
-subtitle = "Macro: Create a string"
+title = "String Macro"
+subtitle = "Fabulous Generator"
 description = """
 This is an example to create a string macros based on the **en-US language settings**. 
 
