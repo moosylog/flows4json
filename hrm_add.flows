@@ -1,8 +1,8 @@
 uid = "hrm_add"
 type = "mutation"
 language = "us"
-title = "Add Home-Row Mods"
-subtitle = "Configurable"
+title = "Home-Row Mods"
+subtitle = "Adds Home-Row Modifiers"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
 
