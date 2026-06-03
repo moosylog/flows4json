@@ -1,16 +1,3 @@
-uid = "hrm_add_dev"
-type = "mutation"
-language = "us"
-title = "Add Home-Row Mods DEV2"
-subtitle = "Configurable"
-description = """
-Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
-
-See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
-
-
-ℹ️ *Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.*
-"""
 # ==============================================================================
 # JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
@@ -190,20 +177,19 @@ def GetHardware:
       get_side($h_idx) as $side |
       get_char_node as $char |
       ($mod_seq[$h_idx]) as $current_mod |
+      
+      # Pull the color background lookup safely outside the if/else block!
+      ($color_registry[$current_mod]) as $bg |
 
-      (if $set_decorators and type == "object" then
-         ($color_registry[$current_mod]) as $bg |
-         if $bg then
-           { decoration: { background: $bg } }
-         elif .decoration then
-           { decoration: .decoration }
-         else
-           {}
-         end
-       else
-         ($color_registry[$current_mod]) as $bg |
-         if $bg then { decoration: { background: $bg } } else {} end
-       end) as $dec |
+      (
+        if $set_decorators and $bg != null then
+          { decoration: { background: $bg } }
+        elif type == "object" and .decoration then
+          { decoration: .decoration }
+        else
+          {}
+        end
+      ) as $dec |
 
       {
         value:
@@ -222,42 +208,3 @@ def GetHardware:
   ]
 )
 '''
-
-# ==============================================================================
-# UI PARAMETERS 
-# ==============================================================================
-
-[[param]]
-id = "target_version"
-label = "HRM flavor"
-type = "select"
-options = ["2", "3"]
-labels = ["Urob timeless", "Sunaku per finger"]
-default = "2"
-
-[[param]]
-id = "mod_preset"
-label = "Recommended order"
-type = "select"
-options = ["GACS", "CAGS"]
-labels = ["Windows / Linux", "macOS"]
-default = "GACS"
-
-[[param]]
-id = "set_decorators"
-label = "Key Decorator"
-type = "boolean"
-default = true
-
-# ==============================================================================
-# METADATA & CONFIG
-# ==============================================================================
-
-[manifest]
-author = "moosyresearch"
-keyboards = ["go60","glove80"]
-icon = "🎨"      
-# Optional: red, green, blue, purple, yellow, orange
-theme = "green" 
-[config]
-category = "Home-Row Mods"
