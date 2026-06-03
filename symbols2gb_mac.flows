@@ -1,0 +1,86 @@
+uid = "mac_gb_symbol"
+type = "mutation"
+language = "gb-mac"
+title = "Symbols 2 Mac UK"
+subtitle = "🌍 Map en-US to en-GB-mac"
+description = """
+When you change your OS layout to macOS British (en-GB), Apple maps some keys differently than standard US layouts or Windows UK layouts.
+
+This flow remaps those specific keys (Hash, Grave, and Tilde) so they produce the correct symbols on macOS.
+
+⚠️ **Required:** Symbol Layer must be included in your layout.
+Note: If your macOS input source is set to "British - PC" instead of the standard "British", use the Windows UK mutation instead.
+"""
+script = """
+# ==============================================================================
+#             MAC UK ENGLISH SYMBOL MAPPER (For MoErgo / ZMK)
+#             OS TARGET: MACOS (Standard "British" layout)
+# ==============================================================================
+
+{
+  # --- Hash (#) ---
+  # On Mac UK, Shift+3 is £. Hash is Option+3 (mapped as Left Alt in ZMK).
+  "HASH":                [{"value": "LA", "params": [{"value": "N3", "params": []}]}],
+  "LS(N3)":              [{"value": "LA", "params": [{"value": "N3", "params": []}]}],
+
+  # --- Grave (`) and Tilde (~) ---
+  # On Mac UK, the US grave key outputs §. Grave and Tilde live on the ISO Extra Key.
+  "GRAVE":               [{"value": "NON_US_BSLH", "params": []}],
+  "TILDE":               [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}],
+  "LS(GRAVE)":           [{"value": "LS", "params": [{"value": "NON_US_BSLH", "params": []}]}]
+  
+  # Note: macOS UK keeps @ and " in their US positions, and maps ANSI Backslash natively to \\ and |.
+  # Therefore, those keys do not need remapping!
+} as $mac_uk_symbol_map |
+
+# ==============================================================================
+# CONFIGURATION TARGETS
+# ==============================================================================
+
+.locale = "en-GB-mac" |
+"Symbol" as $layer_to_translate |
+
+# ==============================================================================
+# BEHIND-THE-SCENES TRANSLATION ENGINE
+# ==============================================================================
+
+(.layer_names // .keymap.layer_names) as $all_layers |
+
+if $all_layers == null then
+  "Error: Could not find any keyboard layer names in this file." | halt_error
+else
+  ($all_layers | index($layer_to_translate)) as $layer_index |
+
+  if $layer_index == null then
+    "Error: The layer named '\\($layer_to_translate)' does not exist." | halt_error
+  else
+    if .keymap.layers then
+      .keymap.layers[$layer_index] |= map(
+        if . == null or .value != "&kp" or .params == null or .params == [] then 
+          .
+        else
+          (.params[0] | if .params == null or .params == [] then .value else "\\(.value)(\\(.params[0].value))" end) as $current_key |
+          if $mac_uk_symbol_map[$current_key] then .params = $mac_uk_symbol_map[$current_key] else . end
+        end
+      )
+    else
+      .layers[$layer_index] |= map(
+        if . == null or .value != "&kp" or .params == null or .params == [] then 
+          .
+        else
+          (.params[0] | if .params == null or .params == [] then .value else "\\(.value)(\\(.params[0].value))" end) as $current_key |
+          if $mac_uk_symbol_map[$current_key] then .params = $mac_uk_symbol_map[$current_key] else . end
+        end
+      )
+    end
+  end
+end
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🇬🇧"    
+theme = "purple" 
+[config]
+category = "Languages & Symbols"
+num = 124
