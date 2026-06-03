@@ -6,7 +6,7 @@ subtitle = "Fabulous Generator"
 description = """
 This creates a macro with the specified name that displays the text entered below in Configuration Options. The symbols are based on en-US language settings.
 
-❌ **WARNING: DO NOT STORE SECRETS OR PERSONALLY IDENTIFIABLE INFORMATION IN YOUR LAYOUT. **
+🚫 **WARNING: DO NOT STORE SECRETS OR PERSONALLY IDENTIFIABLE INFORMATION IN YOUR LAYOUT. **
 
 MoErgo Layout Editor files are always accessible via it's URL—there is "no private mode", whether published in the catalog or not.
 
