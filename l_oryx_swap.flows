@@ -2,7 +2,7 @@ uid = "l_oryx_swap"
 type = "mutation"
 language = "us"
 title = "🚀 Oryx Migration Assistant"
-subtitle = "Launch App"
+subtitle = "External App"
 description = """
 Oryx Migration Assistant
 
