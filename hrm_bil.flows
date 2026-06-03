@@ -4,29 +4,27 @@ language = "us"
 title = "Sunaku's Bilateral HRM"
 subtitle = "8 Finger Layers"
 description = """
-Advanced Home-row mods with bilateral combination enforcement improve your typing flow by positioning modifiers at your fingertips.
+Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
 
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)!
 
 
-**This injects:**
+**This injects**
 
 - 16 macros 
 
 - 32 hold-taps
 
-- 1 new QWERTY HRM layer
+- 1 new QWERTY HRM layer called 'HRM_Bil'
 
 - 8 finger layer
 
 
-This creates the HRM on a new 'Bil_HRM' layer, including all finger layers.
+**Notes**
 
-⚠️ No error handling has been implemented yet. 
+⚠️ This module adds the layers and behaviors to your layout, but does not automatically organize or validate them in the Layout Editor. Manual layer setup is required.
 
-⚠️ After running this, you’ll need to manually reorder the layers in the Layout Editor.
-
-⚠️ You can make 'Bil_HRM' your base layer and use QWERTY Swap to switch to another alpha layer.
+⚠️ You can make 'Bil_HRM' your base layer and use QWERTY Swap to convert everything to another alpha layer, like Colemak-DH or other.
 
 """
 
