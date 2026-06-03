@@ -22,8 +22,8 @@ Advanced Home-row mods with bilateral combination enforcement improve your typin
 script = """
 
 {
-  "GACS": { "L1": "LGUI",  "R1": "RGUI",  "L2": "LCTRL", "R2": "RCTRL" },
-  "CAGS": { "L1": "LCTRL", "R1": "RCTRL", "L2": "LGUI",  "R2": "RGUI" }
+  "CACS": { "L1": "LGUI",  "R1": "RGUI",  "L2": "LCTRL", "R2": "RCTRL" },
+  "GAGS": { "L1": "LCTRL", "R1": "RCTRL", "L2": "LGUI",  "R2": "RGUI" }
 }[$mod_preset] as $mod |
 
 
