@@ -88,8 +88,8 @@ def get_primeagen_holdtap: {
         {
           value: "&ht_primeagen",
           params: [
-            { value: $arr_nums[$idx], params: [] }  # Tap action (Number)
-            { value: $arr_syms[$idx], params: [] }, # Hold action (Symbol)
+            { value: $arr_nums[$idx], params: [] }, # Tap action (Number)
+            { value: $arr_syms[$idx], params: [] }  # Hold action (Symbol)
           ]
         } + $dec
         
