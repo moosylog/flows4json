@@ -1,0 +1,19 @@
+uid = "l_kiilix"
+type = "mutation"
+language = "us"
+title = "Kiilix ⭐⭐⭐"
+subtitle =  "External App"
+description = """
+Configure your RGB
+"""
+appUrl = "https://sites.google.com/view/kiilix/"
+script = ""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🧬"      
+# Optional: red, green, blue, purple, yellow, orange
+theme = "blue" 
+[config]
+category = "RGB"
+num = 123
