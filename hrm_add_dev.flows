@@ -15,7 +15,7 @@ See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
 # JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
 script = """
-# Modifier sequences
+# Modifier sequences & Colors
 {
   "GACS": [
     "LGUI", "LALT", "LCTRL", "LSHFT",
@@ -26,6 +26,13 @@ script = """
     "RSHFT", "RGUI", "LALT", "RCTRL"
   ]
 } as $mod_registry |
+
+{
+  "LSHFT": "#fffec9", "RSHFT": "#fffec9",
+  "LCTRL": "#d9f9c9", "RCTRL": "#d9f9c9",
+  "LALT": "#e5feff",  "RALT": "#e5feff",
+  "LGUI": "#fbe6fe",  "RGUI": "#fbe6fe"
+} as $color_registry |
 
 # ==============================================================================
 # 1. CORE UTILITIES
@@ -178,12 +185,13 @@ def GetHardware:
     if $h_idx != null then
       get_side($h_idx) as $side |
       get_char_node as $char |
+      ($mod_seq[$h_idx]) as $current_mod |
 
-      (if $preserve_decorators
-       and type == "object"
-       and .decoration
-       then { decoration: .decoration }
-       else {}
+      (if $preserve_decorators and type == "object" and .decoration then 
+         { decoration: .decoration }
+       else 
+         ($color_registry[$current_mod]) as $bg |
+         if $bg then { decoration: { background: $bg } } else {} end
        end) as $dec |
 
       {
@@ -194,7 +202,7 @@ def GetHardware:
            end),
 
         params: [
-          { value: $mod_seq[$h_idx], params: [] },
+          { value: $current_mod, params: [] },
           $char
         ]
       } + $dec
