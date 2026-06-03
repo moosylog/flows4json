@@ -4,8 +4,11 @@ language = "us"
 title = "Remove HRM"
 subtitle = "from your Layout"
 description = """
-Removes all types of home-row mods, including TailorKey Bilateral HRM layers
-NOTE: This is the ultimate HRM removal and also removes the TailorKey Bilateral HRM
+Removes all home-row mods (HRMs), including TailorKey Bilateral HRM layers.
+
+This removes hold-taps and bindings from your base layer, as well as any finger layers and macros, if available.
+
+**Note:** This fully removes all HRM functionality.
 
 """
 script = """
