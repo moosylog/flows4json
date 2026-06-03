@@ -1,7 +1,7 @@
 uid = "hrm_bil"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRM 🤪"
+title = "Sunaku's Bilateral HRM"
 subtitle = "8 Finger Layers"
 description = """
 Advanced Home-row mods with bilateral combination enforcement improve your typing flow by positioning modifiers at your fingertips.
@@ -37,7 +37,7 @@ script = """
   "CAGS": { "L1": "LCTRL", "R1": "RCTRL", "L2": "LGUI",  "R2": "RGUI",  "C1": "#fbe6fe", "C2":"#d9f9c9"  }
 }[$mod_preset] as $mod |
 
-"HRM_Bil" as $NAME |
+"HRM_Bil" as $LYR |
 
 # ZMK Name-Aware Injection (V1.2 - Complete & Repaired)
 (if .keymap then .keymap else . end) |= (
