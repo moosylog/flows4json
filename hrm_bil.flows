@@ -1,7 +1,7 @@
 uid = "hrm_bil"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRM🪳"
+title = "Sunaku's Bilateral HRM🤪"
 subtitle = "🛠️in progress!!🛠️"
 description = """
 Advanced Home-row mods with bilateral combination enforcement improve your typing flow by positioning modifiers at your fingertips, with modifiers organized for **Windows or Linux (GACS)**.
@@ -98,8 +98,7 @@ def RMOD2: "RCTRL";
     .layers += [[{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F6"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F7"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F8"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F9"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F10"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N6"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N7"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N8"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N9"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N0"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"MINUS"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"Y"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"U"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"I"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"O"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"P"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"BSLH"}]},{"value":"&trans"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&kp","params":[{"value":"S"}]},{"value":"&kp","params":[{"value":"D"}]},{"value":"&kp","params":[{"value":"F"}]},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"H"}]},{"value":"&HRM_right_pinky_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}]},{"value":"&HRM_right_pinky_middy_v1B_TKZ","params":[{"value":$RMOD2},{"value":"K"}]},{"value":"&HRM_right_pinky_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}]},{"value":"&none"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"SQT"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"M"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"COMMA"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"DOT"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]]
   end |
 
- 
-)
+
 """
 
 
