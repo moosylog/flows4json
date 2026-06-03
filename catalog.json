@@ -219,61 +219,16 @@
     "mediaUrl": null
   },
   {
-    "uid": "hrm_add_dev",
-    "title": "Add Home-Row Mods DEV2",
-    "subtitle": "Configurable",
-    "description": "Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. \r\n\r\nSee [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.\r\n\r\n\r\nℹ️ *Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.*",
+    "uid": "",
+    "title": "Untitled",
+    "subtitle": "",
+    "description": "",
     "script": "",
-    "category": "Home-Row Mods",
+    "category": "Utilities",
     "appUrl": null,
-    "manifest": {
-      "author": "moosyresearch",
-      "keyboards": [
-        "go60",
-        "glove80"
-      ],
-      "icon": "🎨",
-      "theme": "green"
-    },
-    "config": {
-      "category": "Home-Row Mods"
-    },
-    "param": [
-      {
-        "id": "target_version",
-        "label": "HRM flavor",
-        "type": "select",
-        "options": [
-          "2",
-          "3"
-        ],
-        "labels": [
-          "Urob timeless",
-          "Sunaku per finger"
-        ],
-        "default": "2"
-      },
-      {
-        "id": "mod_preset",
-        "label": "Recommended order",
-        "type": "select",
-        "options": [
-          "GACS",
-          "CAGS"
-        ],
-        "labels": [
-          "Windows / Linux",
-          "macOS"
-        ],
-        "default": "GACS"
-      },
-      {
-        "id": "set_decorators",
-        "label": "Key Decorator",
-        "type": "boolean",
-        "default": true
-      }
-    ],
+    "manifest": {},
+    "config": {},
+    "param": [],
     "mediaUrl": null
   },
   {
