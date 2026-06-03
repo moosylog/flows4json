@@ -20,10 +20,11 @@
     </script>
     
     <script src="https://cdn.jsdelivr.net/npm/jq-web@0.5.1/jq.wasm.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jq.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/material-darker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
     
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
@@ -109,7 +110,6 @@
         .product-subtitle { font-size: 16px; color: var(--text-secondary); }
         .product-developer { font-size: 13px; color: var(--text-secondary); opacity: 0.7; }
         
-        /* NEW: Flexible Action Area */
         .studio-actions { display: flex; align-items: center; gap: 12px; margin-top: 16px; flex-wrap: wrap;}
         .wizard-feedback { display: flex; flex-direction: column; }
         .wizard-feedback-title { font-size: 14px; font-weight: 600; color: var(--accent-red); }
@@ -121,7 +121,6 @@
         
         .section-title { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         
-        /* MARKDOWN STYLES */
         .product-desc { font-size: 14px; line-height: 1.6; color: rgba(255,255,255,0.85); white-space: normal; }
         .product-desc p { margin-bottom: 12px; margin-top: 0; }
         .product-desc p:last-child { margin-bottom: 0; }
@@ -133,7 +132,6 @@
         .product-desc a { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
         .product-desc a:hover { text-decoration: underline; }
 
-        /* PARAMETERS UI */
         .param-section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--text-primary); }
         .param-group { background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
         .param-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
@@ -147,7 +145,6 @@
         .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
         .dev-toggle:hover { color: white; text-decoration: underline; }
 
-        /* QUEUE DRAWER UI */
         .queue-drawer { position: fixed; bottom: 0; left: 260px; right: 0; background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border); transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 100; display: flex; flex-direction: column; max-height: 50vh; box-shadow: 0 -10px 40px rgba(0,0,0,0.5); }
         .queue-drawer.has-items { transform: translateY(calc(100% - 56px)); } 
         .queue-drawer.expanded { transform: translateY(0); }
@@ -178,11 +175,10 @@
         .ide-editor { display: flex; flex-direction: column; overflow: hidden; position: relative; min-height: 0; min-width: 0; width: 100%; max-width: 100%; }
         .ide-editor-header { padding: 4px 12px; font-size: 11px; color: var(--ide-dim); font-family: var(--font-mono); background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--ide-border); z-index: 5; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;}
         
-        .code-matrix { position: relative; flex: 1; overflow: hidden; background: var(--ide-bg); min-height: 0; min-width: 0; display: block; width: 100%; max-width: 100%; }
-        .code-matrix textarea, .code-matrix pre { margin: 0; padding: 16px; border: 0; width: 100%; height: 100%; max-width: 100%; position: absolute; top: 0; left: 0; overflow: auto; white-space: pre; tab-size: 2; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; }
-        .code-matrix textarea { color: transparent; background: transparent; caret-color: #fff; z-index: 2; resize: none; outline: none;}
-        .code-matrix pre { z-index: 1; pointer-events: none; }
-        .code-matrix code { font-family: var(--font-mono); font-size: 12px; line-height: 1.5; text-shadow: none; }
+        /* NEW: CODEMIRROR STYLES */
+        .cm-wrapper { flex: 1; position: relative; min-height: 0; min-width: 0; width: 100%; overflow: hidden; display: flex; flex-direction: column; }
+        .CodeMirror { flex: 1; height: 100%; font-family: var(--font-mono); font-size: 13px; background: transparent; }
+        .cm-s-material-darker.CodeMirror { background: #141414; }
 
         .log-panel { flex: 1; background: #141414; padding: 12px; overflow-y: scroll; overflow-x: hidden; font-family: var(--font-mono); font-size: 12px; line-height: 1.5; display: flex; flex-direction: column; gap: 4px; min-height: 0; min-width: 0; max-width: 100%; word-wrap: break-word; word-break: break-all; }
         .log-entry { padding: 4px 8px; white-space: pre-wrap; color: #cccccc; word-wrap: break-word; border-radius: 4px; margin-bottom: 4px;}
@@ -262,7 +258,6 @@
                         </div>
 
                         <div id="dynamicParamsContainer"></div>
-
                     </div>
                     <div class="dev-toggle-wrapper" id="devToggleWrapper">
                         <button class="dev-toggle" onclick="app.toggleDevIDE()">{" "} Toggle Developer Console</button>
@@ -281,19 +276,13 @@
                 <div class="ide-grid" id="ideGrid">
                     <div class="ide-editor">
                         <div class="ide-editor-header">source_flow.jq</div>
-                        <div class="code-matrix">
-                            <textarea id="jqInput" spellcheck="false" oninput="app.updateJQSyntax()" onscroll="app.syncScroll('jqInput', 'jqPre')"></textarea>
-                            <pre id="jqPre" aria-hidden="true"><code class="language-jq" id="jqHighlight"></code></pre>
-                        </div>
+                        <div id="jqEditorContainer" class="cm-wrapper"></div>
                     </div>
                     <div class="resizer-v" id="resizerV1"></div>
                     
                     <div class="ide-editor">
                         <div class="ide-editor-header">target_output.json</div>
-                        <div class="code-matrix" style="background: #141414;">
-                            <textarea id="jsonOutput" spellcheck="false" readonly onscroll="app.syncScroll('jsonOutput', 'jsonPre')"></textarea>
-                            <pre id="jsonPre" aria-hidden="true"><code class="language-json" id="jsonHighlight">// AST will stream here...</code></pre>
-                        </div>
+                        <div id="jsonEditorContainer" class="cm-wrapper"></div>
                     </div>
                     <div class="resizer-v" id="resizerV2"></div>
 
@@ -315,10 +304,7 @@
             <svg id="queueChevron" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
         </div>
         <div class="queue-body" id="queueBody"></div>
-        <div class="queue-actions">
-            <button class="accent" onclick="app.executePipeline()" style="flex: 1; justify-content: center; font-size: 14px; padding: 10px;">Apply All to Layout</button>
-            <button onclick="app.clearQueue()" style="padding: 10px 16px;">Clear List</button>
-        </div>
+        <div class="queue-actions" id="queueActions"></div>
     </div>
 
     <input type="file" id="layoutFile" accept=".json" style="display: none;">
@@ -451,18 +437,49 @@
             constructor() {
                 this.catalog = [];
                 this.activeCategory = 'All';
-                this.activeFlow = null;
                 
-                // DATA PIPELINE STATE
-                this.baseAST = null;        // Original untouched JSON 
-                this.outputAST = null;      // Compiled JSON
-                this.queue = [];            // Sequential pipeline list
-                this.pendingAction = null;  // 'single' | 'pipeline'
+                // NEW: REACTIVE STATE MANAGEMENT
+                this.state = {
+                    activeFlow: null,
+                    baseAST: null,
+                    outputAST: null,
+                    activeHardware: null,
+                    queue: [],
+                    pendingAction: null,
+                    wizardState: 'ready',
+                    wizardError: null
+                };
+                
                 this.fileName = "compiled_layout.json";
-                this.wizardState = "ready"; 
 
+                this.initEditors();
                 this.bindEvents();
                 this.fetchCatalog();
+            }
+            
+            // Centralized State Updater (Eliminates render spaghetti)
+            setState(updates) {
+                this.state = { ...this.state, ...updates };
+                this.renderAll();
+            }
+
+            initEditors() {
+                this.jqEditor = CodeMirror(document.getElementById('jqEditorContainer'), {
+                    mode: "javascript",
+                    theme: "material-darker",
+                    lineNumbers: true,
+                    lineWrapping: true,
+                    tabSize: 2
+                });
+                
+                this.jsonEditor = CodeMirror(document.getElementById('jsonEditorContainer'), {
+                    mode: "javascript",
+                    theme: "material-darker",
+                    lineNumbers: true,
+                    lineWrapping: true,
+                    tabSize: 2,
+                    readOnly: true
+                });
             }
 
             getCategory(f) { return (f.config && f.config.category) || f.category || "Uncategorized"; }
@@ -482,7 +499,6 @@
                 document.getElementById('searchInput').addEventListener('input', handleSearchNav);
                 document.querySelectorAll('input[name="device"]').forEach(r => r.addEventListener('change', () => { this.interceptSidebarNav(); this.renderGrid(); }));
                 
-                // File Upload Listener
                 document.getElementById('layoutFile').addEventListener('change', (e) => this.loadTargetJSON(e));
 
                 window.addEventListener('popstate', () => {
@@ -502,10 +518,14 @@
             }
 
             toggleDevIDE() {
-                document.getElementById('devPane').classList.toggle('active');
+                const pane = document.getElementById('devPane');
+                pane.classList.toggle('active');
                 document.getElementById('resizerH').classList.toggle('active');
-                if (document.getElementById('devPane').classList.contains('active')) {
-                    document.getElementById('devPane').style.height = '350px'; 
+                
+                if (pane.classList.contains('active')) {
+                    pane.style.height = '350px'; 
+                    // CodeMirror requires a manual refresh if initialized while hidden
+                    setTimeout(() => { this.jqEditor.refresh(); this.jsonEditor.refresh(); }, 50);
                 }
             }
 
@@ -516,26 +536,14 @@
                     pane.classList.add('active');
                     resizer.classList.add('active');
                     pane.style.height = '350px';
+                    setTimeout(() => { this.jqEditor.refresh(); this.jsonEditor.refresh(); }, 50);
                 }
-            }
-
-            updateJQSyntax() {
-                const text = document.getElementById('jqInput').value;
-                document.getElementById('jqHighlight').innerHTML = Prism.highlight(text, Prism.languages.jq, 'jq');
-            }
-            updateJSONSyntax(jsonStr) {
-                document.getElementById('jsonHighlight').innerHTML = Prism.highlight(jsonStr, Prism.languages.json, 'json');
-            }
-            syncScroll(textareaId, preId) {
-                const ta = document.getElementById(textareaId);
-                const pre = document.getElementById(preId);
-                pre.scrollTop = ta.scrollTop; pre.scrollLeft = ta.scrollLeft;
             }
 
             showLibrary(skipHistory = false) {
                 document.getElementById('viewStudio').classList.remove('active');
                 document.getElementById('viewLibrary').classList.add('active');
-                this.activeFlow = null; 
+                this.setState({ activeFlow: null });
                 document.getElementById('devPane').classList.remove('active');
                 document.getElementById('resizerH').classList.remove('active');
 
@@ -549,9 +557,7 @@
             }
 
             showStudio(flowData, skipHistory = false) {
-                this.activeFlow = flowData;
-                this.wizardState = "ready";
-                this.wizardError = null;
+                this.setState({ activeFlow: flowData, wizardState: "ready", wizardError: null });
 
                 document.getElementById('viewLibrary').classList.remove('active');
                 document.getElementById('viewStudio').classList.add('active');
@@ -623,45 +629,148 @@
                     document.getElementById('resizerH').classList.remove('active');
                 } else {
                     devToggleBtn.style.display = 'block'; 
-                    document.getElementById('jqInput').value = flowData.script || "";
-                    this.updateJQSyntax();
-                    document.getElementById('jsonOutput').value = this.baseAST ? JSON.stringify(this.baseAST, null, 2) : '';
-                    this.updateJSONSyntax(document.getElementById('jsonOutput').value || '// AST will stream here...');
+                    
+                    // CodeMirror injection
+                    this.jqEditor.setValue(flowData.script || "");
+                    const targetJSON = this.state.baseAST ? JSON.stringify(this.state.baseAST, null, 2) : '// AST will stream here...';
+                    this.jsonEditor.setValue(targetJSON);
+                    
                     terminal.clear();
                     terminal.print(`Studio Sandbox mounted for: ${flowData.uid || 'flow'}.flows`, "info");
                 }
-                
-                this.renderStudioActions();
             }
 
             // =========================================================================
-            // QUEUE & LIST MANAGEMENT 
+            // REACTIVE RENDER ENGINE
             // =========================================================================
+            
+            renderAll() {
+                // Because we decoupled state, we can just call the two UI renderers 
+                // any time the state changes, safely knowing they will paint the correct data.
+                this.renderQueueDrawer();
+                this.renderStudioActions();
+            }
 
             renderQueueDrawer() {
                 const drawer = document.getElementById('queueDrawer');
                 const title = document.getElementById('queueTitle');
                 const body = document.getElementById('queueBody');
+                const actionsDiv = document.getElementById('queueActions');
 
-                if (this.queue.length > 0) {
+                if (this.state.queue.length > 0) {
                     drawer.classList.add('has-items');
-                    title.innerText = `📋 Your Custom List: ${this.queue.length} change${this.queue.length > 1 ? 's' : ''} ready to apply`;
+                    title.innerText = `📋 Your Custom List: ${this.state.queue.length} change${this.state.queue.length > 1 ? 's' : ''} ready to apply`;
                 } else {
                     drawer.classList.remove('has-items');
                     drawer.classList.remove('expanded');
                 }
 
                 body.innerHTML = '';
-                this.queue.forEach(item => {
+                let hasIncompatible = false;
+
+                this.state.queue.forEach(item => {
+                    const flow = this.catalog.find(f => f.uid === item.uid);
+                    let tagsHtml = '';
+                    let warningHtml = '';
+                    
+                    if (flow) {
+                        const devices = this.getDevices(flow);
+                        tagsHtml = devices.map(d => `<span class="device-tag ${d.toLowerCase() === 'go60' || d.toLowerCase() === 'glove80' ? d.toLowerCase() : ''}">${d}</span>`).join('');
+                        
+                        if (this.state.baseAST && this.state.activeHardware) {
+                            const supported = devices.map(d => d.toLowerCase());
+                            if (!supported.includes('all') && !supported.includes(this.state.activeHardware)) {
+                                hasIncompatible = true;
+                                warningHtml = `<div style="color: var(--accent-red); font-size: 12px; margin-top: 6px; font-weight: 600;">🚫 Not compatible with ${this.state.activeHardware.toUpperCase()}</div>`;
+                            }
+                        }
+                    }
+
                     const row = document.createElement('div');
                     row.className = 'queue-item';
                     row.innerHTML = `
-                        <div class="queue-item-title"><span style="font-size: 16px;">${item.icon}</span> ${item.title}</div>
+                        <div class="queue-item-content" style="display: flex; flex-direction: column; gap: 4px;">
+                            <div class="queue-item-title"><span style="font-size: 16px;">${item.icon}</span> ${item.title}</div>
+                            <div class="app-tags">${tagsHtml}</div>
+                            ${warningHtml}
+                        </div>
                         <button class="queue-remove" onclick="app.removeFromQueue('${item.uid}')">✕ Remove</button>
                     `;
                     body.appendChild(row);
                 });
+
+                if (hasIncompatible) {
+                    actionsDiv.innerHTML = `
+                        <button class="accent" disabled style="flex: 1; justify-content: center; font-size: 14px; padding: 10px; background: rgba(255,69,58,0.2); color: var(--accent-red);">🚫 Remove incompatible items to apply</button>
+                        <button onclick="app.clearQueue()" style="padding: 10px 16px;">Clear List</button>
+                    `;
+                } else {
+                    actionsDiv.innerHTML = `
+                        <button class="accent" onclick="app.executePipeline()" style="flex: 1; justify-content: center; font-size: 14px; padding: 10px;">Apply All to Layout</button>
+                        <button onclick="app.clearQueue()" style="padding: 10px 16px;">Clear List</button>
+                    `;
+                }
             }
+
+            renderStudioActions() {
+                const box = document.getElementById('studioActions');
+                const flow = this.state.activeFlow;
+                if (!flow) return;
+
+                if (flow.appUrl || flow.app_url) {
+                    const targetUrl = flow.appUrl || flow.app_url;
+                    box.innerHTML = `<button class="accent" onclick="window.open('${targetUrl}', '_blank', 'noopener,noreferrer')">Launch App ↗</button>`;
+                    return;
+                }
+
+                if (this.state.wizardState === "error") {
+                    box.innerHTML = `
+                        <div class="wizard-feedback">
+                            <span class="wizard-feedback-title">⚠️ Pipeline Failed</span>
+                            <span class="wizard-feedback-desc">${this.state.wizardError || "Check Terminal for details."}</span>
+                        </div>
+                        <button onclick="app.resetWizard()">Reset Status</button>
+                    `;
+                    return;
+                }
+
+                if (this.state.wizardState === "loading") {
+                    box.innerHTML = `<button disabled>⚙️ Processing Layout...</button>`;
+                    return;
+                }
+
+                if (this.state.wizardState === "success") {
+                    box.innerHTML = `
+                        <button class="success" onclick="app.saveJSON()">⬇️ Download Again</button>
+                        <button onclick="app.resetWizard()">Continue Editing</button>
+                        <button style="background: rgba(255,69,58,0.15); color: var(--accent-red);" onclick="app.startFresh()">✕ Close File & Start Fresh</button>
+                    `;
+                    return;
+                }
+
+                if (this.state.baseAST && this.state.activeHardware) {
+                    const supported = this.getDevices(flow).map(d => d.toLowerCase());
+                    if (!supported.includes('all') && !supported.includes(this.state.activeHardware)) {
+                        box.innerHTML = `<button disabled style="opacity: 0.6; background: rgba(255,69,58,0.15); color: var(--accent-red);">🚫 Not compatible with ${this.state.activeHardware.toUpperCase()}</button>`;
+                        return;
+                    }
+                }
+
+                const isInQueue = this.state.queue.some(i => i.uid === flow.uid);
+                
+                if (isInQueue) {
+                    box.innerHTML = `<button disabled>✓ Added to List</button>`;
+                } else {
+                    box.innerHTML = `
+                        <button class="primary" onclick="app.triggerExecution('single')">Apply to Layout</button>
+                        <button onclick="app.addToQueue()">+ Add to List</button>
+                    `;
+                }
+            }
+
+            // =========================================================================
+            // PIPELINE & ACTION HANDLERS
+            // =========================================================================
 
             getScriptWithParams(flow) {
                 let paramPrefix = "";
@@ -678,116 +787,60 @@
                         }
                     });
                 }
-                // Always grab the exact script from the IDE text area to allow manual edits
-                const rawScript = document.getElementById('jqInput').value.trim();
+                // Read from CodeMirror instead of textarea
+                const rawScript = this.jqEditor.getValue().trim();
                 return paramPrefix + rawScript;
             }
 
             addToQueue() {
-                if (!this.activeFlow) return;
-                const uid = this.activeFlow.uid;
+                if (!this.state.activeFlow) return;
+                const uid = this.state.activeFlow.uid;
                 
-                // Double check it isn't already added
-                if (this.queue.some(i => i.uid === uid)) return; 
+                if (this.state.queue.some(i => i.uid === uid)) return; 
 
-                this.queue.push({
+                const newItem = {
                     uid: uid,
-                    title: this.activeFlow.title,
-                    icon: getEmoji(this.activeFlow),
-                    fullScript: this.getScriptWithParams(this.activeFlow)
-                });
+                    title: this.state.activeFlow.title,
+                    icon: getEmoji(this.state.activeFlow),
+                    fullScript: this.getScriptWithParams(this.state.activeFlow)
+                };
                 
-                terminal.print(`Added to List: ${this.activeFlow.title}`, "success");
-                this.renderQueueDrawer();
-                this.renderStudioActions();
+                this.setState({ queue: [...this.state.queue, newItem] });
+                terminal.print(`Added to List: ${this.state.activeFlow.title}`, "success");
             }
 
             removeFromQueue(uid) {
-                this.queue = this.queue.filter(i => i.uid !== uid);
+                this.setState({ queue: this.state.queue.filter(i => i.uid !== uid) });
                 terminal.print(`Removed from List: ${uid}`, "warning");
-                this.renderQueueDrawer();
-                this.renderStudioActions();
             }
 
             clearQueue() {
-                this.queue = [];
-                this.renderQueueDrawer();
-                this.renderStudioActions();
+                this.setState({ queue: [] });
                 terminal.print(`List cleared.`, "info");
             }
 
-            // =========================================================================
-            // RENDER STUDIO BUTTONS (Replaces Static Wizard)
-            // =========================================================================
-
-            renderStudioActions() {
-                const box = document.getElementById('studioActions');
-                const flow = this.activeFlow;
-                if (!flow) return;
-
-                // 1. External App Launcher (No Queue allowed)
-                if (flow.appUrl || flow.app_url) {
-                    const targetUrl = flow.appUrl || flow.app_url;
-                    box.innerHTML = `<button class="accent" onclick="window.open('${targetUrl}', '_blank', 'noopener,noreferrer')">Launch App ↗</button>`;
-                    return;
-                }
-
-                // 2. Error State from Execution
-                if (this.wizardState === "error") {
-                    box.innerHTML = `
-                        <div class="wizard-feedback">
-                            <span class="wizard-feedback-title">⚠️ Pipeline Failed</span>
-                            <span class="wizard-feedback-desc">${this.wizardError || "Check Terminal for details."}</span>
-                        </div>
-                        <button onclick="app.resetWizard()">Reset Status</button>
-                    `;
-                    return;
-                }
-
-                // 3. Loading State
-                if (this.wizardState === "loading") {
-                    box.innerHTML = `<button disabled>⚙️ Processing Layout...</button>`;
-                    return;
-                }
-
-                // 4. Success State (Wait, success automatically triggers download now. We just show reset.)
-                if (this.wizardState === "success") {
-                    box.innerHTML = `
-                        <button class="success" onclick="app.saveJSON()">⬇️ Download Again</button>
-                        <button onclick="app.resetWizard()">Apply Another Change</button>
-                    `;
-                    return;
-                }
-
-                // 5. Normal Ready State (Smart Buttons)
-                const isInQueue = this.queue.some(i => i.uid === flow.uid);
-                
-                if (isInQueue) {
-                    // Smart UX: If in list, hide Apply, disable Add. 
-                    box.innerHTML = `<button disabled>✓ Added to List</button>`;
-                } else {
-                    box.innerHTML = `
-                        <button class="primary" onclick="app.triggerExecution('single')">Apply to Layout</button>
-                        <button onclick="app.addToQueue()">+ Add to List</button>
-                    `;
-                }
-            }
-
             resetWizard() {
-                this.wizardState = "ready";
-                this.wizardError = null;
-                this.renderStudioActions();
+                this.setState({ wizardState: "ready", wizardError: null });
             }
 
-            // =========================================================================
-            // EXECUTION PIPELINE
-            // =========================================================================
+            startFresh() {
+                this.setState({
+                    baseAST: null,
+                    outputAST: null,
+                    activeHardware: null,
+                    queue: [],
+                    wizardState: "ready"
+                });
+                
+                this.jsonEditor.setValue('// AST will stream here...');
+                terminal.clear();
+                terminal.print("Session closed. Memory cleared. Ready for a new file.", "info");
+            }
 
             triggerExecution(mode) {
-                // Mode: 'single' or 'pipeline'
-                if (!this.baseAST) {
-                    this.pendingAction = mode;
-                    document.getElementById('layoutFile').click(); // Prompt for file first
+                if (!this.state.baseAST) {
+                    this.setState({ pendingAction: mode });
+                    document.getElementById('layoutFile').click(); 
                     return;
                 }
                 
@@ -799,7 +852,7 @@
                 const file = e.target.files[0];
                 if (!file) return; e.target.value = ''; 
                 
-                this.wizardState = "loading"; this.renderStudioActions();
+                this.setState({ wizardState: "loading" });
                 terminal.verbose(`Initiating file stream for: ${file.name}`);
 
                 const reader = new FileReader();
@@ -808,64 +861,79 @@
                         let rawAST = JSON.parse(event.target.result);
                         this.fileName = "updated_" + file.name;
                         
-                        terminal.verbose(`AST structure ingested. Running hardware normalizer prologue...`);
+                        const hwType = rawAST.keyboard ? rawAST.keyboard.toLowerCase() : null;
+                        if (!hwType || (hwType !== 'glove80' && hwType !== 'go60')) {
+                            throw new Error(`Unrecognized keyboard format. Expected layout to contain "keyboard": "glove80" or "go60", but found: ${hwType || "nothing"}.`);
+                        }
+                        
+                        terminal.verbose(`Hardware detected via metadata: ${hwType}. Running normalizer prologue...`);
+
                         const prologue = `(.keymap // .) |= (.layout = (if .layout != null and .layout.keys != null and (.layout.keys | length) > 0 then .layout elif .keymap != null and .keymap.layout != null and (.keymap.layout.keys | length) > 0 then .keymap.layout else {"keys": [ range(0; 60) as $i | { "i": $i, "label": (if $i < 30 then "L_C" else "R_C" end) } ]} end))`;
                         
                         if (typeof jq === 'undefined') throw new Error("WASM environment not running.");
-                        this.baseAST = await jq.json(rawAST, prologue);
+                        const processedAST = await jq.json(rawAST, prologue);
                         
-                        document.getElementById('jsonOutput').value = JSON.stringify(this.baseAST, null, 2);
-                        this.updateJSONSyntax(document.getElementById('jsonOutput').value);
+                        this.jsonEditor.setValue(JSON.stringify(processedAST, null, 2));
                         terminal.print(`Base Layout loaded and stored in memory.`, "success");
 
-                        // If user clicked Apply *before* uploading, immediately run their requested action!
-                        if (this.pendingAction === 'single') {
-                            this.pendingAction = null;
+                        // Single state update syncs everything
+                        this.setState({ 
+                            activeHardware: hwType,
+                            baseAST: processedAST
+                        });
+
+                        const pending = this.state.pendingAction;
+                        if (pending === 'single') {
+                            this.setState({ pendingAction: null });
                             this.executeSingle();
-                        } else if (this.pendingAction === 'pipeline') {
-                            this.pendingAction = null;
+                        } else if (pending === 'pipeline') {
+                            this.setState({ pendingAction: null });
                             this.executePipeline();
                         } else {
-                            this.wizardState = "ready"; this.renderStudioActions();
+                            this.setState({ wizardState: "ready" });
                         }
 
                     } catch (err) { 
-                        this.wizardError = "Invalid JSON file uploaded."; this.wizardState = "error"; this.renderStudioActions();
+                        this.setState({
+                            wizardError: err.message.includes("JSON") ? "The uploaded file is not a valid JSON document." : err.message,
+                            wizardState: "error"
+                        });
+                        
                         terminal.print(`[Fatal Parse Error] ${err.message}`, "danger");
+                        if (err.stack) terminal.verbose(err.stack);
                         this.forceOpenIDE();
                     }
                 }; reader.readAsText(file);
             }
 
             async executeSingle() {
-                if (!this.baseAST || !this.activeFlow) return;
+                if (!this.state.baseAST || !this.state.activeFlow) return;
                 
-                this.wizardState = "loading"; this.renderStudioActions();
-                const fullScript = this.getScriptWithParams(this.activeFlow);
+                this.setState({ wizardState: "loading" });
+                const fullScript = this.getScriptWithParams(this.state.activeFlow);
                 
-                terminal.verbose(`Executing single flow: ${this.activeFlow.title}`);
+                terminal.verbose(`Executing single flow: ${this.state.activeFlow.title}`);
                 await this.compileAST(fullScript);
             }
 
             async executePipeline() {
-                if (!this.baseAST) {
+                if (!this.state.baseAST) {
                     this.triggerExecution('pipeline');
                     return;
                 }
-                if (this.queue.length === 0) return;
+                if (this.state.queue.length === 0) return;
 
-                this.wizardState = "loading"; this.renderStudioActions();
-                terminal.print(`--- STARTING PIPELINE (${this.queue.length} STEPS) ---`, "info");
+                this.setState({ wizardState: "loading" });
+                terminal.print(`--- STARTING PIPELINE (${this.state.queue.length} STEPS) ---`, "info");
                 
                 try {
                     window.jqCompilerLogs = [];
                     window.isJqCompiling = true;
                     
-                    // Deep copy to protect the base file if a middle step fails
-                    let currentAST = JSON.parse(JSON.stringify(this.baseAST));
+                    let currentAST = JSON.parse(JSON.stringify(this.state.baseAST));
                     
-                    for (let i = 0; i < this.queue.length; i++) {
-                        const step = this.queue[i];
+                    for (let i = 0; i < this.state.queue.length; i++) {
+                        const step = this.state.queue[i];
                         terminal.verbose(`Running Step ${i+1}: ${step.title}`);
                         
                         const result = await jq.json(currentAST, step.fullScript);
@@ -873,17 +941,12 @@
                         currentAST = result;
                     }
 
-                    // If we survive the loop, all steps passed!
-                    this.outputAST = currentAST;
-                    document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
-                    this.updateJSONSyntax(document.getElementById('jsonOutput').value);
+                    this.setState({ outputAST: currentAST, wizardState: "success" });
+                    this.jsonEditor.setValue(JSON.stringify(currentAST, null, 2));
                     
                     terminal.print(`Pipeline success! Output generated.`, "success");
-                    this.wizardState = "success"; 
-                    this.renderStudioActions();
-                    document.getElementById('queueDrawer').classList.remove('expanded'); // Auto collapse on success
-                    
-                    this.saveJSON(); // Auto-download!
+                    document.getElementById('queueDrawer').classList.remove('expanded');
+                    this.saveJSON(); 
 
                 } catch (error) {
                     this.handleExecutionError(error);
@@ -897,24 +960,22 @@
                     window.jqCompilerLogs = [];
                     window.isJqCompiling = true;
 
-                    const snapshot = JSON.parse(JSON.stringify(this.baseAST));
-                    const result = await jq.json(this.baseAST, script);
+                    const snapshot = JSON.parse(JSON.stringify(this.state.baseAST));
+                    const result = await jq.json(this.state.baseAST, script);
                     
                     if (!result) throw new Error("Evaluation returned NULL.");
                     
-                    this.outputAST = result;
-                    document.getElementById('jsonOutput').value = JSON.stringify(this.outputAST, null, 2);
-                    this.updateJSONSyntax(document.getElementById('jsonOutput').value);
+                    this.setState({ outputAST: result, wizardState: "success" });
+                    this.jsonEditor.setValue(JSON.stringify(result, null, 2));
                     
-                    const changes = DiffEngine.compare(snapshot, this.outputAST);
+                    const changes = DiffEngine.compare(snapshot, result);
                     if (changes.length > 0) {
                         terminal.print(`Execution complete. ${changes.length} AST nodes modified.`, "success");
                         terminal.verbose("--- DETAILED DIFF TRACE ---");
                         changes.forEach(change => terminal.printDiff(change));
                     }
                     
-                    this.wizardState = "success"; this.renderStudioActions();
-                    this.saveJSON(); // Auto-download!
+                    this.saveJSON(); 
 
                 } catch (error) {
                     this.handleExecutionError(error);
@@ -924,24 +985,27 @@
             }
 
             handleExecutionError(error) {
-                this.wizardError = "Compilation failed."; 
-                this.wizardState = "error"; 
-                this.renderStudioActions();
+                this.setState({ wizardError: "Compilation failed.", wizardState: "error" });
+                
                 terminal.print(`[Execution Error] ${error.message}`, "danger");
+                terminal.print("--- DIAGNOSTIC TRACE ---", "warning");
                 
                 if (window.jqCompilerLogs && window.jqCompilerLogs.length > 0) {
-                    terminal.verbose("--- COMPILER SYNTAX TRACE ---");
                     window.jqCompilerLogs.forEach(err => terminal.print(err, "warning"));
+                } else {
+                    terminal.verbose("No internal WASM compiler trace captured. The script likely contains a syntax error before execution.");
+                    if (error.stack) terminal.verbose(error.stack);
                 }
+                
                 this.forceOpenIDE();
             }
 
             async saveJSON() {
-                if (!this.outputAST) return;
+                if (!this.state.outputAST) return;
                 try {
                     terminal.verbose("Applying final layout scaffolding filter...");
                     const filter = `(.keymap // .) |= (del(.layout) | (if (.holdTaps | type == "array" and length == 0) then del(.holdTaps) else . end) | (if (.macros | type == "array" and length == 0) then del(.macros) else . end) | (if (.combos | type == "array" and length == 0) then del(.combos) else . end) | (if (.behaviors | type == "array" and length == 0) then del(.behaviors) else . end))`;
-                    let cleanAST = await jq.json(this.outputAST, filter);
+                    let cleanAST = await jq.json(this.state.outputAST, filter);
                     
                     const a = document.createElement('a');
                     a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(cleanAST, null, 2));
