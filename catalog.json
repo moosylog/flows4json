@@ -453,7 +453,7 @@
         "default": "hold-tap"
       }
     ],
-    "mediaUrl": "https://moosylog.github.io/flows4json/sym_numrow.png"
+    "mediaUrl": null
   },
   {
     "uid": "de_symbol",
