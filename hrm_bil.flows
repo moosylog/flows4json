@@ -6,10 +6,11 @@ subtitle = "🛠️in progress!!🛠️"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
 
-🪳 Early version of Sunaku’s Bilateral HRM
-This is the Windows/Linux version.
+🪳 Early version of Sunaku’s Bilateral HRM. Complexity prevents me from changing.
 
 **Includes:**
+
+- QWERTY Windows/Linux Glove80 only
 
 - Layer support
 
