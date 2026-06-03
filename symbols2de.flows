@@ -8,9 +8,9 @@ When you change the language settings in the MoErgo Layout Editor from the defau
 
 This flow remaps those symbols so they produce the correct characters for the German layout.
 
-⚠️ **Required:** Symbol Layer must be included in your layout
+⚠️ **Required:** Symbol Layer must be included in your layout.
 
-🪳 **Quality note:** AI-generated content — not fully tested and may contain bugs
+🛠️ **Quality note:** Mappings are created by the robots.
 """
 script = """
 # ==============================================================================
