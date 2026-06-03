@@ -2,7 +2,7 @@ uid = "hrm_bil"
 type = "mutation"
 language = "us"
 title = "Sunaku's Bilateral HRM"
-subtitle = "8 Finger Layers"
+subtitle = "Adds Home-Row Modifiers"
 description = """
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
 
