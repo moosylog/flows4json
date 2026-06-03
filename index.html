@@ -132,14 +132,64 @@
         .product-desc a { color: var(--accent-blue); text-decoration: none; font-weight: 500; }
         .product-desc a:hover { text-decoration: underline; }
 
-        .param-section-title { font-size: 18px; font-weight: 600; margin-bottom: 16px; border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--text-primary); }
-        .param-group { background: var(--bg-card); padding: 20px; border-radius: var(--radius-md); border: 1px solid var(--border); display: flex; flex-direction: column; gap: 16px; }
+        /* PARAMETERS UI */
+        .param-section-title { 
+            font-size: 18px; font-weight: 600; margin-bottom: 16px; 
+            border-bottom: 1px solid var(--border); padding-bottom: 10px; color: var(--text-primary); 
+        }
+        
+        /* UPGRADE: The Container Anchor */
+        .param-group { 
+            background: linear-gradient(145deg, #2c2c2e 0%, #242426 100%); 
+            padding: 24px; 
+            border-radius: var(--radius-md); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            border-left: 4px solid var(--accent-blue); /* Visual anchor to grab attention */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; gap: 20px; 
+        }
+        
         .param-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
         .param-label { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-        .param-input { background: rgba(0,0,0,0.2); color: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; font-size: 13px; outline: none; min-width: 180px; max-width: 50%; color-scheme: dark; }
-        .param-input option { background: var(--bg-card); color: var(--text-primary); }
-        .param-input:focus { border-color: var(--accent-blue); }
-        .param-checkbox { width: 18px; height: 18px; accent-color: var(--accent-blue); cursor: pointer; }
+        
+        /* UPGRADE: The Input Affordance */
+        .param-input { 
+            background: #1a1a1c; /* Distinct dark inset color */
+            color: white; 
+            border: 1px solid rgba(255, 255, 255, 0.18); /* Brighter border so it pops */
+            padding: 10px 14px; 
+            border-radius: 8px; 
+            font-size: 13px; 
+            outline: none; 
+            min-width: 180px; max-width: 50%; 
+            color-scheme: dark; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); /* Makes it look 'pressed in' */
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        /* UPGRADE: Hover and Focus Feedback */
+        .param-input:hover {
+            border-color: rgba(255, 255, 255, 0.35);
+            background: #1e1e20;
+        }
+        .param-input:focus { 
+            border-color: var(--accent-blue); 
+            background: #1a1a1c;
+            /* Creates a beautiful Apple-style focus ring */
+            box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.3), inset 0 2px 4px rgba(0,0,0,0.3); 
+        }
+        
+        .param-input option { background: #2c2c2e; color: var(--text-primary); }
+        
+        /* UPGRADE: Checkbox Styling */
+        .param-checkbox { 
+            width: 20px; height: 20px; 
+            accent-color: var(--accent-blue); 
+            cursor: pointer; 
+            transition: transform 0.2s;
+        }
+        .param-checkbox:hover { transform: scale(1.1); }
 
         .dev-toggle-wrapper { padding: 0px 40px 40px 40px; text-align: center; flex-shrink: 0;}
         .dev-toggle { background: transparent; color: var(--text-secondary); font-size: 12px; border: none; cursor: pointer; }
