@@ -6,7 +6,7 @@ subtitle = "From en-US to fr-FR"
 description = """
 When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to French (fr-FR), some symbols no longer match their expected characters.
 
-This flow remaps those symbols so they produce the correct characters for the German layout.
+This flow remaps those symbols so they produce the correct characters for the French layout.
 
 ⚠️ REQUIRED: a layout with a 'Symbol Layer'
 🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
