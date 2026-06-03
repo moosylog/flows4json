@@ -1,7 +1,7 @@
 uid = "hrm_bil"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRM🤪"
+title = "Sunaku's Bilateral HRM🪳"
 subtitle = "🛠️in progress!!🛠️"
 description = """
 Advanced Home-row mods with bilateral combination enforcement improve your typing flow by positioning modifiers at your fingertips, with modifiers organized for **Windows or Linux (GACS)**.
@@ -21,10 +21,10 @@ Advanced Home-row mods with bilateral combination enforcement improve your typin
 # ==============================================================================
 script = """
 
-"LGUI"  as $LMOD1  |
-"RGUI"  as $RMOD1  |
-"LCTRL" as $LMOD2 |
-"RCTRL" as $RMOD2 |
+def LMOD1: "LGUI";
+def RMOD1: "RGUI";
+def LMOD2: "LCTRL";
+def RMOD2: "RCTRL";
 
 
 
