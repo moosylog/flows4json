@@ -2,7 +2,7 @@ uid = "emoji"
 type = "mutation"
 language = "us"
 title = "Emoji Macro"
-subtitle = "Macro: Sample Unicode Character Macros🪳"
+subtitle = "Sample Unicode Character Macros🪳"
 description = """
 Generates ready-to-use Unicode macros for your keyboard, letting you type emojis and symbols instantly.
 Includes popular characters like ❤️ ✨ ⭐ 🔥 😂 👍 mapped into simple, reusable shortcuts.
