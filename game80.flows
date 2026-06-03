@@ -6,7 +6,7 @@ subtitle = "Adds a TK/GE Gaming Layer"
 description = """
 Injects a dedicated left-hand focused Gaming layer for the Glove80 with then name 'Gaming_flows'.
 
-📢 Note: layer toggle must be assigned manually for activation.
+🎮 **Note:** layer switch or toggle must be assigned manually in Layout Editor.
 """
 
 # ==============================================================================
