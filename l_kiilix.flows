@@ -5,6 +5,8 @@ title = "Kiilix ⭐⭐⭐"
 subtitle =  "External App"
 description = """
 Configure your RGB
+
+More info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)
 """
 appUrl = "https://sites.google.com/view/kiilix/"
 script = ""
