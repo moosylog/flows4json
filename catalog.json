@@ -220,7 +220,7 @@
   },
   {
     "uid": "hrm_add_dev",
-    "title": "Add Home-Row Mods DEV",
+    "title": "Add Home-Row Mods DEV2",
     "subtitle": "Configurable",
     "description": "Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. \r\n\r\nSee [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.\r\n\r\n\r\nℹ️ *Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.*",
     "script": "",
