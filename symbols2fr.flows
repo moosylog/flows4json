@@ -2,7 +2,7 @@ uid = "fr_symbol"
 type = "mutation"
 language = "us"
 title = "Symbols 2 French AZERTY"
-subtitle = "Map en-US to fr-FR"
+subtitle = "🌍 Map en-US to fr-FR"
 description = """
 When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to French (fr-FR), some symbols no longer match their expected characters.
 
