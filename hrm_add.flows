@@ -11,7 +11,6 @@ See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
 
 ℹ️ *Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.*
 """
-
 # ==============================================================================
 # JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
@@ -97,20 +96,20 @@ def GetRegistry($v):
       ]
     }
   }[$v | tostring]
-  // (log_err("FATAL: Version \\($v) not found") | halt);
+  // (log_err("FATAL: Version \($v) not found") | halt);
 
 # ==============================================================================
 # 3. HARDWARE ABSTRACTION LAYER (HAL)
 # ==============================================================================
 
 def GetHardware:
-  (.layout.keys | length) as $len |
-  if $len > 70 then
+  (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
+  if $kb == "glove80" then
     { type: "glove80", home: [35,36,37,38,41,42,43,44], l_pref: "R_C", r_pref: "L_C" }
-  elif $len > 0 then
+  elif $kb == "go60" then
     { type: "go60", home: [25,26,27,28,31,32,33,34], l_pref: "R_C", r_pref: "L_C" }
   else
-    log_err("FATAL: Layout empty") | halt
+    log_err("FATAL: Unsupported or missing keyboard property in layout") | halt
   end;
 
 # ==============================================================================
@@ -151,10 +150,10 @@ def GetHardware:
         $cfg.profiles[] | {
           name:
             (if $cfg.naming == "simple"
-             then "&\\($side)_hand"
-             else "&HRM_\\($side)_\\(.id)" end),
+             then "&\($side)_hand"
+             else "&HRM_\($side)_\(.id)" end),
 
-          description: "Auto-gen \\($side) HRM (v\\($target_version))",
+          description: "Auto-gen \($side) HRM (v\($target_version))",
           bindings: ["&kp","&kp"],
           tappingTermMs: .term,
           quickTapMs: .quick,
@@ -190,8 +189,8 @@ def GetHardware:
       {
         value:
           (if $cfg.naming == "simple"
-           then "&\\($side)_hand"
-           else "&HRM_\\($side)_\\($cfg.map[$h_idx])"
+           then "&\($side)_hand"
+           else "&HRM_\($side)_\($cfg.map[$h_idx])"
            end),
 
         params: [
@@ -203,6 +202,8 @@ def GetHardware:
     else . end
   ]
 )
+
+
 """
 
 # ==============================================================================
