@@ -1,7 +1,7 @@
 uid = "mac_gb_symbol"
 type = "mutation"
 language = "gb-mac"
-title = "Symbols 2 Mac UK"
+title = "Symbols 2 UK English macOS"
 subtitle = "🌍 Map en-US to en-GB-mac"
 description = """
 When you change your OS layout to macOS British (en-GB), Apple maps some keys differently than standard US layouts or Windows UK layouts.
