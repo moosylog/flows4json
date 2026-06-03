@@ -132,7 +132,7 @@ default = "GACS"
 [manifest]
 author = "moosyresearch"
 keyboards = ["glove80"]
-icon = "⚠️"      
+icon = "📦"      
 # Optional: red, green, blue, purple, yellow, orange
 theme = "red" 
 [config]
