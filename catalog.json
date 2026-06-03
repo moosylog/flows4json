@@ -49,7 +49,7 @@
     "uid": "numrow_primeagen",
     "title": "Programmer's Number Row",
     "subtitle": "Custom Symbols",
-    "description": "Modifies the number row to use dual-function keys using the selected behavior.\r\n\r\nInspired by ThePrimeagen, this maps specific symbols to the number row. \r\nCurrently supports **Hold-Tap** (e.g., hold for symbol, tap for number). Tap-Dance and Mod-Morph are coming soon.",
+    "description": "Modifies the number row to use dual-function keys.\r\n\r\nInspired by ThePrimeagen, this maps specific programmer symbols directly onto the number row so you don't have to stretch for the Shift key. \r\n\r\nCurrently supports **Hold-Tap** (hold for symbol, tap for number). *Tap-Dance and Mod-Morph implementations are coming soon.*",
     "script": "",
     "category": "Layout Mods",
     "appUrl": null,
