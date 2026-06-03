@@ -331,7 +331,7 @@
     "uid": "l_kiilix",
     "title": "Kiilix ⭐⭐⭐",
     "subtitle": "External App",
-    "description": "Configure your RGB",
+    "description": "Configure your RGB\r\n\r\nMore info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)",
     "script": "",
     "category": "RGB",
     "appUrl": "https://sites.google.com/view/kiilix/",
