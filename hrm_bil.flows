@@ -1,28 +1,18 @@
 uid = "hrm_bil"
 type = "mutation"
 language = "us"
-title = "Bil Home-Row Mod 🛠️"
+title = "Sunaku's Bilateral HRM"
 subtitle = "🛠️in progress!!🛠️"
 description = """
-Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
+Advanced Home-row mods with bilateral combination enforcement improve your typing flow by positioning modifiers at your fingertips, with modifiers organized for **Windows or Linux (GACS)**.
 
 🪳 Early version of Sunaku’s Bilateral HRM. Complexity prevents me from changing.
 
-**Includes:**
-
-- QWERTY Windows/Linux Glove80 only
-
-- Layer support
-
-- Hold-taps
-
-- Macros
-
 ⚠️ No error handling has been implemented yet.
 
-After running this, you’ll need to manually reorder the layers in the Layout Editor.
+⚠️ After running this, you’ll need to manually reorder the layers in the Layout Editor.
 
-You can use QWERTY Swap to switch to another alpha layer.
+⚠️ You can use QWERTY Swap to switch to another alpha layer.
 
 """
 
