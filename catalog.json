@@ -46,6 +46,46 @@
     "mediaUrl": null
   },
   {
+    "uid": "numrow_primeagen",
+    "title": "Programmer's Number Row",
+    "subtitle": "Custom Symbols",
+    "description": "Modifies the number row to use dual-function keys using the selected behavior.\r\n\r\nInspired by ThePrimeagen, this maps specific symbols to the number row. \r\nCurrently supports **Hold-Tap** (e.g., hold for symbol, tap for number). Tap-Dance and Mod-Morph are coming soon.",
+    "script": "",
+    "category": "Layout Mods",
+    "appUrl": null,
+    "manifest": {
+      "author": "moosyresearch",
+      "keyboards": [
+        "go60",
+        "glove80"
+      ],
+      "icon": "🔢",
+      "theme": "blue"
+    },
+    "config": {
+      "category": "Layout Mods"
+    },
+    "param": [
+      {
+        "id": "behavior_type",
+        "label": "Trigger Behavior",
+        "type": "select",
+        "options": [
+          "hold-tap",
+          "tap-dance",
+          "mod-morph"
+        ],
+        "labels": [
+          "Hold-Tap (Hold for Symbol)",
+          "Tap-Dance (Coming Soon)",
+          "Mod-Morph (Coming Soon)"
+        ],
+        "default": "hold-tap"
+      }
+    ],
+    "mediaUrl": null
+  },
+  {
     "uid": "alt_layout",
     "title": "Alternative Layouts",
     "subtitle": "Pre-selected list",
