@@ -4,78 +4,85 @@ language = "us"
 title = "Programmer's Number Row"
 subtitle = "Custom Symbols"
 description = """
-Modifies the number row to use dual-function keys using the selected behavior.
+Modifies the number row to use dual-function keys.
 
-Inspired by ThePrimeagen, this maps specific symbols to the number row. 
-Currently supports **Hold-Tap** (e.g., hold for symbol, tap for number). Tap-Dance and Mod-Morph are coming soon.
+Inspired by ThePrimeagen, this maps specific programmer symbols directly onto the number row so you don't have to stretch for the Shift key. 
+
+Currently supports **Hold-Tap** (hold for symbol, tap for number). *Tap-Dance and Mod-Morph implementations are coming soon.*
 """
 
 # ==============================================================================
-# JQ SCRIPT
+# JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
 script = '''
 # ==============================================================================
 # 1. CORE UTILITIES & HARDWARE
 # ==============================================================================
-def log_err($msg): ($msg | stderr) | empty;
+
+def log_err($msg):
+  ($msg | stderr) | empty;
 
 def GetHardware:
   (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
   if $kb == "glove80" then
-    { offset: 11, len: 10 } # Glove80 number row starts at index 11
+    { offset: 11, len: 10 } # Glove80 number row is keys 11 through 20
   elif $kb == "go60" then
-    { offset: 1, len: 10 }  # Go60 number row starts at index 1
+    { offset: 1, len: 10 }  # Go60 number row is keys 1 through 10
   else
-    log_err("FATAL: Unsupported hardware") | halt
+    log_err("FATAL: Unsupported or missing keyboard property in layout") | halt
   end;
 
 # ==============================================================================
-# 2. DATA REGISTRY
+# 2. BEHAVIOR DEFINITIONS
 # ==============================================================================
-# Array 1: Numbers
+
+def get_primeagen_holdtap: {
+  "name": "&ht_primeagen",
+  "description": "Primeagen NumRow Hold-Tap",
+  "bindings": ["&kp", "&kp"],
+  "tappingTermMs": 200,
+  "flavor": "tap-preferred"
+};
+
+# ==============================================================================
+# 3. DATA REGISTRY
+# ==============================================================================
+
+# Array 1: Numbers (Tap)
 ["N1","N2","N3","N4","N5","N6","N7","N8","N9","N0"] as $arr_nums |
 
-# Array 2: Symbols (Primeagen Layout)
+# Array 2: Symbols (Hold)
 ["EXCL","LBKT","LBRC","LPAR","AMPS","EQUAL","RPAR","RBRC","RBKT","ASTRK"] as $arr_syms |
 
 (GetHardware) as $hw |
 
 # ==============================================================================
-# 3. BEHAVIOR INJECTION (Hold-Tap)
+# 4. MAIN TRANSFORMATION ENGINE
 # ==============================================================================
+
 (.keymap // .) |= (
   
-  # Only inject the behavior if Hold-Tap is selected
-  if $behavior_type == "hold-tap" then
-    .holdTaps = (
-      [
-        (.holdTaps // [])[],
-        {
-          name: "&ht_primeagen",
-          description: "Primeagen Number Row Hold-Tap",
-          flavor: "tap-preferred",
-          tappingTermMs: 200,
-          quickTapMs: 150,
-          bindings: ["&kp", "&kp"]
-        }
-      ] | unique_by(.name)
-    )
-  else . end
+  # Step 1: Inject the selected behavior into the AST
+  (if $behavior_type == "hold-tap" then
+    .holdTaps = ((.holdTaps // []) + [get_primeagen_holdtap] | unique_by(.name))
+  else 
+    . 
+  end) 
+  
   |
 
-  # ==============================================================================
-  # 4. LAYER MODIFICATION
-  # ==============================================================================
+  # Step 2: Modify the Number Row on the Base Layer
   .layers[0] |= [
     range(length) as $i | .[$i] |
     
-    # Check if the current key index falls inside our hardware's number row
+    # Check if the current key index is strictly inside the hardware's number row
     if ($i >= $hw.offset) and ($i < ($hw.offset + $hw.len)) then
       
-      ($i - $hw.offset) as $idx | # Maps index back to 0-9 for our arrays
+      ($i - $hw.offset) as $idx | # Maps index back to 0-9 to pull from our arrays cleanly
 
       if $behavior_type == "hold-tap" then
         
+        # Safely preserve any UI decorators the user has applied
         (if type == "object" and .decoration then { decoration: .decoration } else {} end) as $dec |
         
         {
@@ -87,10 +94,10 @@ def GetHardware:
         } + $dec
         
       elif $behavior_type == "tap-dance" then
-        # FUTURE: Implement Tap-Dance mapping here
+        # FUTURE: Implement Tap-Dance AST structure here
         .
       elif $behavior_type == "mod-morph" then
-        # FUTURE: Implement Mod-Morph mapping here
+        # FUTURE: Implement Mod-Morph AST structure here
         .
       else 
         . 
