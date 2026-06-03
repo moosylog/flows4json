@@ -6,7 +6,9 @@ subtitle = "Scheme generator"
 description = """
 This creates a PR36 Scheme based on your key decorators in your Device Tree section.
 
-It's basically donig the same thing as KiiliX
+It's basically donig the same thing as [Kiilix](https://sites.google.com/view/kiilix/).
+
+More info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)
 
 ⚠️ **WARNING:** THIS OVERWRITES THE DEVICE TREE SECTION
 
