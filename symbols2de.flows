@@ -2,7 +2,7 @@ uid = "de_symbol"
 type = "mutation"
 language = "us"
 title = "Symbols 2 German"
-subtitle = "Map en-US to de-DE"
+subtitle = "🌍 Map en-US to de-DE"
 description = """
 When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to German (de-DE), some symbols no longer match their expected characters.
 
