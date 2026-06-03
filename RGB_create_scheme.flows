@@ -1,0 +1,117 @@
+uid = "mac_gb_symbol"
+type = "mutation"
+language = "en-US"
+title = "PR36 Create DEV🛠️"
+subtitle = "Scheme generator"
+description = """
+This creates a PR36 Scheme based on your key decorators in your Device Tree section.
+
+It's basically donig the same thing as KiiliX
+
+⚠️ **WARNING:** THIS OVERWRITES THE DEVICE TREE SECTION
+
+"""
+script = """
+
+(if .keymap then .keymap else . end) |= (
+
+  # --- VALIDATION: Check basic structure ---
+  if type != "object" then error("Invalid input: Expected a JSON object.") else . end |
+  if .layers == null then error("Invalid input: Missing '.layers' array.") else . end |
+
+  .keyboard as $kb |
+  .layer_names as $names |
+
+  # --- VALIDATION: Supported Keyboard Check ---
+  (if ($kb != "glove80" and $kb != "go60") then
+    error("Unsupported keyboard: '\($kb // "null")'. Supported keyboards are 'glove80' and 'go60'.")
+  else . end) |
+
+  # 1. Extract Unique Colors (with Safe Hex Validation)
+  ([ .layers[][].decoration?.background? // empty
+     | select(type == "string" and . != "")
+     | ascii_upcase
+     | sub("^#"; "")
+     | select(length >= 6)
+     | .[0:6]
+     | select(. != "000000")
+  ] | unique) as $colors |
+
+  # 2. Map Colors to Macros
+  (reduce range(0; $colors | length) as $i ({}; 
+    .[$colors[$i]] = "C\( ($i+1) | tostring | if length == 1 then "0"+. else . end )"
+  )) as $color_map |
+
+  # 3. Build Palette and Undef blocks
+  ( ($colors | map($color_map[.] as $m | "  #define \($m)_RGB 0x\(.)\n  #define \($m) &ug \($m)_RGB") | join("\n"))
+    + "\n  #define ___ &ug 0x000000"
+  ) as $palette |
+
+  ( ($colors | map($color_map[.] as $m | "  #undef \($m)\n  #undef \($m)_RGB") | join("\n"))
+    + "\n  #undef ___"
+  ) as $undef |
+
+  # 4. Generate Layers with correct Row Logic
+  (.layers | to_entries | map(
+    .key as $idx |
+
+    (($names // [])[$idx] // "Layer_\($idx)") as $layerName |
+
+    # STRICT Key Count Check
+    (.value | length) as $keyCount |
+    (if ($kb == "glove80" and $keyCount != 80) then
+      error("Error in layer '\($layerName)': Glove80 expects 80 keys, but found \($keyCount).")
+    elif ($kb == "go60" and $keyCount != 60) then
+      error("Error in layer '\($layerName)': Go60 expects 60 keys, but found \($keyCount).")
+    else . end) |
+
+    # Map keys safely
+    (.value | map(
+      (.decoration?.background? // "" | ascii_upcase | sub("^#"; "") |
+        if length >= 6 then .[0:6] else "" end
+      ) as $hex |
+      if $color_map[$hex] then $color_map[$hex] else "___" end
+    )) as $m |
+
+    # Physical Grid Construction
+    (if $kb == "glove80" then
+      "          \($m[0:5]|join(" "))                                             \($m[5:10]|join(" "))\n" +
+      "          \($m[10:16]|join(" "))                                     \($m[16:22]|join(" "))\n" +
+      "          \($m[22:28]|join(" "))                                     \($m[28:34]|join(" "))\n" +
+      "          \($m[34:40]|join(" "))                                     \($m[40:46]|join(" "))\n" +
+      "          \($m[46:52]|join(" "))     \($m[52:55]|join(" "))     \($m[55:58]|join(" "))     \($m[58:64]|join(" "))\n" +
+      "          \($m[64:69]|join(" "))         \($m[69:72]|join(" "))     \($m[72:75]|join(" "))         \($m[75:80]|join(" "))"
+    elif $kb == "go60" then
+      "          \($m[0:6]|join(" "))                                     \($m[6:12]|join(" "))\n" +
+      "          \($m[12:18]|join(" "))                                     \($m[18:24]|join(" "))\n" +
+      "          \($m[24:30]|join(" "))                                     \($m[30:36]|join(" "))\n" +
+      "          \($m[36:42]|join(" "))                                     \($m[42:48]|join(" "))\n" +
+      "                  \($m[48:51]|join(" "))                                             \($m[51:54]|join(" "))\n" +
+      "                                      \($m[54:57]|join(" "))     \($m[57:60]|join(" "))"
+    else "" end) as $grid |
+
+    "      #ifdef LAYER_\($layerName)\n      \($layerName) {\n        bindings = <\n\($grid)\n        >;\n        layer-id = <LAYER_\($layerName)>;\n        fade-delay = <15>;\n      };\n      #endif"
+  ) | join("\n\n")) as $layersOutput |
+
+  # 5. Injection
+  .custom_devicetree = (
+    "#if __has_include(<dt-bindings/zmk/rgb_colors.h>)\n" +
+    "  // --- RGB Palette ---\n" + $palette + "\n\n" +
+    "  / {\n    underglow-layer {\n      compatible = \"zmk,underglow-layer\";\n\n" +
+    $layersOutput + "\n" +
+    "    };\n  };\n\n" +
+    "  // --- Cleanup ---\n" + $undef + "\n" +
+    "#endif"
+  )
+)
+
+
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🎨"      
+theme = "purple" 
+[config]
+category = "RGB"
+num = 124
