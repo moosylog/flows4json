@@ -1,7 +1,7 @@
 uid = "mac_gb_symbol"
 type = "mutation"
 language = "en-US"
-title = "PR36 Create DEV🛠️"
+title = "PR36 Create DEV"
 subtitle = "Scheme generator"
 description = """
 This creates a PR36 Scheme based on your key decorators in your Device Tree section.
@@ -111,7 +111,7 @@ script = """
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
 icon = "🎨"      
-theme = "purple" 
+theme = "green" 
 [config]
 category = "RGB"
 num = 124
