@@ -2,7 +2,7 @@ uid = "se_symbol"
 type = "mutation"
 language = "us"
 title = "Symbols 2 Swedish macOS"
-subtitle = "Map en-US to sv-SE"
+subtitle = "🌍 Map en-US to sv-SE"
 description = """
 When you change the language settings in the MoErgo Layout Editor from the default US English keyboard layout (en-US) to Swedish (sv-SE), some symbols no longer match their expected characters.
 
