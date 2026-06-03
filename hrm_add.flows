@@ -8,6 +8,7 @@ Home-row mods let your home-row keys do two things: act as normal letters when t
 
 See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
 
+⚠️ This will add HRMs to your layout. Remove any existing HRMs first to avoid conflicts or duplicates. You can use the “Remove HRMs” option before applying new ones.
 
 ℹ️ *Urob Timeless is the safest choice, using the balanced hold-tap flavor, while Sunaku uses a tap-preferred hold-tap flavor.*
 """
@@ -15,7 +16,9 @@ See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
 # JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
 script = """
-# Modifier sequences
+
+
+# Modifier sequences & Colors
 {
   "GACS": [
     "LGUI", "LALT", "LCTRL", "LSHFT",
@@ -26,6 +29,13 @@ script = """
     "RSHFT", "RGUI", "LALT", "RCTRL"
   ]
 } as $mod_registry |
+
+{
+  "LSHFT": "#fffec9", "RSHFT": "#fffec9",
+  "LCTRL": "#d9f9c9", "RCTRL": "#d9f9c9",
+  "LALT": "#e5feff",  "RALT": "#e5feff",
+  "LGUI": "#fbe6fe",  "RGUI": "#fbe6fe"
+} as $color_registry |
 
 # ==============================================================================
 # 1. CORE UTILITIES
@@ -105,9 +115,19 @@ def GetRegistry($v):
 def GetHardware:
   (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
   if $kb == "glove80" then
-    { type: "glove80", home: [35,36,37,38,41,42,43,44], l_pref: "R_C", r_pref: "L_C" }
+    { 
+      type: "glove80", 
+      home: [35,36,37,38,41,42,43,44], 
+      l_trigs: [5, 6, 7, 8, 9, 16, 17, 18, 19, 20, 21, 28, 29, 30, 31, 32, 33, 40, 41, 42, 43, 44, 45, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79],
+      r_trigs: [0, 1, 2, 3, 4, 10, 11, 12, 13, 14, 15, 22, 23, 24, 25, 26, 27, 34, 35, 36, 37, 38, 39, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74]
+    }
   elif $kb == "go60" then
-    { type: "go60", home: [25,26,27,28,31,32,33,34], l_pref: "R_C", r_pref: "L_C" }
+    { 
+      type: "go60", 
+      home: [25,26,27,28,31,32,33,34], 
+      l_trigs: [6, 7, 8, 9, 10, 11, 18, 19, 20, 21, 22, 23, 30, 31, 32, 33, 34, 35, 42, 43, 44, 45, 46, 47, 51, 52, 53, 54, 55, 56, 57, 58, 59],
+      r_trigs: [0, 1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17, 24, 25, 26, 27, 28, 29, 36, 37, 38, 39, 40, 41, 48, 49, 50, 54, 55, 56, 57, 58, 59]
+    }
   else
     log_err("FATAL: Unsupported or missing keyboard property in layout") | halt
   end;
@@ -125,13 +145,7 @@ def GetHardware:
 # ----------------------------------------------------------------------
 
 (.layout.keys | reduce .[] as $k (
-  { l_trigs: [], r_trigs: [], home_map: {} };
-
-  ($k.label // "") as $lbl |
-
-  (if ($lbl | startswith($hw.l_pref)) then .l_trigs += [$k.i] else . end) |
-  (if ($lbl | startswith($hw.r_pref)) then .r_trigs += [$k.i] else . end) |
-
+  { home_map: {} };
   ($hw.home | index($k.i)) as $idx |
   (if $idx != null then .home_map[$k.i | tostring] = $idx else . end)
 )) as $db |
@@ -163,8 +177,8 @@ def GetHardware:
 
           holdTriggerKeyPositions:
             (if $side == "left"
-             then ($db.l_trigs | sort)
-             else ($db.r_trigs | sort)
+             then $hw.l_trigs
+             else $hw.r_trigs
              end)
         }
       )
@@ -178,13 +192,20 @@ def GetHardware:
     if $h_idx != null then
       get_side($h_idx) as $side |
       get_char_node as $char |
+      ($mod_seq[$h_idx]) as $current_mod |
+      
+      # Pull the color background lookup safely outside the if/else block!
+      ($color_registry[$current_mod]) as $bg |
 
-      (if $preserve_decorators
-       and type == "object"
-       and .decoration
-       then { decoration: .decoration }
-       else {}
-       end) as $dec |
+      (
+        if $set_decorators and $bg != null then
+          { decoration: { background: $bg } }
+        elif type == "object" and .decoration then
+          { decoration: .decoration }
+        else
+          {}
+        end
+      ) as $dec |
 
       {
         value:
@@ -194,7 +215,7 @@ def GetHardware:
            end),
 
         params: [
-          { value: $mod_seq[$h_idx], params: [] },
+          { value: $current_mod, params: [] },
           $char
         ]
       } + $dec
@@ -202,8 +223,6 @@ def GetHardware:
     else . end
   ]
 )
-
-
 """
 
 # ==============================================================================
@@ -227,8 +246,8 @@ labels = ["Windows / Linux", "macOS"]
 default = "GACS"
 
 [[param]]
-id = "preserve_decorators"
-label = "Preserve UI Decorators"
+id = "set_decorators"
+label = "Key Decorator"
 type = "boolean"
 default = true
 
@@ -239,7 +258,7 @@ default = true
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60","glove80"]
-icon = "🏠"      
+icon = "🏚️"      
 # Optional: red, green, blue, purple, yellow, orange
 theme = "green" 
 [config]
