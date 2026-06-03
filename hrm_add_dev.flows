@@ -187,12 +187,19 @@ def GetHardware:
       get_char_node as $char |
       ($mod_seq[$h_idx]) as $current_mod |
 
-      (if $preserve_decorators and type == "object" and .decoration then 
-         { decoration: .decoration }
-       else 
-         ($color_registry[$current_mod]) as $bg |
-         if $bg then { decoration: { background: $bg } } else {} end
-       end) as $dec |
+(if $set_decorators and type == "object" then
+   ($color_registry[$current_mod]) as $bg |
+   if $bg then
+     { decoration: { background: $bg } }
+   elif .decoration then
+     { decoration: .decoration }
+   else
+     {}
+   end
+ else
+   ($color_registry[$current_mod]) as $bg |
+   if $bg then { decoration: { background: $bg } } else {} end
+ end) as $dec |
 
       {
         value:
@@ -235,8 +242,8 @@ labels = ["Windows / Linux", "macOS"]
 default = "GACS"
 
 [[param]]
-id = "preserve_decorators"
-label = "Preserve UI Decorators"
+id = "set_decorators"
+label = "Key Decorator"
 type = "boolean"
 default = true
 
