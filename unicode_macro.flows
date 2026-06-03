@@ -7,9 +7,7 @@ description = """
 Generates ready-to-use Unicode macros for your keyboard, letting you type emojis and symbols instantly.
 Includes popular characters like ❤️ ✨ ⭐ 🔥 😂 👍 mapped into simple, reusable shortcuts.
 
-Works across Windows, macOS, and Linux with settings per in the script per OS (see 🚩)
-
-🪳 STILL A BIT BUGGY, YOU CAN HELP IMPROVING IT. OPEN THE DEV SECTION BELOW TO SEE THE SCRIPT.
+Works on Windows, macOS, and Linux with settings per in the script per OS (see 🚩)
 
 Injects macros directly into your layout so you can type Unicode without copying or searching.
 Supports both basic and advanced Unicode characters, including full emoji range.
@@ -19,7 +17,7 @@ Keeps everything consistent across layouts while removing the need for manual Un
 Lets you express yourself faster with one-keystroke emoji and symbol insertion.
 A universal shortcut system for modern typing.
 
-🪳 QUALITY: AI-generated content — not fully tested and may contain bugs.
+🪳 **QUALITY:** AI-generated content — not fully tested and may contain bugs.
 """
 
 # ==============================================================================
