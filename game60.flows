@@ -1,7 +1,7 @@
 uid = "gaming60"
 type = "mutation"
 language = "us"
-title = "TK Gaming Layer 60"
+title = "Gaming Layer 60"
 subtitle = "Adds the TK Gaming Layer"
 description = """
 Injects a dedicated left-hand focused Gaming layer for the Go60 with then name 'Gaming_flows'.
