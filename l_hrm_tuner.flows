@@ -4,8 +4,9 @@ language = "us"
 title = "HRM Configurator ⭐⭐"
 subtitle =  "External App"
 description = """
-Advanced Home-Row Mod Configurator
-This tool allows you to bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob or manual values to your entire layout at once. 
+Advanced Home-Row Mod Configurator is an **external application** that lets you bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob, or by setting manual values, across your entire layout at once.
+
+It supports both standard HRM and TailorKey bilateral HRM.
 """
 appUrl = "https://sites.google.com/view/tailorkey/how-to/hrm-tuner"
 script = ""
