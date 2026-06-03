@@ -1,7 +1,7 @@
 uid = "numrow_primeagen"
 type = "mutation"
 language = "us"
-title = "Programmer's Number Row"
+title = "Programmer's Number Row🤪"
 subtitle = "Custom Symbols"
 description = """
 Modifies the number row to use dual-function keys.
@@ -14,7 +14,7 @@ Currently supports **Hold-Tap** (hold for symbol, tap for number). *Tap-Dance an
 # ==============================================================================
 # JQ SCRIPT (Must remain at the top before any headers!)
 # ==============================================================================
-script = '''
+script = """
 # ==============================================================================
 # 1. CORE UTILITIES & HARDWARE
 # ==============================================================================
@@ -108,7 +108,7 @@ def get_primeagen_holdtap: {
     end
   ]
 )
-'''
+"""
 
 # ==============================================================================
 # UI PARAMETERS 
@@ -133,4 +133,4 @@ icon = "🔢"
 theme = "blue" 
 
 [config]
-category = "Languages & Symbols"
+category = "Layout Mods"
