@@ -1,7 +1,7 @@
 uid = "numrow_primeagen"
 type = "mutation"
 language = "us"
-title = "Programmer's Number Row🤪"
+title = "Programmer's Number Row⚠️"
 subtitle = "Custom Symbols"
 description = """
 Modifies the number row to use dual-function keys.
@@ -25,9 +25,9 @@ def log_err($msg):
 def GetHardware:
   (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
   if $kb == "glove80" then
-    { offset: 11, len: 10 } # Glove80 number row is keys 11 through 20
+    { offset: 10, len: 12 } # Glove80 number row is keys 10 through 22
   elif $kb == "go60" then
-    { offset: 1, len: 10 }  # Go60 number row is keys 1 through 10
+    { offset: 0, len: 12 }  # Go60 number row is keys 0 through 12
   else
     log_err("FATAL: Unsupported or missing keyboard property in layout") | halt
   end;
@@ -49,10 +49,10 @@ def get_primeagen_holdtap: {
 # ==============================================================================
 
 # Array 1: Numbers (Tap)
-["N1","N2","N3","N4","N5","N6","N7","N8","N9","N0"] as $arr_nums |
+["AT","N1","N2","N3","N4","N5","N6","N7","N8","N9","N0","DOLLAR"] as $arr_nums |
 
 # Array 2: Symbols (Hold)
-["EXCL","LBKT","LBRC","LPAR","AMPS","EQUAL","RPAR","RBRC","RBKT","ASTRK"] as $arr_syms |
+["PLUS","EXCL","LBKT","LBRC","LPAR","AMPS","EQUAL","RPAR","RBRC","RBKT","ASTRK","PERCENT"] as $arr_syms |
 
 (GetHardware) as $hw |
 
@@ -88,8 +88,8 @@ def get_primeagen_holdtap: {
         {
           value: "&ht_primeagen",
           params: [
-            { value: $arr_syms[$idx], params: [] }, # Hold action (Symbol)
             { value: $arr_nums[$idx], params: [] }  # Tap action (Number)
+            { value: $arr_syms[$idx], params: [] }, # Hold action (Symbol)
           ]
         } + $dec
         
