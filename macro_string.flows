@@ -4,9 +4,11 @@ language = "us"
 title = "String Macro"
 subtitle = "Fabulous Generator"
 description = """
-This is an example to create a string macros based on the **en-US language settings**. 
+This creates a macro with the specified name that displays the text entered below in Configuration Options. The symbols are based on en-US language settings.
 
-❌ Do not store secrets or personal data in your layout. MoErgo Layout Editor files are always accessible via a URL—there is no “private” mode, whether published in the catalog or not.
+❌ **WARNING: DO NOT STORE SECRETS OR PERSONAL DATA IN YOUR LAYOUT. **
+
+MoErgo Layout Editor files are always accessible via it's URL—there is "no private mode", whether published in the catalog or not.
 
 **Supported Characters:**
 - Lowercase Letters: a b c d e f g h i j k l m n o p q r s t u v w x y z
