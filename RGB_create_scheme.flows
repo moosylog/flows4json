@@ -10,7 +10,8 @@ It's basically donig the same thing as [Kiilix](https://sites.google.com/view/ki
 
 More info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)
 
-⚠️ **WARNING:** THIS OVERWRITES THE DEVICE TREE SECTION
+⚠️ **WARNING:** THIS OVERWRITES THE COMPLETE DEVICE TREE CONTENT
+
 
 """
 script = """
