@@ -2,7 +2,7 @@ uid = "emoji"
 type = "mutation"
 language = "us"
 title = "Core Communication Emoji Set"
-subtitle = "Unified 20-Emoji Kernel & Layer🪳"
+subtitle = "Unified 20-Emoji Kernel & Layer"
 description = """
 Generates ready-to-use Unicode macros for your keyboard and automatically builds a dedicated **Emoji Layer** mapped with colored labels.
 
