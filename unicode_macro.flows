@@ -7,6 +7,8 @@ description = """
 Generates ready-to-use Unicode Emoji macros and automatically builds a dedicated **Emoji Layer** mapped with colored labels.
 You can easy drag and drop these to your favorite location in Layout Editor.
 
+😂 😭 😅 😍 😎 🤔 😉 😮 🙁 ❤️ 👍 👎 🙏 💯 🔥 👀 ❌ ✅ 🤣 🙇🏻
+
 ### ⚠️ Prerequisites: OS Unicode Support
 Standard keyboards send keycodes, not actual characters. To output these emojis natively, your OS must be configured to accept hexadecimal input:
 
