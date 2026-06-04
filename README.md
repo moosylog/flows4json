@@ -20,11 +20,10 @@ You simply upload your layout file, browse for the features you want, and click 
 ---
 
 ### 🤔 What does this app actually do?
-When you build a layout using a web tool (like the MoErgo Layout Editor), it saves your layout as a `.json` file. 
 
-Normally, if you want to add an advanced community feature (like "AutoShift" or "Home-Row Mods"), you have to manually open that file and rewrite the code yourself. Flows4JSON acts as a smart robotic assistant. It reads your `.json` file, understands exactly where your keys are, and perfectly injects the new features into your layout without breaking any of your existing personalizations. 
+Usually, if you want to add cool community features (like "AutoShift" or "Home-Row Mods"), you have to suffer through dozens of manual steps and endless clicking in the Layout Editor.
 
-Best of all? **It is 100% private and runs entirely inside your web browser.** Your layout files are never uploaded to a remote server.
+There is a better way. When you build a layout in the MoErgo Layout Editor, you can save it as a .json file. Flows4JSON acts as a smart robotic assistant that reads this file. It figures out exactly where your keys are and perfectly injects these complex new features—all without breaking a single one of your existing personalizations.
 
 ---
 
