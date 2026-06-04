@@ -217,7 +217,7 @@ script = """
 
     # 4. Inject layer (Overwrite existing "Emoji" layer, or append a new one)
     ((.layer_names | index($emoji_layer)) // (.layers | length)) as $layer_idx |
-    .layer_names[$layer_idx] = "Emoji" |
+    .layer_names[$layer_idx] = $emoji_layer |
     .layers[$layer_idx] = $new_layer
   )
 )
