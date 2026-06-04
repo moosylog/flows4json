@@ -4,10 +4,12 @@ language = "us"
 title = "🍏 Remap to/from macOS"
 subtitle = "Swap modifier: macOS/Win"
 description = """
-Instantly swap Ctrl and Cmd across your entire keyboard layout for a seamless Mac ↔ Windows experience.
-Keeps familiar shortcuts like Copy, Paste, Undo, and Redo working exactly as expected.
-Works automatically across all layers and custom key behaviors, so you can switch platforms without relearning muscle memory.
-Perfect for users who move between macOS and Windows and want their keyboard to feel natural everywhere.
+Seamlessly switch your keyboard between macOS and Windows by making shortcuts behave the way you expect on both systems.
+
+Remaps all Ctrl and Cmd/GUI modifiers across your entire keyboard layout.
+This includes LCTRL ↔ LGUI, RCTRL ↔ RGUI, as well as LC() ↔ LG() and RC() ↔ RG() style bindings, including nested behaviors.
+Keeps familiar shortcuts like Copy, Paste, Undo, and Redo working naturally across both operating systems.
+Applies globally to all layers and custom key behaviors, so you can switch platforms without relearning muscle memory.
 """
 script = """
 # 1. The Bi-directional Swap Map
