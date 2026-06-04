@@ -10,41 +10,42 @@ This 🚫️ deletes everying ☠️ unused, that's not associated
 
 """
 script = """
-# Safe Root Accessor Pattern: Isolates the keymap node
-(if type == "object" and .keymap? then .keymap else . end) |= (
+# HARDENED CLEANUP: Direct Object Access
+# We remove the "if .keymap" check to prevent index-on-array crashes
+. as $root |
+if ($root | type) != "object" then $root else (
+  
+  # 1. VALIDATION
+  if ($root.layers | type) != "array" then $root else (
 
-  # 1. RIGID PRE-FLIGHT VALIDATION
-  # Prevents processing corrupted or malformed ZMK export files.
-  if type != "object" or (.layers | type != "array") or (.layers | length) <= 1 then .
-  else (
+    # 2. DEPENDENCY MAPPING (No '..', strictly controlled recursion)
+    def extract_refs:
+      if type == "string" then [.]
+      elif type == "array" then map(extract_refs) | flatten
+      elif type == "object" then to_entries | map(.value | extract_refs) | flatten
+      else [] end;
 
-    # 2. DEFINED DEPENDENCY MAPPING (Garbage Collection)
-    # Recursively extracts all behavioral references to prevent deleting used macros/hold-taps.
-    def get_bindings: .. | objects | .value? | select(type == "string" and startswith("&")) | sub("^&"; "");
-    
-    [get_bindings] | unique as $used_behaviors |
+    ($root.layers + ($root.combos // []) + ($root.inputListeners // [])) | extract_refs | map(select(startswith("&"))) | map(sub("^&"; "")) | unique as $used_behaviors |
 
     # 3. IDENTIFY TARGETS
-    # Logic: Only delete if empty, not referenced by combos/listeners, and not a magic layer.
-    ([.layers | to_entries[] | select(.value | type == "array" and (map(select(type == "object" and .value != null and .value != "&none" and .value != "&trans")) | length == 0)) | .key]) as $empty_layers |
+    # Use index-safe selection
+    [range(1; $root.layers | length)] as $indices |
+    [map(select(
+      ($root.layers[.] | type == "array") and 
+      ($root.layers[.] | map(select(type == "object" and .value != null and .value != "&none" and .value != "&trans")) | length == 0) and
+      ($root.layer_names[.] | type == "string" and ($root.layer_names[.] | ascii_downcase | contains("magic") | not))
+    ))] | flatten as $to_del |
 
-    ([.. | objects | select(.value? == "&mo" or .value? == "&to" or .value? == "&tog") | .params[0].value,
-      .inputListeners[]?.nodes[]?.layers[]?,
-      .combos[]?.layers[]?] | map(select(type == "number")) | unique) as $refs |
-
-    ([range(1; .layers | length) | select(IN($empty_layers[]) and (IN($refs[]) | not) and (.layer_names[.] | ascii_downcase | contains("magic") | not))] | reverse) as $to_del |
-
-    # 4. SURGICAL PURGE & REALIGNMENT
-    # Performs the actual deletion and shifts indices for all cross-references.
-    reduce $to_del[] as $idx (.;
+    # 4. SURGICAL PURGE (Reverse order to maintain integrity)
+    reduce ($to_del | sort | reverse)[] as $idx ($root;
       del(.layers[$idx]) | del(.layer_names[$idx]) |
-      (.. | objects | select(.value? | IN("&mo", "&to", "&tog"))) |= (.params[0].value |= (if . > $idx then . - 1 elif . == $idx then 0 else . end)) |
+      # Shift references
+      (.. | objects | select(.value? | IN("&mo", "&to", "&tog", "&sl", "&ltt", "&layer"))).params[0].value |= (if . > $idx then . - 1 elif . == $idx then 0 else . end) |
       (.inputListeners[]?.nodes[]?.layers) |= map(if . > $idx then . - 1 elif . == $idx then 0 else . end) |
       (.combos[]?.layers) |= map(if . > $idx then . - 1 elif . == $idx then 0 else . end)
     ) |
 
-    # 5. BEHAVIOR GARBAGE COLLECTION
-    # Cleans up unused custom behaviors/macros while preserving core layout integrity.
+    # 5. BEHAVIOR CLEANUP
     .holdTaps |= map(select(.name | IN($used_behaviors[]))) |
     .macros |= map(select(.name | IN($used_behaviors[])))
   ) end
