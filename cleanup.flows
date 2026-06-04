@@ -1,0 +1,134 @@
+uid = "cleanup"
+type = "mutation"
+language = "en-US"
+title = "☠️Cleanup🚫️"
+subtitle = "Danger Zone"
+description = """
+This 🚫️ deletes everying ☠️ unused, that's not associated
+
+⚠️ **WARNING:** THIS CAN BE TRICKY / RISK
+
+"""
+script = """
+
+# Safe Root Accessor Pattern
+(if type == "object" and .keymap? then .keymap else . end) |= (
+  
+  # =========================================================================
+  # STEP 1: RIGID PRE-FLIGHT STRUCTURAL VALIDATION (Fail-Safe Guard)
+  # =========================================================================
+  if type != "object" or 
+     .layers == null or 
+     .layer_names == null or 
+     (.layers | length) <= 1 or
+     (.layers | length) != (.layer_names | length) or
+     (.layers | any(length != 60 and length != 80))
+  then 
+    . # CRITICAL ASYMMETRY DETECTED: Abort processing and return original data untouched
+  else (
+
+    # =========================================================================
+    # STEP 2: RECURSIVE DEPENDENCY SPIDER (DAG Parameter Protection)
+    # =========================================================================
+    # Extract every layout, chording, and listener tracking string as an initial root
+    ([.layers, .combos, .inputListeners] | .. | strings | sub("^&"; "")) as $roots |
+
+    # Group all local behavioral definition libraries
+    ([.holdTaps[]?, .macros[]?, .behaviors[]?]) as $lib |
+
+    # Recursive function to crawl downstream nested behavior-to-behavior parameters
+    def track_deps($current_set):
+      ([$current_set[] as $c | $lib[] | select(.name == $c) | .. | strings | sub("^&"; "")] | unique) as $next_set |
+      if ($next_set | any(IN($current_set[]) | not)) 
+      then track_deps(($current_set + $next_set) | unique) 
+      else $current_set end;
+
+    track_deps($roots) as $used_behaviors |
+
+    # =========================================================================
+    # STEP 3: IDENTIFY EMPTY & REFERENCED LAYERS (Multi-Vector Sweep)
+    # =========================================================================
+    # Identify layers populated exclusively by baseline fallback codes
+    ([.layers | to_entries[] 
+      | select(.value | all(.value == "&none" or .value == "&trans")) 
+      | .key]) as $empty_layers |
+
+    # Extract layer integers from ALL possible parameter locations across the layout
+    ([
+      (.. | objects | select(.value? | IN("&mo", "&to", "&tog", "&sl", "&ltt", "&layer")) | .params[0].value),
+      (.. | objects | select(.value? == "&zip_temp_layer") | (.params[0] | if type == "object" then .value else . end)),
+      .inputListeners[]?.nodes[]?.layers[]?,
+      .combos[]?.layers[]?
+    ] | map(select(type == "number")) | unique) as $referenced_layers |
+
+    # Evaluate target deletion list (Exclude Layer 0, Referenced Layers, and Magic Layers)
+    ([.layer_names? | to_entries[] 
+      | select(.key != 0)
+      | select(.key as $k | $referenced_layers | contains([$k]) | not)
+      | select(.key as $k | $empty_layers | contains([$k]))
+      | select(.value | ascii_downcase | test("magic") | not)
+      | .key] | sort | reverse) as $to_del |
+
+    # =========================================================================
+    # STEP 4: SURGICAL LAYER PURGE & PARAMETER REALIGNMENT
+    # =========================================================================
+    reduce $to_del[] as $idx (.;
+      del(.layers[$idx]) | del(.layer_names[$idx]) |
+      
+      # Shift basic layer navigation behaviors pointing above the deletion line
+      (.. | objects | select(.value? | IN("&mo", "&to", "&tog", "&sl", "&ltt", "&layer"))) |= 
+        (.params[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)) |
+      
+      # Shift advanced input tracking temporary layer parameters safely
+      (.. | objects | select(.value? == "&zip_temp_layer")) |= (
+        .params[0] |= (
+          if type == "object" then 
+            .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+          elif type == "number" then 
+            (if . > $idx then . - 1 elif . == $idx then 0 else . end)
+          else . end
+        )
+      ) |
+      
+      # Shift structural hardware trackpad listener node matrices
+      (.inputListeners[]?.nodes[]?.layers) |= (if type == "array" then map(if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) |
+      
+      # Shift combo layer constraints
+      (.combos? // [])[]?.layers |= (if type == "array" then map(if . == $idx then empty elif . > $idx then . - 1 else . end) else . end)
+    ) |
+
+    # Combo Drop Protection: Wipe combos that no longer monitor any valid layer
+    del(.combos[]? | select(.layers == [])) |
+
+    # =========================================================================
+    # STEP 5: BEHAVIOR PURGE (Strict Prefix Preservation Sweep)
+    # =========================================================================
+    # ONLY clear an item if it matches an auto-generated prefix AND is completely unreferenced
+    .holdTaps |= (if type == "array" then map(select(
+        (.name | (startswith("ht_auto_") or startswith("td_")) | not) or (.name as $n | IN($used_behaviors[]))
+    )) | if length == 0 then empty else . end else . end) |
+    
+    .behaviors |= (if type == "array" then map(select(
+        (.name | (startswith("ht_auto_") or startswith("td_")) | not) or (.name as $n | IN($used_behaviors[]))
+    )) | if length == 0 then empty else . end else . end) |
+    
+    .macros |= (if type == "array" then map(select(
+        (.name | (startswith("ht_auto_") or startswith("td_")) | not) or (.name as $n | IN($used_behaviors[]))
+    )) | if length == 0 then empty else . end else . end) |
+
+    # Clean up empty parent nodes to optimize JSON structure and UI parser compilation
+    (if .holdTaps == [] then del(.holdTaps) else . end) |
+    (if .behaviors == [] then del(.behaviors) else . end) |
+    (if .macros == [] then del(.macros) else . end)
+  ) end
+)
+
+"""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🧹️"      
+theme = "red" 
+[config]
+category = "Cleaup"
+num = 124
