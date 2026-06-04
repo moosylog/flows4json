@@ -1,7 +1,7 @@
 uid = "cleanup"
 type = "mutation"
 language = "en-US"
-title = "☠️Cleanup☠️"
+title = "☠️Cleanup☠️🚫"
 subtitle = "Danger Zone"
 description = """
 This 🚫️ deletes everying ☠️ unused, that's not associated
@@ -12,45 +12,120 @@ This 🚫️ deletes everying ☠️ unused, that's not associated
 
 """
 script = """
-# HARDENED CLEANUP: Direct Object Access
-# We remove the "if .keymap" check to prevent index-on-array crashes
-. as $root |
-if ($root | type) != "object" then $root else (
-  
-  # 1. VALIDATION
-  if ($root.layers | type) != "array" then $root else (
+# =========================================================================
+# SAFE RECURSE UTILITY (Bypasses WASM string iteration panics)
+# =========================================================================
+def safe_recurse: recurse(if type == "object" or type == "array" then .[] else empty end);
 
-    # 2. DEPENDENCY MAPPING (No '..', strictly controlled recursion)
-    def extract_refs:
-      if type == "string" then [.]
-      elif type == "array" then map(extract_refs) | flatten
-      elif type == "object" then to_entries | map(.value | extract_refs) | flatten
-      else [] end;
+(if type == "object" and (.keymap? != null) then .keymap else . end) |= (
 
-    ($root.layers + ($root.combos // []) + ($root.inputListeners // [])) | extract_refs | map(select(startswith("&"))) | map(sub("^&"; "")) | unique as $used_behaviors |
+  # =========================================================================
+  # STEP 1: ENCAPSULATED PRE-FLIGHT STRUCTURAL VALIDATION
+  # =========================================================================
+  if type == "object" then
+    if (.layers | type == "array") and 
+       (.layer_names | type == "array") and 
+       (.layers | length) > 1 and 
+       (.layers | length) == (.layer_names | length) and 
+       (.layers | map(select(type != "array" or (if type == "array" then (length != 60 and length != 80) else true end))) | length == 0)
+    then (
 
-    # 3. IDENTIFY TARGETS
-    # Use index-safe selection
-    [range(1; $root.layers | length)] as $indices |
-    [map(select(
-      ($root.layers[.] | type == "array") and 
-      ($root.layers[.] | map(select(type == "object" and .value != null and .value != "&none" and .value != "&trans")) | length == 0) and
-      ($root.layer_names[.] | type == "string" and ($root.layer_names[.] | ascii_downcase | contains("magic") | not))
-    ))] | flatten as $to_del |
+      # =========================================================================
+      # STEP 2: RECURSIVE DEPENDENCY SPIDER (DAG Parameter Protection)
+      # =========================================================================
+      ([.layers, .combos, .inputListeners] | safe_recurse | select(type == "object") | .value? | select(type == "string" and startswith("&")) | sub("^&"; "")) as $roots |
 
-    # 4. SURGICAL PURGE (Reverse order to maintain integrity)
-    reduce ($to_del | sort | reverse)[] as $idx ($root;
-      del(.layers[$idx]) | del(.layer_names[$idx]) |
-      # Shift references
-      (.. | objects | select(.value? | IN("&mo", "&to", "&tog", "&sl", "&ltt", "&layer"))).params[0].value |= (if . > $idx then . - 1 elif . == $idx then 0 else . end) |
-      (.inputListeners[]?.nodes[]?.layers) |= map(if . > $idx then . - 1 elif . == $idx then 0 else . end) |
-      (.combos[]?.layers) |= map(if . > $idx then . - 1 elif . == $idx then 0 else . end)
-    ) |
+      ([
+        (.holdTaps | if type == "array" then . else [] end),
+        (.macros | if type == "array" then . else [] end),
+        (.behaviors | if type == "array" then . else [] end)
+      ] | flatten) as $lib |
 
-    # 5. BEHAVIOR CLEANUP
-    .holdTaps |= map(select(.name | IN($used_behaviors[]))) |
-    .macros |= map(select(.name | IN($used_behaviors[])))
-  ) end
+      def track_deps($current_set):
+        ([
+           $lib[] | select(type == "object" and .name? and (.name as $n | $current_set | index($n))) | safe_recurse | select(type == "string" and startswith("&")) | sub("^&"; "")
+        ] | unique) as $next_set |
+        if ($next_set - $current_set | length > 0) 
+        then track_deps(($current_set + $next_set) | unique) 
+        else $current_set end;
+
+      track_deps($roots | unique) as $used_behaviors |
+
+      # =========================================================================
+      # STEP 3: IDENTIFY EMPTY & REFERENCED LAYERS (Multi-Vector Sweep)
+      # =========================================================================
+      ([.layers | to_entries[] 
+        | select(.value | type == "array")
+        | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0)
+        | .key]) as $empty_layers |
+
+      ([
+        (safe_recurse | select(type == "object") | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params | if type == "array" and length > 0 then (.[0] | if type == "object" then .value else empty end) else empty end),
+        (safe_recurse | select(type == "object") | select(.value? == "&zip_temp_layer") | .params | if type == "array" and length > 0 then (.[0] | if type == "object" then .value else . end) else empty end),
+        (.inputListeners | if type == "array" then .[] | select(type == "object") | .nodes | if type == "array" then .[] | select(type == "object") | .layers | if type == "array" then .[] else empty end else empty end else empty end),
+        (.combos | if type == "array" then .[] | select(type == "object") | .layers | if type == "array" then .[] else empty end else empty end)
+      ] | map(select(type == "number")) | unique) as $referenced_layers |
+
+      ([.layer_names | to_entries[] 
+        | select(.key != 0)
+        | select(.key as $k | $referenced_layers | index($k) | not)
+        | select(.key as $k | $empty_layers | index($k))
+        | select(.value | type == "string" and (ascii_downcase | test("magic") | not))
+        | .key] | sort | reverse) as $to_del |
+
+      # =========================================================================
+      # STEP 4: SURGICAL LAYER PURGE & PARAMETER REALIGNMENT
+      # =========================================================================
+      reduce $to_del[] as $idx (.;
+        del(.layers[$idx]) | del(.layer_names[$idx]) |
+        
+        (safe_recurse | select(type == "object") | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params) |= 
+          (if type == "array" and length > 0 and (.[0] | type == "object") then .[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end) else . end) |
+        
+        (safe_recurse | select(type == "object") | select(.value? == "&zip_temp_layer") | .params) |= (
+          if type == "array" and length > 0 then 
+            .[0] |= (
+              if type == "object" then 
+                .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+              elif type == "number" then 
+                (if . > $idx then . - 1 elif . == $idx then 0 else . end)
+              else . end
+            )
+          else . end
+        ) |
+        
+        (.inputListeners) |= (if type == "array" then map(if type == "object" and (.nodes | type == "array") then .nodes |= map(if type == "object" and (.layers | type == "array") then .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end) else . end) else . end) |
+        
+        (.combos) |= (if type == "array" then map(if type == "object" and (.layers | type == "array") then .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end) else . end)
+      ) |
+
+      # Cleaned Combo Filtering: Replaces the unstable streaming del() pattern
+      .combos |= (if type == "array" then map(select(type == "object" and (.layers | type == "array" and length > 0))) else . end) |
+
+      # =========================================================================
+      # STEP 5: BEHAVIOR PURGE (Strict Prefix Preservation Sweep)
+      # =========================================================================
+      .holdTaps |= (if type == "array" then map(select(
+          type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
+          (.name as $n | $used_behaviors | index($n)))
+      )) else . end) |
+      
+      .behaviors |= (if type == "array" then map(select(
+          type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
+          (.name as $n | $used_behaviors | index($n)))
+      )) else . end) |
+      
+      .macros |= (if type == "array" then map(select(
+          type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
+          (.name as $n | $used_behaviors | index($n)))
+      )) else . end) |
+
+      (if .holdTaps == [] then del(.holdTaps) else . end) |
+      (if .behaviors == [] then del(.behaviors) else . end) |
+      (if .macros == [] then del(.macros) else . end)
+
+    ) else . end
+  else . end
 )
 """
 [manifest]
