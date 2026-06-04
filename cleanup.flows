@@ -154,5 +154,5 @@ keyboards = ["go60","glove80"]
 icon = "🧹️"      
 theme = "red" 
 [config]
-category = "Cleaup"
+category = "DEV/TEST"
 num = 124
