@@ -1,8 +1,8 @@
 uid = "mac_gb_symbol"
 type = "mutation"
 language = "en-US"
-title = "PR36 Create"
-subtitle = "Scheme generator"
+title = "PR36 Scheme Creator"
+subtitle = "Generate schemes using decorators"
 description = """
 This creates a PR36 Scheme based on your key decorators in your Device Tree section.
 
