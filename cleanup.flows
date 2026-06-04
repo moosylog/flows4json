@@ -1,7 +1,7 @@
 uid = "cleanup"
 type = "mutation"
 language = "en-US"
-title = "☠️Cleanup☠️🚫"
+title = "☠️Cleanup☠️🧹"
 subtitle = "Danger Zone"
 description = """
 This 🚫️ deletes everying ☠️ unused, that's not associated
@@ -79,8 +79,11 @@ def safe_recurse: recurse(if type == "object" or type == "array" then .[] else e
       reduce $to_del[] as $idx (.;
         del(.layers[$idx]) | del(.layer_names[$idx]) |
         
-        (safe_recurse | select(type == "object") | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params) |= 
-          (if type == "array" and length > 0 and (.[0] | type == "object") then .[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end) else . end) |
+        (safe_recurse | select(type == "object") | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params) |= (
+          if type == "array" and length > 0 and (.[0] | type == "object") then 
+            .[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end) 
+          else . end
+        ) |
         
         (safe_recurse | select(type == "object") | select(.value? == "&zip_temp_layer") | .params) |= (
           if type == "array" and length > 0 then 
@@ -99,7 +102,7 @@ def safe_recurse: recurse(if type == "object" or type == "array" then .[] else e
         (.combos) |= (if type == "array" then map(if type == "object" and (.layers | type == "array") then .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end) else . end)
       ) |
 
-      # Cleaned Combo Filtering: Replaces the unstable streaming del() pattern
+      # Cleaned Combo Filtering: Replaces unstable streaming patterns
       .combos |= (if type == "array" then map(select(type == "object" and (.layers | type == "array" and length > 0))) else . end) |
 
       # =========================================================================
