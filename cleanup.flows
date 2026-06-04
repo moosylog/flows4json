@@ -14,7 +14,20 @@ This 🚫️ deletes everying ☠️ unused, that's not associated
 script = """
 
 # =========================================================================
-# 1. PURE AST EXTRACTORS (Bypasses unstable engine recurse/.. paths)
+# 0. FAIL-SAFE WALK DEFINITION
+# =========================================================================
+def walk(f):
+  . as $in
+  | if type == "object" then
+      reduce keys_unsorted[] as $key ( {}; . + { ($key):  ($in[$key] | walk(f)) } ) | f
+    elif type == "array" then
+      map( walk(f) ) | f
+    else
+      f
+    end;
+
+# =========================================================================
+# 1. PURE AST EXTRACTORS
 # =========================================================================
 def get_behavior_refs:
   if type == "object" then
@@ -29,11 +42,11 @@ def get_layer_refs:
     (
       (if (.value? | type == "string") and (["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index(.value)) then
          (if .params? | type == "array" and length > 0 then
-            (if .params[0] | type == "object" then [.params[0].value] else [] end)
+            (if .params[0] | type == "object" and (.params[0] | has("value")) then [.params[0].value] else [] end)
           else [] end)
        elif .value? == "&zip_temp_layer" then
          (if .params? | type == "array" and length > 0 then
-            (if .params[0] | type == "object" then [.params[0].value]
+            (if .params[0] | type == "object" and (.params[0] | has("value")) then [.params[0].value]
              elif .params[0] | type == "number" then [.params[0]]
              else [] end)
           else [] end)
@@ -41,7 +54,7 @@ def get_layer_refs:
       +
       (if .layers? | type == "array" then
          [.layers[] | select(type == "number")]
-       else [] end)
+      else [] end)
       +
       ([.[] | get_layer_refs] | flatten)
     )
@@ -50,85 +63,66 @@ def get_layer_refs:
   else [] end;
 
 # =========================================================================
-# 2. SCHEMA-VERIFIED LAYER SHIFTER (Protects against type-indexing bugs)
+# 2. SCHEMA-VERIFIED LAYER SHIFTER (Panic-Proof)
 # =========================================================================
 def shift_layer($idx):
   walk(
     if type == "object" then
-      # Behavior Parameter Tracking Guard
-      if (.value? | type == "string") and (["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index(.value)) then
-         if .params? | type == "array" and (.params | length > 0) and (.params[0] | type == "object") and (.params[0] | has("value")) then
-            .params[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
-         else . end
+      # 1. Behavior Param Guard
+      if .value? and (.value | type == "string") and (["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index(.value)) then
+         try (
+           if .params? and (.params | type == "array") and (.params | length > 0) and (.params[0] | type == "object") and (.params[0] | has("value")) then
+             .params[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+           else . end
+         ) catch .
       
-      # Input Listener ZIP Temp Layer Realignment Guard
+      # 2. ZIP Temp Layer Guard
       elif .value? == "&zip_temp_layer" then
-         if .params? | type == "array" and (.params | length > 0) then
-            .params[0] |= (
-              if type == "object" and has("value") then .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
-              elif type == "number" then (if . > $idx then . - 1 elif . == $idx then 0 else . end)
-              else . end
-            )
-         else . end
+         try (
+           if .params? and (.params | type == "array") and (.params | length > 0) then
+              .params[0] |= (
+                if type == "object" and has("value") then .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+                elif type == "number" then (if . > $idx then . - 1 elif . == $idx then 0 else . end)
+                else . end
+              )
+           else . end
+         ) catch .
       
-      # Combo, Input Listener, and Node Index Boundary Array Guard
-      elif .layers? | type == "array" then
+      # 3. Layer Array Guard
+      elif .layers? and (.layers | type == "array") then
          .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end)
       else . end
     else . end
   );
 
 # =========================================================================
-# 3. MAIN EXECUTION BLOCK (State Processing & Garbage Collection)
+# 3. MAIN EXECUTION BLOCK
 # =========================================================================
-# Root Accessor Pattern Verification
 (if type == "object" and (.keymap? != null) then .keymap else . end) |= (
   if type == "object" then
-    # Pre-flight Bilateral Structural Verification (Layers match Layer Names & Hardware Boundaries)
-    if (.layers | type == "array") and 
-       (.layer_names | type == "array") and 
-       (.layers | length) > 1 and 
-       (.layers | length) == (.layer_names | length) and 
-       (.layers | map(select(type != "array" or (if type == "array" then (length != 60 and length != 80) else true end))) | length == 0)
-    then (
+    if (.layers | type == "array") and (.layer_names | type == "array") then
       
-      # Step A: Tracing Node Dependencies via Directed Acyclic Graph (DAG) Execution
+      # Step A: Dependency Resolution
       ([.layers, .combos, .inputListeners] | get_behavior_refs | unique) as $roots |
-
-      ([
-        (.holdTaps | if type == "array" then . else [] end),
-        (.macros | if type == "array" then . else [] end),
-        (.behaviors | if type == "array" then . else [] end)
-      ] | flatten) as $lib |
+      ([.holdTaps, .macros, .behaviors] | flatten) as $lib |
 
       def track_deps($current_set):
-        ([
-           $lib[] | select(type == "object" and .name? and (.name as $n | $current_set | index($n))) | get_behavior_refs
-        ] | flatten | unique) as $next_set |
-        if ($next_set - $current_set | length > 0) 
-        then track_deps(($current_set + $next_set) | unique) 
-        else $current_set end;
+        ([$lib[] | select(type == "object" and .name? and (.name as $n | $current_set | index($n))) | get_behavior_refs] | flatten | unique) as $next_set |
+        if ($next_set - $current_set | length > 0) then track_deps(($current_set + $next_set) | unique) else $current_set end;
 
       track_deps($roots | unique) as $used_behaviors |
 
-      # Step B: Identify Completely Empty Matrices (Only null, &none, &trans)
-      ([.layers | to_entries[] 
-        | select(.value | type == "array")
-        | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0)
-        | .key]) as $empty_layers |
-
-      # Step C: Isolate All Active Layer Indexes Across Matrices, Combos, and Listeners
+      # Step B: Identify Layers to Nuke
+      ([.layers | to_entries[] | select(.value | type == "array") | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0) | .key]) as $empty_layers |
       ([.layers, .combos, .inputListeners] | get_layer_refs | map(select(type == "number")) | unique) as $referenced_layers |
 
-      # Step D: Apply Selection Rules (No Layer 0, No Magic Layers, No Referenced Layers)
       ([.layer_names | to_entries[] 
         | select(.key != 0)
         | select(.key as $k | $referenced_layers | index($k) | not)
         | select(.key as $k | $empty_layers | index($k))
-        | select(.value | type == "string" and (ascii_downcase | test("magic") | not))
         | .key] | sort | reverse) as $to_del |
 
-      # Step E: Surgical High-to-Low Sequential Layer Purge & Sync Realignment
+      # Step C: Surgical Purge
       reduce $to_del[] as $idx (.;
         del(.layers[$idx]) | del(.layer_names[$idx]) |
         (.layers) |= shift_layer($idx) |
@@ -139,31 +133,16 @@ def shift_layer($idx):
         (.holdTaps) |= shift_layer($idx)
       ) |
 
-      # Step F: Combo Drop Protection Execution Sweep
+      # Step D: Cleanup
       .combos |= (if type == "array" then map(select(type == "object" and (.layers | type == "array" and length > 0))) else . end) |
-
-      # Step G: Strict Prefixed Garbage Collection Sweep (Preserves User Configurations)
-      .holdTaps |= (if type == "array" then map(select(
-          type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
-          (.name as $n | $used_behaviors | index($n)))
-      )) else . end) |
-      
-      .behaviors |= (if type == "array" then map(select(
-          type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
-          (.name as $n | $used_behaviors | index($n)))
-      )) else . end) |
-      
-      .macros |= (if type == "array" then map(select(
-          type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
-          (.name as $n | $used_behaviors | index($n)))
-      )) else . end) |
-
-      # Step H: UI Rendering Library Safeguards (Drop empty schema scopes)
+      .holdTaps |= (if type == "array" then map(select(type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or (.name as $n | $used_behaviors | index($n))))) else . end) |
+      .behaviors |= (if type == "array" then map(select(type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or (.name as $n | $used_behaviors | index($n))))) else . end) |
+      .macros |= (if type == "array" then map(select(type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or (.name as $n | $used_behaviors | index($n))))) else . end) |
       (if .holdTaps == [] then del(.holdTaps) else . end) |
       (if .behaviors == [] then del(.behaviors) else . end) |
       (if .macros == [] then del(.macros) else . end)
 
-    ) else . end
+    else . end
   else . end
 )
 
