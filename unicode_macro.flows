@@ -4,7 +4,7 @@ language = "us"
 title = "Emoji Set"
 subtitle = "Adds 40-Emoji on a Layer"
 description = """
-Generates ready-to-use Unicode Emoji macros and automatically builds a dedicated **Emoji Layer** mapped with colored labels.
+Generates **40** ready-to-use Unicode Emoji macros and automatically builds a dedicated **Emoji Layer** mapped with colored labels.
 You can easy drag and drop these to your favorite location in Layout Editor.
 
 ### ⚠️ Prerequisites: OS Unicode Support
@@ -47,6 +47,9 @@ script = """
 "#e0f032ff" as $bg_hands |      # Yellow-Green
 "#9bf6ffff" as $bg_intent |     # Pastel Cyan
 "#bdb2ffff" as $bg_boosters |   # Pastel Purple
+
+# --- Layer ---
+"Emoji_flows" as $emoji_layer | # Layer Name
 
 [
   # --- Faces & Emotion ---
@@ -213,7 +216,7 @@ script = """
     ) as $new_layer |
 
     # 4. Inject layer (Overwrite existing "Emoji" layer, or append a new one)
-    ((.layer_names | index("Emoji")) // (.layers | length)) as $layer_idx |
+    ((.layer_names | index($emoji_layer)) // (.layers | length)) as $layer_idx |
     .layer_names[$layer_idx] = "Emoji" |
     .layers[$layer_idx] = $new_layer
   )
