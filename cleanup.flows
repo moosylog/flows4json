@@ -14,7 +14,7 @@ This 🚫️ deletes everying ☠️ unused, that's not associated
 script = """
 
 # =========================================================================
-# PURE AST EXTRACTORS (Zero WASM 'recurse' or '..' panics)
+# 1. PURE AST EXTRACTORS (Bypasses unstable engine recurse/.. paths)
 # =========================================================================
 def get_behavior_refs:
   if type == "object" then
@@ -49,21 +49,29 @@ def get_layer_refs:
     ([.[] | get_layer_refs] | flatten)
   else [] end;
 
+# =========================================================================
+# 2. SCHEMA-VERIFIED LAYER SHIFTER (Protects against type-indexing bugs)
+# =========================================================================
 def shift_layer($idx):
   walk(
     if type == "object" then
+      # Behavior Parameter Tracking Guard
       if (.value? | type == "string") and (["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index(.value)) then
-         if .params? | type == "array" and length > 0 and (.params[0] | type == "object") then
+         if .params? | type == "array" and (.params | length > 0) and (.params[0] | type == "object") and (.params[0] | has("value")) then
             .params[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
          else . end
+      
+      # Input Listener ZIP Temp Layer Realignment Guard
       elif .value? == "&zip_temp_layer" then
-         if .params? | type == "array" and length > 0 then
+         if .params? | type == "array" and (.params | length > 0) then
             .params[0] |= (
-              if type == "object" then .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+              if type == "object" and has("value") then .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
               elif type == "number" then (if . > $idx then . - 1 elif . == $idx then 0 else . end)
               else . end
             )
          else . end
+      
+      # Combo, Input Listener, and Node Index Boundary Array Guard
       elif .layers? | type == "array" then
          .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end)
       else . end
@@ -71,10 +79,12 @@ def shift_layer($idx):
   );
 
 # =========================================================================
-# MAIN EXECUTION BLOCK
+# 3. MAIN EXECUTION BLOCK (State Processing & Garbage Collection)
 # =========================================================================
+# Root Accessor Pattern Verification
 (if type == "object" and (.keymap? != null) then .keymap else . end) |= (
   if type == "object" then
+    # Pre-flight Bilateral Structural Verification (Layers match Layer Names & Hardware Boundaries)
     if (.layers | type == "array") and 
        (.layer_names | type == "array") and 
        (.layers | length) > 1 and 
@@ -82,7 +92,7 @@ def shift_layer($idx):
        (.layers | map(select(type != "array" or (if type == "array" then (length != 60 and length != 80) else true end))) | length == 0)
     then (
       
-      # 1. Extract dependencies using pure recursion
+      # Step A: Tracing Node Dependencies via Directed Acyclic Graph (DAG) Execution
       ([.layers, .combos, .inputListeners] | get_behavior_refs | unique) as $roots |
 
       ([
@@ -101,16 +111,16 @@ def shift_layer($idx):
 
       track_deps($roots | unique) as $used_behaviors |
 
-      # 2. Sweep empty matrices
+      # Step B: Identify Completely Empty Matrices (Only null, &none, &trans)
       ([.layers | to_entries[] 
         | select(.value | type == "array")
         | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0)
         | .key]) as $empty_layers |
 
-      # 3. Sweep referenced indices using pure recursion
+      # Step C: Isolate All Active Layer Indexes Across Matrices, Combos, and Listeners
       ([.layers, .combos, .inputListeners] | get_layer_refs | map(select(type == "number")) | unique) as $referenced_layers |
 
-      # 4. Identify layers to nuke
+      # Step D: Apply Selection Rules (No Layer 0, No Magic Layers, No Referenced Layers)
       ([.layer_names | to_entries[] 
         | select(.key != 0)
         | select(.key as $k | $referenced_layers | index($k) | not)
@@ -118,7 +128,7 @@ def shift_layer($idx):
         | select(.value | type == "string" and (ascii_downcase | test("magic") | not))
         | .key] | sort | reverse) as $to_del |
 
-      # 5. Surgical purge via native, safe walk() map
+      # Step E: Surgical High-to-Low Sequential Layer Purge & Sync Realignment
       reduce $to_del[] as $idx (.;
         del(.layers[$idx]) | del(.layer_names[$idx]) |
         (.layers) |= shift_layer($idx) |
@@ -129,8 +139,10 @@ def shift_layer($idx):
         (.holdTaps) |= shift_layer($idx)
       ) |
 
+      # Step F: Combo Drop Protection Execution Sweep
       .combos |= (if type == "array" then map(select(type == "object" and (.layers | type == "array" and length > 0))) else . end) |
 
+      # Step G: Strict Prefixed Garbage Collection Sweep (Preserves User Configurations)
       .holdTaps |= (if type == "array" then map(select(
           type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
           (.name as $n | $used_behaviors | index($n)))
@@ -146,6 +158,7 @@ def shift_layer($idx):
           (.name as $n | $used_behaviors | index($n)))
       )) else . end) |
 
+      # Step H: UI Rendering Library Safeguards (Drop empty schema scopes)
       (if .holdTaps == [] then del(.holdTaps) else . end) |
       (if .behaviors == [] then del(.behaviors) else . end) |
       (if .macros == [] then del(.macros) else . end)
@@ -153,7 +166,6 @@ def shift_layer($idx):
     ) else . end
   else . end
 )
-
 
 
 """
