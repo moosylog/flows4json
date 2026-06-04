@@ -12,8 +12,8 @@ You simply upload your layout file, browse for the features you want, and click 
 
 <a href="https://moosylog.github.io/flows4json/" target="_blank">
   <img 
-    src="https://img.shields.io/badge/🚀%20LAUNCH%20GRIDFLUX-TRAIN%20NOW-00FF66?style=for-the-badge"
-    alt="Launch GridFlux"
+    src="https://img.shields.io/badge/🚀%20LAUNCH%20Flows4JSON-STORE20NOW-00FF66?style=for-the-badge"
+    alt="Launch Flows4JSON"
   />
 </a>
 
