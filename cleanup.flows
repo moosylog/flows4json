@@ -1,7 +1,7 @@
 uid = "cleanup"
 type = "mutation"
 language = "en-US"
-title = "☠️Cleanup🚫️"
+title = "☠️Cleanup🚫️☠️"
 subtitle = "Danger Zone"
 description = """
 This 🚫️ deletes everying ☠️ unused, that's not associated
@@ -25,9 +25,8 @@ script = """
   else (
 
     # =========================================================================
-    # STEP 2: DEPENDENCY SPIDER (Pure Array Math, Zero Iteration Macros)
+    # STEP 2: DEPENDENCY SPIDER (Protects behaviors used by layers, combos, and listeners)
     # =========================================================================
-    # Safely extract strings recursively without risking array iterators
     ([.layers, .combos, .inputListeners] | .. | objects | .value? | select(type == "string" and startswith("&")) | sub("^&"; "")) as $roots |
 
     ([
@@ -39,7 +38,7 @@ script = """
     # Recursive DAG walk utilizing native Array Subtraction rather than any() or IN()
     def track_deps($current_set):
       ([
-         $lib[] | select(.name as $n | $current_set | index($n)) | .. | strings | select(startswith("&")) | sub("^&"; "")
+         $lib[] | select(type == "object" and .name? and ($current_set | index(.name))) | .. | strings | select(startswith("&")) | sub("^&"; "")
       ] | unique) as $next_set |
       if ($next_set - $current_set | length > 0) 
       then track_deps(($current_set + $next_set) | unique) 
@@ -48,21 +47,19 @@ script = """
     track_deps($roots | unique) as $used_behaviors |
 
     # =========================================================================
-    # STEP 3: IDENTIFY EMPTY LAYERS (Replaced all() with map length validation)
+    # STEP 3: IDENTIFY EMPTY LAYERS
     # =========================================================================
     ([.layers | to_entries[] 
       | select(.value | type == "array")
-      | select(.value | map(select(type == "object" and .value != "&none" and .value != "&trans")) | length == 0)
+      | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0)
       | .key]) as $empty_layers |
 
     # =========================================================================
-    # STEP 4: IDENTIFY REFERENCED LAYERS (Guarded Iteration)
+    # STEP 4: IDENTIFY REFERENCED LAYERS (Excluding Combos and InputListeners)
     # =========================================================================
     ([
       (.. | objects | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params? | if type == "array" then .[0]?.value else empty end),
-      (.. | objects | select(.value? == "&zip_temp_layer") | .params? | if type == "array" then (.[0] | if type == "object" then .value else . end) else empty end),
-      (.inputListeners? | if type == "array" then .[] else empty end | .nodes? | if type == "array" then .[] else empty end | .layers? | if type == "array" then .[] else empty end),
-      (.combos? | if type == "array" then .[] else empty end | .layers? | if type == "array" then .[] else empty end)
+      (.. | objects | select(.value? == "&zip_temp_layer") | .params? | if type == "array" then (.[0] | if type == "object" then .value else . end) else empty end)
     ] | map(select(type == "number")) | unique) as $referenced_layers |
 
     # =========================================================================
@@ -76,7 +73,7 @@ script = """
       | .key] | sort | reverse) as $to_del |
 
     # =========================================================================
-    # STEP 6: SURGICAL PURGE & RE-INDEXING
+    # STEP 6: SURGICAL PURGE & RE-INDEXING (Combos & InputListeners Untouched)
     # =========================================================================
     reduce $to_del[] as $idx (.;
       del(.layers[$idx]) | del(.layer_names[$idx]) |
@@ -94,16 +91,11 @@ script = """
             else . end
           )
         else . end
-      ) |
-      
-      (.inputListeners[]?.nodes[]?.layers) |= (if type == "array" then map(if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) |
-      (.combos? // [])[]?.layers |= (if type == "array" then map(if . == $idx then empty elif . > $idx then . - 1 else . end) else . end)
+      )
     ) |
 
-    del(.combos[]? | select(.layers | type == "array" and length == 0)) |
-
     # =========================================================================
-    # STEP 7: BEHAVIOR PURGE (Using Array Indexing)
+    # STEP 7: BEHAVIOR PURGE
     # =========================================================================
     .holdTaps |= (if type == "array" then map(select(
         (.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
@@ -123,7 +115,7 @@ script = """
     (if .holdTaps == [] then del(.holdTaps) else . end) |
     (if .behaviors == [] then del(.behaviors) else . end) |
     (if .macros == [] then del(.macros) else . end)
-  )
+  ) end
 )
 
 """
