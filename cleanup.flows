@@ -12,16 +12,68 @@ This 🚫️ deletes everying ☠️ unused, that's not associated
 
 """
 script = """
-# =========================================================================
-# SAFE RECURSE UTILITY (Bypasses WASM string iteration panics)
-# =========================================================================
-def safe_recurse: recurse(if type == "object" or type == "array" then .[] else empty end);
 
+# =========================================================================
+# PURE AST EXTRACTORS (Zero WASM 'recurse' or '..' panics)
+# =========================================================================
+def get_behavior_refs:
+  if type == "object" then
+    ( (if (.value? | type == "string") and (.value | startswith("&")) then [.value | sub("^&"; "")] else [] end) +
+      ([.[] | get_behavior_refs] | flatten) )
+  elif type == "array" then
+    ([.[] | get_behavior_refs] | flatten)
+  else [] end;
+
+def get_layer_refs:
+  if type == "object" then
+    (
+      (if (.value? | type == "string") and (["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index(.value)) then
+         (if .params? | type == "array" and length > 0 then
+            (if .params[0] | type == "object" then [.params[0].value] else [] end)
+          else [] end)
+       elif .value? == "&zip_temp_layer" then
+         (if .params? | type == "array" and length > 0 then
+            (if .params[0] | type == "object" then [.params[0].value]
+             elif .params[0] | type == "number" then [.params[0]]
+             else [] end)
+          else [] end)
+       else [] end)
+      +
+      (if .layers? | type == "array" then
+         [.layers[] | select(type == "number")]
+       else [] end)
+      +
+      ([.[] | get_layer_refs] | flatten)
+    )
+  elif type == "array" then
+    ([.[] | get_layer_refs] | flatten)
+  else [] end;
+
+def shift_layer($idx):
+  walk(
+    if type == "object" then
+      if (.value? | type == "string") and (["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index(.value)) then
+         if .params? | type == "array" and length > 0 and (.params[0] | type == "object") then
+            .params[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+         else . end
+      elif .value? == "&zip_temp_layer" then
+         if .params? | type == "array" and length > 0 then
+            .params[0] |= (
+              if type == "object" then .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
+              elif type == "number" then (if . > $idx then . - 1 elif . == $idx then 0 else . end)
+              else . end
+            )
+         else . end
+      elif .layers? | type == "array" then
+         .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end)
+      else . end
+    else . end
+  );
+
+# =========================================================================
+# MAIN EXECUTION BLOCK
+# =========================================================================
 (if type == "object" and (.keymap? != null) then .keymap else . end) |= (
-
-  # =========================================================================
-  # STEP 1: ENCAPSULATED PRE-FLIGHT STRUCTURAL VALIDATION
-  # =========================================================================
   if type == "object" then
     if (.layers | type == "array") and 
        (.layer_names | type == "array") and 
@@ -29,11 +81,9 @@ def safe_recurse: recurse(if type == "object" or type == "array" then .[] else e
        (.layers | length) == (.layer_names | length) and 
        (.layers | map(select(type != "array" or (if type == "array" then (length != 60 and length != 80) else true end))) | length == 0)
     then (
-
-      # =========================================================================
-      # STEP 2: RECURSIVE DEPENDENCY SPIDER (DAG Parameter Protection)
-      # =========================================================================
-      ([.layers, .combos, .inputListeners] | safe_recurse | select(type == "object") | .value? | select(type == "string" and startswith("&")) | sub("^&"; "")) as $roots |
+      
+      # 1. Extract dependencies using pure recursion
+      ([.layers, .combos, .inputListeners] | get_behavior_refs | unique) as $roots |
 
       ([
         (.holdTaps | if type == "array" then . else [] end),
@@ -43,29 +93,24 @@ def safe_recurse: recurse(if type == "object" or type == "array" then .[] else e
 
       def track_deps($current_set):
         ([
-           $lib[] | select(type == "object" and .name? and (.name as $n | $current_set | index($n))) | safe_recurse | select(type == "string" and startswith("&")) | sub("^&"; "")
-        ] | unique) as $next_set |
+           $lib[] | select(type == "object" and .name? and (.name as $n | $current_set | index($n))) | get_behavior_refs
+        ] | flatten | unique) as $next_set |
         if ($next_set - $current_set | length > 0) 
         then track_deps(($current_set + $next_set) | unique) 
         else $current_set end;
 
       track_deps($roots | unique) as $used_behaviors |
 
-      # =========================================================================
-      # STEP 3: IDENTIFY EMPTY & REFERENCED LAYERS (Multi-Vector Sweep)
-      # =========================================================================
+      # 2. Sweep empty matrices
       ([.layers | to_entries[] 
         | select(.value | type == "array")
         | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0)
         | .key]) as $empty_layers |
 
-      ([
-        (safe_recurse | select(type == "object") | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params | if type == "array" and length > 0 then (.[0] | if type == "object" then .value else empty end) else empty end),
-        (safe_recurse | select(type == "object") | select(.value? == "&zip_temp_layer") | .params | if type == "array" and length > 0 then (.[0] | if type == "object" then .value else . end) else empty end),
-        (.inputListeners | if type == "array" then .[] | select(type == "object") | .nodes | if type == "array" then .[] | select(type == "object") | .layers | if type == "array" then .[] else empty end else empty end else empty end),
-        (.combos | if type == "array" then .[] | select(type == "object") | .layers | if type == "array" then .[] else empty end else empty end)
-      ] | map(select(type == "number")) | unique) as $referenced_layers |
+      # 3. Sweep referenced indices using pure recursion
+      ([.layers, .combos, .inputListeners] | get_layer_refs | map(select(type == "number")) | unique) as $referenced_layers |
 
+      # 4. Identify layers to nuke
       ([.layer_names | to_entries[] 
         | select(.key != 0)
         | select(.key as $k | $referenced_layers | index($k) | not)
@@ -73,41 +118,19 @@ def safe_recurse: recurse(if type == "object" or type == "array" then .[] else e
         | select(.value | type == "string" and (ascii_downcase | test("magic") | not))
         | .key] | sort | reverse) as $to_del |
 
-      # =========================================================================
-      # STEP 4: SURGICAL LAYER PURGE & PARAMETER REALIGNMENT
-      # =========================================================================
+      # 5. Surgical purge via native, safe walk() map
       reduce $to_del[] as $idx (.;
         del(.layers[$idx]) | del(.layer_names[$idx]) |
-        
-        (safe_recurse | select(type == "object") | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params) |= (
-          if type == "array" and length > 0 and (.[0] | type == "object") then 
-            .[0].value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end) 
-          else . end
-        ) |
-        
-        (safe_recurse | select(type == "object") | select(.value? == "&zip_temp_layer") | .params) |= (
-          if type == "array" and length > 0 then 
-            .[0] |= (
-              if type == "object" then 
-                .value |= (if type == "number" and . > $idx then . - 1 elif . == $idx then 0 else . end)
-              elif type == "number" then 
-                (if . > $idx then . - 1 elif . == $idx then 0 else . end)
-              else . end
-            )
-          else . end
-        ) |
-        
-        (.inputListeners) |= (if type == "array" then map(if type == "object" and (.nodes | type == "array") then .nodes |= map(if type == "object" and (.layers | type == "array") then .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end) else . end) else . end) |
-        
-        (.combos) |= (if type == "array" then map(if type == "object" and (.layers | type == "array") then .layers |= map(if type == "number" then (if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end) else . end)
+        (.layers) |= shift_layer($idx) |
+        (.combos) |= shift_layer($idx) |
+        (.inputListeners) |= shift_layer($idx) |
+        (.behaviors) |= shift_layer($idx) |
+        (.macros) |= shift_layer($idx) |
+        (.holdTaps) |= shift_layer($idx)
       ) |
 
-      # Cleaned Combo Filtering: Replaces unstable streaming patterns
       .combos |= (if type == "array" then map(select(type == "object" and (.layers | type == "array" and length > 0))) else . end) |
 
-      # =========================================================================
-      # STEP 5: BEHAVIOR PURGE (Strict Prefix Preservation Sweep)
-      # =========================================================================
       .holdTaps |= (if type == "array" then map(select(
           type == "object" and ((.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
           (.name as $n | $used_behaviors | index($n)))
@@ -130,6 +153,9 @@ def safe_recurse: recurse(if type == "object" or type == "array" then .[] else e
     ) else . end
   else . end
 )
+
+
+
 """
 [manifest]
 author = "moosyresearch"
