@@ -6,7 +6,7 @@ subtitle = "Adds Home-Row Modifiers"
 description = """
 Home-row mods let your home-row keys do two things: act as normal letters when tapped, and as modifier keys when held. 
 
-See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more.
+See [this video](https://youtu.be/gFW0tgQwnHQ) to learn more about Home-Row Mods.
 
 ⚠️ This will add HRMs to your layout. Remove any existing HRMs first to avoid conflicts or duplicates. You can use the “Remove HRMs” option before applying new ones.
 
