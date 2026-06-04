@@ -15,17 +15,20 @@ script = """
 (if type == "object" and .keymap? then .keymap else . end) |= (
   
   # =========================================================================
-  # STEP 1: PRE-FLIGHT VALIDATION
+  # STEP 1: RIGID PRE-FLIGHT STRUCTURAL VALIDATION (Fail-Safe Guard)
   # =========================================================================
   if type != "object" or 
      (.layers | type != "array") or 
      (.layer_names | type != "array") or 
-     (.layers | length) <= 1 
-  then . 
+     (.layers | length) <= 1 or
+     (.layers | length) != (.layer_names | length) or
+     (.layers | map(select(type != "array" or (length != 60 and length != 80))) | length > 0)
+  then 
+    . # CRITICAL ASYMMETRY DETECTED: Abort processing and return original data untouched
   else (
 
     # =========================================================================
-    # STEP 2: DEPENDENCY SPIDER (Protects behaviors used by layers, combos, and listeners)
+    # STEP 2: RECURSIVE DEPENDENCY SPIDER (DAG Parameter Protection)
     # =========================================================================
     ([.layers, .combos, .inputListeners] | .. | objects | .value? | select(type == "string" and startswith("&")) | sub("^&"; "")) as $roots |
 
@@ -35,7 +38,6 @@ script = """
       (.behaviors | if type == "array" then . else [] end)
     ] | flatten) as $lib |
 
-    # Recursive DAG walk utilizing native Array Subtraction rather than any() or IN()
     def track_deps($current_set):
       ([
          $lib[] | select(type == "object" and .name? and ($current_set | index(.name))) | .. | strings | select(startswith("&")) | sub("^&"; "")
@@ -47,25 +49,21 @@ script = """
     track_deps($roots | unique) as $used_behaviors |
 
     # =========================================================================
-    # STEP 3: IDENTIFY EMPTY LAYERS
+    # STEP 3: IDENTIFY EMPTY & REFERENCED LAYERS (Multi-Vector Sweep)
     # =========================================================================
     ([.layers | to_entries[] 
       | select(.value | type == "array")
       | select(.value | map(select(type == "object" and .value? != null and .value? != "&none" and .value? != "&trans")) | length == 0)
       | .key]) as $empty_layers |
 
-    # =========================================================================
-    # STEP 4: IDENTIFY REFERENCED LAYERS (Excluding Combos and InputListeners)
-    # =========================================================================
     ([
       (.. | objects | select(.value? | type == "string") | select(.value as $v | ["&mo", "&to", "&tog", "&sl", "&ltt", "&layer"] | index($v)) | .params? | if type == "array" then .[0]?.value else empty end),
-      (.. | objects | select(.value? == "&zip_temp_layer") | .params? | if type == "array" then (.[0] | if type == "object" then .value else . end) else empty end)
+      (.. | objects | select(.value? == "&zip_temp_layer") | .params? | if type == "array" then (.[0] | if type == "object" then .value else . end) else empty end),
+      (.inputListeners? | if type == "array" then .[] else empty end | .nodes? | if type == "array" then .[] else empty end | .layers? | if type == "array" then .[] else empty end),
+      (.combos? | if type == "array" then .[] else empty end | .layers? | if type == "array" then .[] else empty end)
     ] | map(select(type == "number")) | unique) as $referenced_layers |
 
-    # =========================================================================
-    # STEP 5: TARGET DELETION LIST
-    # =========================================================================
-    ([.layer_names | to_entries[] 
+    ([.layer_names? | to_entries[] 
       | select(.key != 0)
       | select(.key as $k | $referenced_layers | index($k) | not)
       | select(.key as $k | $empty_layers | index($k))
@@ -73,7 +71,7 @@ script = """
       | .key] | sort | reverse) as $to_del |
 
     # =========================================================================
-    # STEP 6: SURGICAL PURGE & RE-INDEXING (Combos & InputListeners Untouched)
+    # STEP 4: SURGICAL LAYER PURGE & PARAMETER REALIGNMENT
     # =========================================================================
     reduce $to_del[] as $idx (.;
       del(.layers[$idx]) | del(.layer_names[$idx]) |
@@ -91,11 +89,17 @@ script = """
             else . end
           )
         else . end
-      )
+      ) |
+      
+      (.inputListeners) |= (if type == "array" then map(if type == "object" and (.nodes | type == "array") then .nodes |= map(if type == "object" and (.layers | type == "array") then .layers |= map(if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end) else . end) |
+      
+      (.combos) |= (if type == "array" then map(if type == "object" and (.layers | type == "array") then .layers |= map(if . == $idx then empty elif . > $idx then . - 1 else . end) else . end) else . end)
     ) |
 
+    del(.combos[]? | select(.layers | type == "array" and length == 0)) |
+
     # =========================================================================
-    # STEP 7: BEHAVIOR PURGE
+    # STEP 5: BEHAVIOR PURGE (Strict Prefix Preservation Sweep)
     # =========================================================================
     .holdTaps |= (if type == "array" then map(select(
         (.name | type == "string" and (startswith("ht_auto_") or startswith("td_")) | not) or 
