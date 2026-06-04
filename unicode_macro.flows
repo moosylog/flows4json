@@ -2,7 +2,7 @@ uid = "emoji"
 type = "mutation"
 language = "us"
 title = "Emoji Macro"
-subtitle = "Top 40 Unicode Emoji Macros🪳"
+subtitle = "Top 40 Unicode Emoji Macros🤪"
 description = """
 Generates ready-to-use Unicode macros for your keyboard, letting you type emojis and symbols instantly.
 This generator is pre-configured with the **Top 40 most frequently used emojis**.
