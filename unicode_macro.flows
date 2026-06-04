@@ -1,7 +1,7 @@
 uid = "emoji"
 type = "mutation"
 language = "us"
-title = "Core Communication Emoji Set"
+title = "Emoji Set"
 subtitle = "Unified 20-Emoji Kernel🪳"
 description = """
 Generates ready-to-use Unicode macros for your keyboard, pre-configured with a highly optimized 20-emoji core communication set.
