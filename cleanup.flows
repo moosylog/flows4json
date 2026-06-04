@@ -1,7 +1,7 @@
 uid = "cleanup"
 type = "mutation"
 language = "en-US"
-title = "☠️Cleanup☠️🧹"
+title = "☠️Cleanup☠️"
 subtitle = "Danger Zone"
 description = """
 This 🚫️ deletes everying ☠️ unused, that's not associated
