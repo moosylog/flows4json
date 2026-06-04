@@ -8,6 +8,8 @@ This 🚫️ deletes everying ☠️ unused, that's not associated
 
 ⚠️ **WARNING:** THIS CAN BE TRICKY / RISK AND GIVE ERRORS - STILL TESTING THIS
 
+# NOT WORKING!!
+
 """
 script = """
 # HARDENED CLEANUP: Direct Object Access
