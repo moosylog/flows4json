@@ -13,13 +13,14 @@ Supports dynamically swapping modifiers (Pinky and Middle finger colors are swap
 # JQ SCRIPT
 # ==============================================================================
 script = """
+# Capture the keyboard type from the ROOT before diving into the keymap
+(.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
 
 (.keymap // .) |= (
   
-  # 1. HARDWARE ABSTRACTION (Moved inside to prevent syntax crashes)
+  # 1. HARDWARE ABSTRACTION
   # ---------------------------------------------------------
   def GetHardware:
-    (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
     if $kb == "glove80" then {
       left_pinky: 35, left_ring: 36, left_middy: 37, left_index: 38,
       right_index: 41, right_middy: 42, right_ring: 43, right_pinky: 44
@@ -81,7 +82,6 @@ script = """
       ( $idx_map["\\($i)"] ) as $dec_update |
       
       if $dec_update then
-        # This safely merges the new background/icon. Existing labels/text colors are preserved.
         .decoration = ((.decoration // {}) + { background: $dec_update.bg, icon: $dec_update.ic })
       else
         .
@@ -89,7 +89,6 @@ script = """
     ]
   ]
 )
-
 """
 
 # ==============================================================================
