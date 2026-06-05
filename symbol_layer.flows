@@ -1,0 +1,197 @@
+uid = "add_symbol_layer_v1"
+type = "mutation"
+language = "en-US"
+title = "Add Symbols Layer"
+subtitle = "Injects a dedicated symbol layer"
+description = """
+Automatically injects a brand new "Symbols" layer at the very bottom of your layer stack. 
+
+It also automatically installs the required `&symb_dotdot_v1_TKZ` macro. This flow intelligently adapts to both the MoErgo Glove80 and the Go60 trackpad module.
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+# --- CONFIGURATION CONSTANTS ---
+"Symbols" as $layer_name |
+"&symb_dotdot_v1_TKZ" as $macro_name |
+
+# 1. Capture hardware type
+(.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
+
+# --- ERROR HANDLING: Check for duplicates ---
+((.keymap // .).layer_names // []) as $existing_layers |
+if ($existing_layers | index($layer_name) != null) then
+  error("A layer named '\\($layer_name)' already exists! Aborting to prevent duplicates.")
+else . end |
+
+# 2. Define the required macro dynamically
+{
+  "name": $macro_name,
+  "description": "Symbol layer dot dot",
+  "waitMs": 0,
+  "tapMs": 0,
+  "bindings": [
+    { "value": "&macro_tap" },
+    { "value": "&kp", "params": [ { "value": "DOT" } ] },
+    { "value": "&kp", "params": [ { "value": "DOT" } ] }
+  ],
+  "params": []
+} as $dot_macro |
+
+# 3. Select the correct Layer Matrix based on hardware
+(if $kb == "go60" then
+  [
+    { "value": "&kp", "params": [ { "value": "GRAVE" } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "COMMA" } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N9" } ] } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N0" } ] } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "SEMI" } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "DOT" } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N1" } ] } ], "decoration": { "background": "#fbe6feff" } },
+    { "value": "&kp", "params": [ { "value": "LBKT" } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "LBKT" } ] } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "RBKT" } ] } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "RBKT" } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "FSLH" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "GRAVE" } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "DEL" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "TAB" } ] } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "INS" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "ESC" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N3" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N6" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "EQUAL" } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "MINUS" } ] } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N4" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N8" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "SINGLE_QUOTE" } ] } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "BSPC" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "TAB" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "SPACE" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "RET" } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "GRAVE" } ] } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "COMMA" } ] } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "BSLH" } ] } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "MINUS" } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "DOT" } ] } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "FSLH" } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "SQT" } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&sk", "params": [ { "value": "LSHFT" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&sk", "params": [ { "value": "LCTRL" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&sk", "params": [ { "value": "LALT" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&sk", "params": [ { "value": "LGUI" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "SQT" } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "SINGLE_QUOTE" } ] } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "EQUAL" } ] } ], "decoration": { "background": "#f8e6d7" } },
+    { "value": "&kp", "params": [ { "value": "BSLH" } ], "decoration": { "background": "#fffec9ff" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N7" } ] } ], "decoration": { "background": "#fffec9ff" } },
+    { "value": $macro_name, "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N5" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "SEMI" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N2" } ] } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&none" }, { "value": "&none" },
+    { "value": "&none", "decoration": { "icon": "io-finger-print", "color": "#ffffffff", "background": "#000000ff" } }
+  ]
+else
+  [
+    { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "GRAVE" } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N6" } ] } ], "decoration": { "label": ",", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N9" } ] } ], "decoration": { "label": "(", "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N0" } ] } ], "decoration": { "label": ")", "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "SEMI" } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "COMMA" } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" }, { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N1" } ] } ], "decoration": { "label": "!", "background": "#fbe6feff" } },
+    { "value": "&kp", "params": [ { "value": "LBKT" } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "LBKT" } ] } ], "decoration": { "label": "{", "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "RBKT" } ] } ], "decoration": { "label": "}", "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "RBKT" } ], "decoration": { "background": "#e0ebf6" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "FSLH" } ] } ], "decoration": { "label": "?", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "DOT" } ], "decoration": { "label": ".", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "DEL" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "TAB" } ] } ], "decoration": { "label": "Shift Tab", "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "INS" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "ESC" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N3" } ] } ], "decoration": { "label": "#", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N6" } ] } ], "decoration": { "label": "^", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "EQUAL" } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "MINUS" } ] } ], "decoration": { "label": "_", "background": "#e5feff" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N4" } ] } ], "decoration": { "label": "$", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N8" } ] } ], "decoration": { "label": "*", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "COMMA" } ], "decoration": { "label": ",", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "BSPC" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "TAB" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "SPACE" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&kp", "params": [ { "value": "RET" } ], "decoration": { "background": "#f8e6d7ff" } },
+    { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "GRAVE" } ] } ], "decoration": { "label": "~", "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "COMMA" } ] } ], "decoration": { "label": "<", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "BSLH" } ] } ], "decoration": { "label": "|", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "MINUS" } ], "decoration": { "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "DOT" } ] } ], "decoration": { "label": ">", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "FSLH" } ], "decoration": { "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "BSLH" } ], "decoration": { "background": "#fbe6feff" } },
+    { "value": "&kp", "params": [ { "value": "DOT" } ], "decoration": { "label": ".", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N8" } ] } ], "decoration": { "label": "*", "background": "#fffec9" } },
+    { "value": "&none" }, { "value": "&none" }, { "value": "&none" },
+    { "value": "&kp", "params": [ { "value": "SEMI" } ], "decoration": { "label": ";", "background": "#d9f9c9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "SINGLE_QUOTE" } ] } ], "decoration": { "label": "\\\"", "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "SQT" } ], "decoration": { "label": "'", "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "GRAVE" } ], "decoration": { "label": "`", "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "BSLH" } ], "decoration": { "background": "#fbe6feff" } },
+    { "value": "&none" },
+    { "value": $macro_name, "decoration": { "label": "..", "background": "#e5feff" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N7" } ] } ], "decoration": { "label": "&", "background": "#e5feff" } },
+    { "value": "&kp", "params": [ { "value": "SQT" } ], "decoration": { "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "SINGLE_QUOTE" } ] } ], "decoration": { "label": "\\\"", "background": "#fbe6fe" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "EQUAL" } ] } ], "decoration": { "label": "+", "background": "#e5feff" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N5" } ] } ], "decoration": { "label": "%", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "SEMI" } ] } ], "decoration": { "label": ":", "background": "#fffec9" } },
+    { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N2" } ] } ], "decoration": { "label": "@", "background": "#fffec9" } },
+    { "value": "&none" }, { "value": "&none" },
+    { "value": "&none", "decoration": { "icon": "io-finger-print", "color": "#ffffffff", "background": "#000000fc" } },
+    { "value": "&sk", "params": [ { "value": "RSHFT" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&sk", "params": [ { "value": "RCTRL" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&sk", "params": [ { "value": "RALT" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&sk", "params": [ { "value": "RGUI" } ], "decoration": { "background": "#f2f2f2ff" } },
+    { "value": "&none" }
+  ]
+end) as $new_layer |
+
+# 4. Engine STEP A: Force the macro injection first
+(.keymap // .) |= (
+  .macros = (.macros // []) |
+  if (any(.macros[]; .name == $macro_name) | not) then
+    .macros += [$dot_macro]
+  else
+    .
+  end
+) |
+
+# 5. Engine STEP B: Now that the macro is strictly built, inject the layer
+(.keymap // .) |= (
+  .layer_names = (.layer_names // []) + [$layer_name] |
+  .layers = (.layers // []) + [$new_layer]
+)
+"""
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60", "glove80"]
+icon = "🔣"
+theme = "yellow"
+
+[config]
+category = "Symbols"
