@@ -1,8 +1,8 @@
 uid = "colors_createRGBscheme"
 type = "mutation"
 language = "en-US"
-title = "PR36 Scheme Creator"
-subtitle = "Generate schemes using decorators"
+title = "PR36 RGB Scheme"
+subtitle = "Generate from key decorators"
 description = """
 PR36 is community firmware that adds support for per key RGB. [Learn more](https://sites.google.com/view/tailorkey/how-to/rgb)
 
