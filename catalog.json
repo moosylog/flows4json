@@ -306,7 +306,7 @@
   {
     "uid": "l_cleaner",
     "title": "Layout Cleaner",
-    "subtitle": "External App",
+    "subtitle": "🚀 External App",
     "description": "**Detect clutter & allows bulk delete**\nHelps you maintain lean configurations by automatically identifying \"orphans\"—unused macros, combos, hold-taps, or layers—and letting you bulk delete them safely via an intuitive UI.\nNote: Custom Defined Behaviors are ignored.\n\n## IMPORTANT:  Custom Defined Behaviors are not supported.",
     "script": "",
     "category": "Cleanup",
