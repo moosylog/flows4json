@@ -172,7 +172,7 @@
         ],
         "labels": [
           "🎨 Apply Theme Colors",
-          "🗑️ DELETE ALL Decorators (Clean Slate)"
+          "🗑️ DELETE APPLIED Decorators"
         ],
         "default": "apply"
       },
