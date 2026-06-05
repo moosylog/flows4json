@@ -15,23 +15,12 @@ Colors your physical home row keys based on selected visual themes, and searches
 # JQ SCRIPT
 # ==============================================================================
 script = """
-(.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
+# =========================================================
+# 🛠️ USER CONFIGURATION ZONE 
+# Add your new themes, colors, and macro searches here!
+# =========================================================
 
-# ---------------------------------------------------------
-# 1. HARDWARE INDEX MAP
-# ---------------------------------------------------------
-(if $kb == "glove80" then {
-  "35": "left.pinky", "36": "left.ring", "37": "left.middy", "38": "left.index",
-  "41": "right.index", "42": "right.middy", "43": "right.ring", "44": "right.pinky"
-} elif $kb == "go60" then {
-  "25": "left.pinky", "26": "left.ring", "27": "left.middy", "28": "left.index",
-  "31": "right.index", "32": "right.middy", "33": "right.ring", "34": "right.pinky"
-} else {} end) as $hw_map |
-
-# ---------------------------------------------------------
-# 2. COLOR PALETTE CLASS
-# Define base colors here. Add new colors easily!
-# ---------------------------------------------------------
+# --- 1. COLOR PALETTE CLASS ---
 (if $theme == "engrammer" then {
   pinky: "#ffcdd2", ring: "#bbdefb", middy: "#dcedc8", index: "#ffecb3",
   action_copy: "#fffec9", action_paste: "#e0ebf6", action_search: "#fbe6fe"
@@ -40,9 +29,38 @@ script = """
   action_copy: "#fffec9", action_paste: "#e0ebf6", action_search: "#e5feff"
 } else {} end) as $pal |
 
-# ---------------------------------------------------------
-# 3. HOME ROW THEME ASSIGNMENTS (WITH OS SWAP)
-# ---------------------------------------------------------
+# --- 2. LOGICAL SEARCH MAP ---
+(if $os == "mac" then
+  {
+    "&kp(LG(C))": { bg: $pal.action_copy, ic: "fa-copy", label: "Copy" },
+    "&kp(LG(V))": { bg: $pal.action_paste, ic: "fa-paste", label: "Paste" },
+    "&kp(LG(LS(G)))": { bg: $pal.action_search, ic: "fa-search", label: "Search" }
+  } 
+else
+  {
+    "&kp(LC(C))": { bg: $pal.action_copy, ic: "fa-copy", label: "Copy" },
+    "&kp(LC(V))": { bg: $pal.action_paste, ic: "fa-paste", label: "Paste" },
+    "&kp(LC(LS(G)))": { bg: $pal.action_search, ic: "fa-search", label: "Search" }
+  } 
+end) as $logical_map |
+
+
+# =========================================================
+# ⚙️ INTERNAL ENGINE (DO NOT EDIT BELOW THIS LINE)
+# =========================================================
+
+(.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
+
+# --- HARDWARE INDEX MAP ---
+(if $kb == "glove80" then {
+  "35": "left.pinky", "36": "left.ring", "37": "left.middy", "38": "left.index",
+  "41": "right.index", "42": "right.middy", "43": "right.ring", "44": "right.pinky"
+} elif $kb == "go60" then {
+  "25": "left.pinky", "26": "left.ring", "27": "left.middy", "28": "left.index",
+  "31": "right.index", "32": "right.middy", "33": "right.ring", "34": "right.pinky"
+} else {} end) as $hw_map |
+
+# --- HOME ROW THEME ASSIGNMENTS (WITH OS SWAP) ---
 (if $os == "mac" then
   {
     left:  { pinky: {bg: $pal.middy, ic: "fa-align-left"}, ring: {bg: $pal.ring, ic: "fa-align-left"}, middy: {bg: $pal.pinky, ic: "fa-align-left"}, index: {bg: $pal.index, ic: "fa-align-left"} },
@@ -55,37 +73,7 @@ else
   }
 end) as $homerow_theme |
 
-# ---------------------------------------------------------
-# 4. THE DEEP SEARCH ENGINE 
-# Recursively flattens nested MoErgo params into a ZMK Signature
-# e.g. {value: "&kp", params: [{value: "LC", params: [{value: "C"}]}]} -> "&kp(LC(C))"
-# ---------------------------------------------------------
-def GetSignature:
-  if type == "string" then .
-  elif type == "object" and .value then
-    if (.params | type == "array" and length > 0) then
-      .value + "(" + (.params | map(GetSignature) | join(",")) + ")"
-    else
-      .value
-    end
-  else
-    ""
-  end;
-
-# ---------------------------------------------------------
-# 5. LOGICAL SEARCH MAP (Scans the ENTIRE layout)
-# Add any nested macro signature here to style it globally!
-# ---------------------------------------------------------
-{
-  "&kp(LC(C))": { bg: $pal.action_copy, ic: "fa-copy", label: "Copy" },
-  "&kp(LC(V))": { bg: $pal.action_paste, ic: "fa-paste", label: "Paste" },
-  "&kp(LC(LS(G)))": { bg: $pal.action_search, ic: "", label: "Search" }
-} as $logical_map |
-
-
-# ---------------------------------------------------------
-# 6. MUTATION ENGINE
-# ---------------------------------------------------------
+# --- MUTATION ENGINE ---
 (.keymap // .) |= (
   
   if $mode == "delete" then
@@ -93,7 +81,20 @@ def GetSignature:
     .layers |= map(map(if type == "object" then del(.decoration) else . end))
     
   else
-    # APPLY MODE: Run the styling engines
+    # --- DEEP SEARCH FLATTENER ---
+    def GetSignature:
+      if type == "string" then .
+      elif type == "object" and .value then
+        if (.params | type == "array" and length > 0) then
+          .value + "(" + (.params | map(GetSignature) | join(",")) + ")"
+        else
+          .value
+        end
+      else
+        ""
+      end;
+
+    # --- APPLY STYLES ---
     .layers |= [
       range(length) as $layerIdx | .[$layerIdx] |
       [
@@ -114,7 +115,7 @@ def GetSignature:
         
         if $target_style then
           
-          # Smart Label Extraction (Use predefined label, or extract from keycode)
+          # Smart Label Extraction
           (
             if $logical_style and $logical_style.label then $logical_style.label
             elif type == "object" then
