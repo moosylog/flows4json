@@ -1,0 +1,50 @@
+uid = "swap_trackpads_lh_rh"
+type = "mutation"
+language = "en-US"
+title = "Swap Trackpads"
+subtitle = "Swap Left & Right Trackpads"
+description = """
+Swaps the entire touchpad configuration between the left and right hands. 
+
+If your right trackpad controls the mouse pointer and your left trackpad handles scrolling (the factory default), applying this flow will perfectly flip them. The left hand will become the mouse, and the right hand will become the scroll wheel.
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+(.keymap // .) |= (
+  # Check if inputListeners exists and is an array
+  if .inputListeners and (.inputListeners | type == "array") then
+    .inputListeners |= map(
+      # If this config block targets the Left Hand, point it to the Right Hand
+      if .code == "&cirque_lh_listener" then
+        .code = "&cirque_rh_listener"
+        
+      # If this config block targets the Right Hand, point it to the Left Hand
+      elif .code == "&cirque_rh_listener" then
+        .code = "&cirque_lh_listener"
+        
+      # Leave any other custom listeners (like trackballs) untouched
+      else
+        .
+      end
+    )
+  else
+    .
+  end
+)
+"""
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["all", "go60"]
+icon = "🖱️"
+theme = "blue"
+
+[config]
+category = "Hardware"
