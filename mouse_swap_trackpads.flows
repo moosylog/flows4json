@@ -43,8 +43,8 @@ script = """
 [manifest]
 author = "moosyresearch"
 keyboards = ["all", "go60"]
-icon = "🖱️"
-theme = "blue"
+icon = "⚫"
+theme = "orange"
 
 [config]
-category = "Hardware"
+category = "Mouse Controls"
