@@ -194,6 +194,30 @@
     "mediaUrl": null
   },
   {
+    "uid": "colors_launch_kiilix",
+    "title": "Kiilix Studio ⭐⭐⭐",
+    "subtitle": "🚀 External App",
+    "description": "Configure your RGB\r\n\r\nMore info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)",
+    "script": "",
+    "category": "Key Decorations & RGB",
+    "appUrl": "https://sites.google.com/view/kiilix/",
+    "manifest": {
+      "author": "moosyresearch",
+      "keyboards": [
+        "go60",
+        "glove80"
+      ],
+      "icon": "🧬",
+      "theme": "yellow"
+    },
+    "config": {
+      "category": "Key Decorations & RGB",
+      "num": "123"
+    },
+    "param": [],
+    "mediaUrl": null
+  },
+  {
     "uid": "gaming60",
     "title": "Gaming Layer 60",
     "subtitle": "Adds the TK Gaming Layer",
@@ -402,30 +426,6 @@
     },
     "param": [],
     "mediaUrl": "https://moosylog.github.io/flows4json/l_hrm_tuner.png"
-  },
-  {
-    "uid": "colors_launch_kiilix",
-    "title": "Kiilix Studio ⭐⭐⭐",
-    "subtitle": "🚀 External App",
-    "description": "Configure your RGB\r\n\r\nMore info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)",
-    "script": "",
-    "category": "Key Decorations & RGB",
-    "appUrl": "https://sites.google.com/view/kiilix/",
-    "manifest": {
-      "author": "moosyresearch",
-      "keyboards": [
-        "go60",
-        "glove80"
-      ],
-      "icon": "🧬",
-      "theme": "yellow"
-    },
-    "config": {
-      "category": "Key Decorations & RGB",
-      "num": "123"
-    },
-    "param": [],
-    "mediaUrl": null
   },
   {
     "uid": "l_oryx_swap",
