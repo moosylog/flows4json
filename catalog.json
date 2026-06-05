@@ -527,7 +527,7 @@
     "manifest": {
       "author": "moosyresearch",
       "keyboards": [
-        "all",
+        "glove80",
         "go60"
       ],
       "icon": "⚫",
