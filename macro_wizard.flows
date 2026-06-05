@@ -4,7 +4,13 @@ language = "us"
 title = "Macro Wizard"
 subtitle = "String Macro Generator"
 description = """
-This creates a macro with the specified name that displays the text entered below in Configuration Options. The symbols are based on en-US language settings.
+Creating macros in the MoErgo Layout Editor can be repetitive and time-consuming, especially for longer text strings.
+
+This flow automatically generates a macro from any text string you provide, reducing the number of manual clicks required in the editor.
+
+You can configure both the macro name and the output text in the Configuration Options.
+
+Character mappings are based on the en-US keyboard layout.
 
 🚫 **WARNING: DO NOT STORE SECRETS OR PERSONALLY IDENTIFIABLE INFORMATION IN YOUR LAYOUT.**
 
