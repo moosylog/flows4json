@@ -9,7 +9,7 @@ Simply drag and drop them into your preferred position in the MoErgo Layout Edit
 Includes the 40 most widely used emojis in collaboration tools. **Select your OS below.**
 
 ### ⚠️ Prerequisites: OS Unicode Support
-Standard keyboards send keycodes, not actual characters. To output these emojis natively, your OS must be configured to accept hexadecimal input:
+Standard keyboards send keycodes, not characters. To output these emojis, your OS must be configured to accept hexadecimal input:
 
 🪟 **Windows (WinCompose):** Install and run [WinCompose](https://github.com/samhocevar/wincompose) in the background.
 
