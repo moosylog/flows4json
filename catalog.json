@@ -404,12 +404,12 @@
     "mediaUrl": "https://moosylog.github.io/flows4json/l_hrm_tuner.png"
   },
   {
-    "uid": "l_kiilix",
+    "uid": "colors_launch_kiilix",
     "title": "Kiilix Studio ⭐⭐⭐",
     "subtitle": "🚀 External App",
     "description": "Configure your RGB\r\n\r\nMore info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)",
     "script": "",
-    "category": "Decorations & RGB",
+    "category": "Key Decorations & RGB",
     "appUrl": "https://sites.google.com/view/kiilix/",
     "manifest": {
       "author": "moosyresearch",
@@ -421,7 +421,7 @@
       "theme": "yellow"
     },
     "config": {
-      "category": "Decorations & RGB",
+      "category": "Key Decorations & RGB",
       "num": "123"
     },
     "param": [],
