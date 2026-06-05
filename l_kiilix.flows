@@ -1,4 +1,4 @@
-uid = "l_kiilix"
+uid = "colors_launch_kiilix"
 type = "mutation"
 language = "us"
 title = "Kiilix Studio ⭐⭐⭐"
@@ -17,5 +17,5 @@ icon = "🧬"
 # Optional: red, green, blue, purple, yellow, orange
 theme = "yellow" 
 [config]
-category = "Decorations & RGB"
+category = "Key Decorations & RGB"
 num = 123
