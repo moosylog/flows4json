@@ -21,7 +21,6 @@ script = """
 (.keymap // .) |= (
   
   # 1. HARDWARE INDEX MAP
-  # Strictly maps the exact physical matrix index to the logical finger path
   (if $kb == "glove80" then {
     "35": "left.pinky", "36": "left.ring", "37": "left.middy", "38": "left.index",
     "41": "right.index", "42": "right.middy", "43": "right.ring", "44": "right.pinky"
@@ -31,7 +30,6 @@ script = """
   } else {} end) as $hw_map |
 
   # 2. THEMES DICTIONARY
-  # Add future themes as new 'elif' blocks here!
   (if $theme == "engrammer" then {
     left:  { pinky: {bg: "#ffcdd2", ic: "fa-align-left"}, ring: {bg: "#bbdefb", ic: "fa-align-left"}, middy: {bg: "#dcedc8", ic: "fa-align-left"}, index: {bg: "#ffecb3", ic: "fa-align-left"} },
     right: { pinky: {bg: "#ffcdd2", ic: "fa-align-right"}, ring: {bg: "#bbdefb", ic: "fa-align-right"}, middy: {bg: "#dcedc8", ic: "fa-align-right"}, index: {bg: "#ffecb3", ic: "fa-align-right"} }
@@ -41,7 +39,6 @@ script = """
   } else {} end) as $t |
 
   # 3. OS SWAP LOGIC
-  # If mac is selected, safely swap the pinky and middy objects for both hands
   (if $os == "mac" then
     $t |
     .left.pinky as $lp | .left.middy as $lm |
@@ -56,18 +53,27 @@ script = """
   .layers[0] |= [
     range(length) as $i | .[$i] |
     
-    # Use native tostring to avoid TOML string escaping traps!
     ($hw_map[$i | tostring]) as $finger |
     
     if $finger then
-      # Dynamically fetch the nested style object (e.g. left.pinky)
       ($active_theme | getpath($finger | split("."))) as $style |
       
-      # Safely apply decoration, ensuring primitive strings don't crash the compiler
+      # Extract the label: params[1] -> params[0] -> value
+      (
+        if type == "object" then
+          if .params[1] != null then (.params[1].value // .params[1])
+          elif .params[0] != null then (.params[0].value // .params[0])
+          else .value end
+        else
+          .
+        end | tostring
+      ) as $extracted_label |
+      
+      # Apply decoration safely
       if type == "object" then
-        .decoration = ((.decoration // {}) + { background: $style.bg, icon: $style.ic })
+        .decoration = ((.decoration // {}) + { background: $style.bg, icon: $style.ic, label: $extracted_label })
       else
-        { "value": ., "params": [], "decoration": { "background": $style.bg, "icon": $style.ic } }
+        { "value": ., "params": [], "decoration": { "background": $style.bg, "icon": $style.ic, "label": $extracted_label } }
       end
     else
       .
