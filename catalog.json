@@ -431,7 +431,7 @@
     "uid": "l_oryx_swap",
     "title": "ZSA Oryx Migration Assistant",
     "subtitle": "🚀 External App",
-    "description": "Migrate your ZSA ORYX Layout to MoErgo Go60 / Glove80.\nThis tool converts a Oryx layouts to the Layout Editor.",
+    "description": "Migrate your ZSA ORYX **Moonlander | Voyager** Layout to MoErgo Go60 / Glove80.\nThis tool converts a Oryx layouts to the Layout Editor.",
     "script": "",
     "category": "ZSA Migration",
     "appUrl": "https://github.com/moosylog/oma/blob/main/README.md",
