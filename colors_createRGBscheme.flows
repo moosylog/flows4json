@@ -4,11 +4,12 @@ language = "en-US"
 title = "PR36 Scheme Creator"
 subtitle = "Generate schemes using decorators"
 description = """
-This creates a PR36 Scheme based on your key decorators in your Device Tree section.
+PR36 is community firmware that adds support for per key RGB. [Learn more](https://sites.google.com/view/tailorkey/how-to/rgb)
 
-It's basically donig the same thing as [Kiilix](https://sites.google.com/view/kiilix/).
+This package automatically generates the RGB scheme for PR36 based on your Layout Editor key decorations.
 
-More info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)
+It effectively does the same job as [Kiilix Studio](https://sites.google.com/view/kiilix/), but in a lightweight flow package.
+
 
 ⚠️ **WARNING:** THIS OVERWRITES THE COMPLETE DEVICE TREE CONTENT
 
