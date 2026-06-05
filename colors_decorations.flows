@@ -1,12 +1,12 @@
 uid = "theme_homerow_colors"
 type = "mutation"
 language = "en-US"
-title = "Home Row Colorizer🌈 dev"
+title = "Home Row Colorizer🌈 test"
 subtitle = "Visual Themes & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes. 
 
-# NOT WORKING - WORK IN PROGRESS
+# WORK IN PROGRESS  
 
 Supports dynamically swapping modifiers (Pinky and Middle finger colors are swapped) for macOS users. **This targets the physical location of the keys**, meaning your home row will always be perfectly colored regardless of what letters you have mapped there.
 """
