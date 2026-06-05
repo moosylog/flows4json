@@ -7,7 +7,7 @@ description = """
 This Flow automatically injects a brand new "Symbols_Flows" layer on *Go60 or Glove80* the very bottom of your layer stack and one macro for '..'
 
 It also automatically installs the required `&symb_dotdot_v1_TKZ` macro. 
-
+"""
 # ==============================================================================
 # JQ SCRIPT
 # ==============================================================================
