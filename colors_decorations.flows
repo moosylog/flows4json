@@ -1,91 +1,157 @@
 uid = "theme_homerow_colors"
 type = "mutation"
 language = "en-US"
-title = "Home Row Colorizer🌈"
-subtitle = "Visual Themes & OS Swaps"
+title = "Smart Theme Colorizer 🌈"
+subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
-Colors your physical home row keys based on selected visual themes. 
+Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
 
-# WORK IN PROGRESS (WORKS but needs more colors and love)
-
-
-Supports dynamically swapping modifiers (Pinky and Middle finger colors are swapped) for macOS users. **This targets the physical location of the keys**, meaning your home row will always be perfectly colored regardless of what letters you have mapped there.
+* Includes a **Clean Slate** mode to delete all decorations across your entire layout.
+* Supports macOS modifier swapping for the home row.
+* Easily expandable inside the Developer Console by adding new signature strings!
 """
 
 # ==============================================================================
 # JQ SCRIPT
 # ==============================================================================
 script = """
-# Capture the hardware type safely from the root before mutating
 (.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
 
+# ---------------------------------------------------------
+# 1. HARDWARE INDEX MAP
+# ---------------------------------------------------------
+(if $kb == "glove80" then {
+  "35": "left.pinky", "36": "left.ring", "37": "left.middy", "38": "left.index",
+  "41": "right.index", "42": "right.middy", "43": "right.ring", "44": "right.pinky"
+} elif $kb == "go60" then {
+  "25": "left.pinky", "26": "left.ring", "27": "left.middy", "28": "left.index",
+  "31": "right.index", "32": "right.middy", "33": "right.ring", "34": "right.pinky"
+} else {} end) as $hw_map |
+
+# ---------------------------------------------------------
+# 2. COLOR PALETTE CLASS
+# Define base colors here. Add new colors easily!
+# ---------------------------------------------------------
+(if $theme == "engrammer" then {
+  pinky: "#ffcdd2", ring: "#bbdefb", middy: "#dcedc8", index: "#ffecb3",
+  action_copy: "#fffec9", action_paste: "#e0ebf6", action_search: "#fbe6fe"
+} elif $theme == "tailorkey" then {
+  pinky: "#fbe6fe", ring: "#e5feff", middy: "#d9f9c9", index: "#fffec9",
+  action_copy: "#fffec9", action_paste: "#e0ebf6", action_search: "#e5feff"
+} else {} end) as $pal |
+
+# ---------------------------------------------------------
+# 3. HOME ROW THEME ASSIGNMENTS (WITH OS SWAP)
+# ---------------------------------------------------------
+(if $os == "mac" then
+  {
+    left:  { pinky: {bg: $pal.middy, ic: "fa-align-left"}, ring: {bg: $pal.ring, ic: "fa-align-left"}, middy: {bg: $pal.pinky, ic: "fa-align-left"}, index: {bg: $pal.index, ic: "fa-align-left"} },
+    right: { pinky: {bg: $pal.middy, ic: "fa-align-right"}, ring: {bg: $pal.ring, ic: "fa-align-right"}, middy: {bg: $pal.pinky, ic: "fa-align-right"}, index: {bg: $pal.index, ic: "fa-align-right"} }
+  }
+else
+  {
+    left:  { pinky: {bg: $pal.pinky, ic: "fa-align-left"}, ring: {bg: $pal.ring, ic: "fa-align-left"}, middy: {bg: $pal.middy, ic: "fa-align-left"}, index: {bg: $pal.index, ic: "fa-align-left"} },
+    right: { pinky: {bg: $pal.pinky, ic: "fa-align-right"}, ring: {bg: $pal.ring, ic: "fa-align-right"}, middy: {bg: $pal.middy, ic: "fa-align-right"}, index: {bg: $pal.index, ic: "fa-align-right"} }
+  }
+end) as $homerow_theme |
+
+# ---------------------------------------------------------
+# 4. THE DEEP SEARCH ENGINE 
+# Recursively flattens nested MoErgo params into a ZMK Signature
+# e.g. {value: "&kp", params: [{value: "LC", params: [{value: "C"}]}]} -> "&kp(LC(C))"
+# ---------------------------------------------------------
+def GetSignature:
+  if type == "string" then .
+  elif type == "object" and .value then
+    if (.params | type == "array" and length > 0) then
+      .value + "(" + (.params | map(GetSignature) | join(",")) + ")"
+    else
+      .value
+    end
+  else
+    ""
+  end;
+
+# ---------------------------------------------------------
+# 5. LOGICAL SEARCH MAP (Scans the ENTIRE layout)
+# Add any nested macro signature here to style it globally!
+# ---------------------------------------------------------
+{
+  "&kp(LC(C))": { bg: $pal.action_copy, ic: "fa-copy", label: "Copy" },
+  "&kp(LC(V))": { bg: $pal.action_paste, ic: "fa-paste", label: "Paste" },
+  "&kp(LC(LS(G)))": { bg: $pal.action_search, ic: "", label: "Search" }
+} as $logical_map |
+
+
+# ---------------------------------------------------------
+# 6. MUTATION ENGINE
+# ---------------------------------------------------------
 (.keymap // .) |= (
   
-  # 1. HARDWARE INDEX MAP
-  (if $kb == "glove80" then {
-    "35": "left.pinky", "36": "left.ring", "37": "left.middy", "38": "left.index",
-    "41": "right.index", "42": "right.middy", "43": "right.ring", "44": "right.pinky"
-  } elif $kb == "go60" then {
-    "25": "left.pinky", "26": "left.ring", "27": "left.middy", "28": "left.index",
-    "31": "right.index", "32": "right.middy", "33": "right.ring", "34": "right.pinky"
-  } else {} end) as $hw_map |
-
-  # 2. THEMES DICTIONARY
-  (if $theme == "engrammer" then {
-    left:  { pinky: {bg: "#ffcdd2", ic: "fa-align-left"}, ring: {bg: "#bbdefb", ic: "fa-align-left"}, middy: {bg: "#dcedc8", ic: "fa-align-left"}, index: {bg: "#ffecb3", ic: "fa-align-left"} },
-    right: { pinky: {bg: "#ffcdd2", ic: "fa-align-right"}, ring: {bg: "#bbdefb", ic: "fa-align-right"}, middy: {bg: "#dcedc8", ic: "fa-align-right"}, index: {bg: "#ffecb3", ic: "fa-align-right"} }
-  } elif $theme == "tailorkey" then {
-    left:  { pinky: {bg: "#e57373", ic: "fa-align-left"}, ring: {bg: "#81c784", ic: "fa-align-left"}, middy: {bg: "#64b5f6", ic: "fa-align-left"}, index: {bg: "#ffd54f", ic: "fa-align-left"} },
-    right: { pinky: {bg: "#e57373", ic: "fa-align-right"}, ring: {bg: "#81c784", ic: "fa-align-right"}, middy: {bg: "#64b5f6", ic: "fa-align-right"}, index: {bg: "#ffd54f", ic: "fa-align-right"} }
-  } else {} end) as $t |
-
-  # 3. OS SWAP LOGIC
-  (if $os == "mac" then
-    $t |
-    .left.pinky as $lp | .left.middy as $lm |
-    .right.pinky as $rp | .right.middy as $rm |
-    .left.pinky = $lm | .left.middy = $lp |
-    .right.pinky = $rm | .right.middy = $rp
+  if $mode == "delete" then
+    # OVERRIDE: Strip ALL decorators from EVERY key on ALL layers
+    .layers |= map(map(if type == "object" then del(.decoration) else . end))
+    
   else
-    $t
-  end) as $active_theme |
-
-  # 4. MUTATION ENGINE (LAYER 0 ONLY)
-  .layers[0] |= [
-    range(length) as $i | .[$i] |
-    
-    ($hw_map[$i | tostring]) as $finger |
-    
-    if $finger then
-      ($active_theme | getpath($finger | split("."))) as $style |
-      
-      # Extract the label: params[1] -> params[0] -> value
-      (
-        if type == "object" then
-          if .params[1] != null then (.params[1].value // .params[1])
-          elif .params[0] != null then (.params[0].value // .params[0])
-          else .value end
+    # APPLY MODE: Run the styling engines
+    .layers |= [
+      range(length) as $layerIdx | .[$layerIdx] |
+      [
+        range(length) as $keyIdx | .[$keyIdx] |
+        
+        # A. Resolve Physical Home Row Style (Layer 0 Only)
+        (if $layerIdx == 0 then $hw_map[$keyIdx | tostring] else null end) as $finger_path |
+        (if $finger_path then ($homerow_theme | getpath($finger_path | split("."))) else null end) as $physical_style |
+        
+        # B. Resolve Logical Search Style (All Layers)
+        (GetSignature) as $sig |
+        ($logical_map[$sig]) as $logical_style |
+        
+        # C. Priority logic (Logical Macros override Home Row colors)
+        (if $logical_style then $logical_style
+         elif $physical_style then $physical_style
+         else null end) as $target_style |
+        
+        if $target_style then
+          
+          # Smart Label Extraction (Use predefined label, or extract from keycode)
+          (
+            if $logical_style and $logical_style.label then $logical_style.label
+            elif type == "object" then
+              if .params[1] != null then (.params[1].value // .params[1])
+              elif .params[0] != null then (.params[0].value // .params[0])
+              else .value end | tostring
+            else
+              . | tostring
+            end
+          ) as $extracted_label |
+          
+          # Apply the target style securely
+          if type == "object" then
+            .decoration = ((.decoration // {}) + { background: $target_style.bg, icon: $target_style.ic, label: $extracted_label })
+          else
+            { "value": ., "params": [], "decoration": { "background": $target_style.bg, "icon": $target_style.ic, "label": $extracted_label } }
+          end
         else
           .
-        end | tostring
-      ) as $extracted_label |
-      
-      # Apply decoration safely
-      if type == "object" then
-        .decoration = ((.decoration // {}) + { background: $style.bg, icon: $style.ic, label: $extracted_label })
-      else
-        { "value": ., "params": [], "decoration": { "background": $style.bg, "icon": $style.ic, "label": $extracted_label } }
-      end
-    else
-      .
-    end
-  ]
+        end
+      ]
+    ]
+  end
 )
 """
 
 # ==============================================================================
 # UI PARAMETERS 
 # ==============================================================================
+
+[[param]]
+id = "mode"
+label = "Execution Mode"
+type = "select"
+options = ["apply", "delete"]
+labels = ["🎨 Apply Theme Colors", "🗑️ DELETE ALL Decorators (Clean Slate)"]
+default = "apply"
 
 [[param]]
 id = "os"
@@ -112,7 +178,6 @@ author = "moosyresearch"
 keyboards = ["go60", "glove80"]
 icon = "🌈"
 theme = "purple"
-
 
 [config]
 category = "Decorations & RGB"
