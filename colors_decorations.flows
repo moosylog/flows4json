@@ -119,7 +119,7 @@ default = "engrammer"
 [manifest]
 author = "moosyresearch"
 keyboards = ["go60", "glove80"]
-icon = "🎨"
+icon = "🌈"
 theme = "purple"
 
 [config]
