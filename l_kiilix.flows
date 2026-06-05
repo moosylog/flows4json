@@ -17,5 +17,5 @@ icon = "🧬"
 # Optional: red, green, blue, purple, yellow, orange
 theme = "yellow" 
 [config]
-category = "RGB"
+category = "Decorations & RGB"
 num = 123
