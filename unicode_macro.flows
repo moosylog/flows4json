@@ -244,5 +244,5 @@ icon = "🤪"
 theme = "red" 
 
 [config]
-category = "Special keys"
+category = "Symbols"
 num = 123
