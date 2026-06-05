@@ -540,6 +540,29 @@
     "mediaUrl": "https://moosylog.github.io/flows4json/mouse.png"
   },
   {
+    "uid": "swap_trackpads_lh_rh",
+    "title": "Swap Trackpads",
+    "subtitle": "Swap Left & Right Trackpads",
+    "description": "Swaps the entire touchpad configuration between the left and right hands. \r\n\r\nIf your right trackpad controls the mouse pointer and your left trackpad handles scrolling (the factory default), applying this flow will perfectly flip them. The left hand will become the mouse, and the right hand will become the scroll wheel.",
+    "script": "(.keymap // .) |= (\r\n  # Check if inputListeners exists and is an array\r\n  if .inputListeners and (.inputListeners | type == \"array\") then\r\n    .inputListeners |= map(\r\n      # If this config block targets the Left Hand, point it to the Right Hand\r\n      if .code == \"&cirque_lh_listener\" then\r\n        .code = \"&cirque_rh_listener\"\r\n        \r\n      # If this config block targets the Right Hand, point it to the Left Hand\r\n      elif .code == \"&cirque_rh_listener\" then\r\n        .code = \"&cirque_lh_listener\"\r\n        \r\n      # Leave any other custom listeners (like trackballs) untouched\r\n      else\r\n        .\r\n      end\r\n    )\r\n  else\r\n    .\r\n  end\r\n)",
+    "category": "Hardware",
+    "appUrl": null,
+    "manifest": {
+      "author": "moosyresearch",
+      "keyboards": [
+        "all",
+        "go60"
+      ],
+      "icon": "🖱️",
+      "theme": "blue"
+    },
+    "config": {
+      "category": "Hardware"
+    },
+    "param": [],
+    "mediaUrl": null
+  },
+  {
     "uid": "sym_numrow",
     "title": "Primeagen's NumRow",
     "subtitle": "Custom Number Row",
