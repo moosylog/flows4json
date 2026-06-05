@@ -8,7 +8,7 @@ description = """
 Helps you maintain lean configurations by automatically identifying "orphans"—unused macros, combos, hold-taps, or layers—and letting you bulk delete them safely via an intuitive UI.
 Note: Custom Defined Behaviors are ignored.
 
-## IMPORTANT:  Custom Behaviors are not supported. 
+## IMPORTANT:  Custom Defined Behaviors are not supported. 
 
 """
 appUrl = "https://sites.google.com/view/keyboards/tools/tailorkey-toolbox/layout-cleaner"
@@ -20,5 +20,5 @@ icon = "🧹"
 # Optional: red, green, blue, purple, yellow, orange
 theme = "purple" 
 [config]
-category = "ZSA Migration"
+category = "Cleanup"
 num = 123
