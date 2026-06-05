@@ -4,8 +4,9 @@ language = "us"
 title = "Emoji Set"
 subtitle = "Adds 40-Emoji on a Layer"
 description = """
-Generates **40** ready-to-use Unicode Emoji macros and automatically builds a dedicated **Emoji Layer** with key decorators.
-You can easy drag and drop these to your favorite location in the MoErgo Layout Editor.  **Select your OS below!**
+Generate **40 ready-to-use Unicode Emoji macros** and instantly build a dedicated **Emoji Layer** with key decorators.  
+Simply drag and drop them into your preferred position in the MoErgo Layout Editor.  
+Includes the 40 most widely used emojis in collaboration tools. **Select your OS below.**
 
 ### ⚠️ Prerequisites: OS Unicode Support
 Standard keyboards send keycodes, not actual characters. To output these emojis natively, your OS must be configured to accept hexadecimal input:
