@@ -4,10 +4,9 @@ language = "en-US"
 title = "Symbols Layer"
 subtitle = "Adds Sunaku's Symbol layer"
 description = """
-Automatically injects a brand new "Symbols_Flows" layer at the very bottom of your layer stack and one macro for '..'
+This Flow automatically injects a brand new "Symbols_Flows" layer on *Go60 or Glove80* the very bottom of your layer stack and one macro for '..'
 
-It also automatically installs the required `&symb_dotdot_v1_TKZ` macro. This flow intelligently adapts to both the MoErgo Glove80 and the Go60 trackpad module.
-"""
+It also automatically installs the required `&symb_dotdot_v1_TKZ` macro. 
 
 # ==============================================================================
 # JQ SCRIPT
