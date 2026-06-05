@@ -1,7 +1,7 @@
 uid = "theme_homerow_colors"
 type = "mutation"
 language = "en-US"
-title = "Home Row Colorizer🌈"
+title = "Home Row Colorizer🌈 dev"
 subtitle = "Visual Themes & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes. 
