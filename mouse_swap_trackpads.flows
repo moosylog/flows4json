@@ -42,7 +42,7 @@ script = """
 
 [manifest]
 author = "moosyresearch"
-keyboards = ["all", "go60"]
+keyboards = ["glove80", "go60"]
 icon = "⚫"
 theme = "orange"
 
