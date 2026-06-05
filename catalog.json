@@ -429,7 +429,7 @@
   },
   {
     "uid": "l_oryx_swap",
-    "title": "ZSA Oryx Migration",
+    "title": "ZSA Oryx Migration Assistant",
     "subtitle": "🚀 External App",
     "description": "##Oryx Migration Assistant\n\nMigrate your ZSA ORYX Layout to MoErgo Go60 \nThis tool converts a Oryx layouts to the Layout Editor.",
     "script": "",
