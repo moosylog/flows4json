@@ -2,7 +2,7 @@ uid = "l_cleaner"
 type = "mutation"
 language = "us"
 title = "Layout Cleaner"
-subtitle = "External App"
+subtitle = "🚀 External App"
 description = """
 **Detect clutter & allows bulk delete**
 Helps you maintain lean configurations by automatically identifying "orphans"—unused macros, combos, hold-taps, or layers—and letting you bulk delete them safely via an intuitive UI.
