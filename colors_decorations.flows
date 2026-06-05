@@ -6,8 +6,6 @@ subtitle = "Visual Themes & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes. 
 
-# NOT WORKING - Work in progress
-
 Supports dynamically swapping modifiers (Pinky and Middle finger colors are swapped) for macOS users. **This targets the physical location of the keys**, meaning your home row will always be perfectly colored regardless of what letters you have mapped there.
 """
 
@@ -15,43 +13,33 @@ Supports dynamically swapping modifiers (Pinky and Middle finger colors are swap
 # JQ SCRIPT
 # ==============================================================================
 script = """
-# Capture the keyboard type from the ROOT before diving into the keymap
+# Capture the hardware type safely from the root before mutating
 (.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
 
 (.keymap // .) |= (
   
-  # 1. HARDWARE ABSTRACTION
-  # ---------------------------------------------------------
-  def GetHardware:
-    if $kb == "glove80" then {
-      left_pinky: 35, left_ring: 36, left_middy: 37, left_index: 38,
-      right_index: 41, right_middy: 42, right_ring: 43, right_pinky: 44
-    } elif $kb == "go60" then {
-      left_pinky: 25, left_ring: 26, left_middy: 27, left_index: 28,
-      right_index: 31, right_middy: 32, right_ring: 33, right_pinky: 34
-    } else
-      empty
-    end;
+  # 1. HARDWARE INDEX MAP
+  # Strictly maps the exact physical matrix index to the logical finger path
+  (if $kb == "glove80" then {
+    "35": "left.pinky", "36": "left.ring", "37": "left.middy", "38": "left.index",
+    "41": "right.index", "42": "right.middy", "43": "right.ring", "44": "right.pinky"
+  } elif $kb == "go60" then {
+    "25": "left.pinky", "26": "left.ring", "27": "left.middy", "28": "left.index",
+    "31": "right.index", "32": "right.middy", "33": "right.ring", "34": "right.pinky"
+  } else {} end) as $hw_map |
 
-  # 2. THEME DICTIONARY
-  # ---------------------------------------------------------
-  def GetTheme($themeName):
-    if $themeName == "engrammer" then
-      {
-        left:  { pinky: {bg: "#ffcdd2ff", ic: "fa-align-left"}, ring: {bg: "#bbdefbff", ic: "fa-align-left"}, middy: {bg: "#dcedc8ff", ic: "fa-align-left"}, index: {bg: "#ffecb3ff", ic: "fa-align-left"} },
-        right: { pinky: {bg: "#ffcdd2ff", ic: "fa-align-right"}, ring: {bg: "#bbdefbff", ic: "fa-align-right"}, middy: {bg: "#dcedc8ff", ic: "fa-align-right"}, index: {bg: "#ffecb3ff", ic: "fa-align-right"} }
-      }
-    elif $themeName == "tailorkey" then
-      {
-        left:  { pinky: {bg: "#e57373ff", ic: "fa-align-left"}, ring: {bg: "#81c784ff", ic: "fa-align-left"}, middy: {bg: "#64b5f6ff", ic: "fa-align-left"}, index: {bg: "#ffd54fff", ic: "fa-align-left"} },
-        right: { pinky: {bg: "#e57373ff", ic: "fa-align-right"}, ring: {bg: "#81c784ff", ic: "fa-align-right"}, middy: {bg: "#64b5f6ff", ic: "fa-align-right"}, index: {bg: "#ffd54fff", ic: "fa-align-right"} }
-      }
-    else empty end;
+  # 2. THEMES DICTIONARY
+  # Add future themes as new 'elif' blocks here!
+  (if $theme == "engrammer" then {
+    left:  { pinky: {bg: "#ffcdd2", ic: "fa-align-left"}, ring: {bg: "#bbdefb", ic: "fa-align-left"}, middy: {bg: "#dcedc8", ic: "fa-align-left"}, index: {bg: "#ffecb3", ic: "fa-align-left"} },
+    right: { pinky: {bg: "#ffcdd2", ic: "fa-align-right"}, ring: {bg: "#bbdefb", ic: "fa-align-right"}, middy: {bg: "#dcedc8", ic: "fa-align-right"}, index: {bg: "#ffecb3", ic: "fa-align-right"} }
+  } elif $theme == "tailorkey" then {
+    left:  { pinky: {bg: "#e57373", ic: "fa-align-left"}, ring: {bg: "#81c784", ic: "fa-align-left"}, middy: {bg: "#64b5f6", ic: "fa-align-left"}, index: {bg: "#ffd54f", ic: "fa-align-left"} },
+    right: { pinky: {bg: "#e57373", ic: "fa-align-right"}, ring: {bg: "#81c784", ic: "fa-align-right"}, middy: {bg: "#64b5f6", ic: "fa-align-right"}, index: {bg: "#ffd54f", ic: "fa-align-right"} }
+  } else {} end) as $t |
 
-  # 3. PRE-PROCESS STATE
-  # ---------------------------------------------------------
-  GetTheme($theme) as $t |
-
+  # 3. OS SWAP LOGIC
+  # If mac is selected, safely swap the pinky and middy objects for both hands
   (if $os == "mac" then
     $t |
     .left.pinky as $lp | .left.middy as $lm |
@@ -62,29 +50,25 @@ script = """
     $t
   end) as $active_theme |
 
-  GetHardware as $hw |
-
-  {
-    "\\($hw.left_pinky)": $active_theme.left.pinky,
-    "\\($hw.left_ring)": $active_theme.left.ring,
-    "\\($hw.left_middy)": $active_theme.left.middy,
-    "\\($hw.left_index)": $active_theme.left.index,
-    "\\($hw.right_index)": $active_theme.right.index,
-    "\\($hw.right_middy)": $active_theme.right.middy,
-    "\\($hw.right_ring)": $active_theme.right.ring,
-    "\\($hw.right_pinky)": $active_theme.right.pinky
-  } as $idx_map |
-
   # 4. MUTATION ENGINE
-  # ---------------------------------------------------------
   .layers |= [
     range(length) as $layerIdx | .[$layerIdx] |
     [
       range(length) as $i | .[$i] |
-      ( $idx_map["\\($i)"] ) as $dec_update |
       
-      if $dec_update then
-        .decoration = ((.decoration // {}) + { background: $dec_update.bg, icon: $dec_update.ic })
+      # Use double-backslash in TOML to properly inject variables into JQ
+      ($hw_map["\\($i)"]) as $finger |
+      
+      if $finger then
+        # Dynamically fetch the nested style object (e.g. left.pinky)
+        ($active_theme | getpath($finger | split("."))) as $style |
+        
+        # Safely apply decoration, ensuring primitive strings don't crash the compiler
+        if type == "object" then
+          .decoration = ((.decoration // {}) + { background: $style.bg, icon: $style.ic })
+        else
+          { "value": ., "params": [], "decoration": { "background": $style.bg, "icon": $style.ic } }
+        end
       else
         .
       end
@@ -122,6 +106,7 @@ author = "moosyresearch"
 keyboards = ["go60", "glove80"]
 icon = "🌈"
 theme = "purple"
+
 
 [config]
 category = "Key Decorations & RGB"
