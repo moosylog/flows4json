@@ -307,9 +307,9 @@
     "uid": "l_cleaner",
     "title": "Layout Cleaner",
     "subtitle": "External App",
-    "description": "**Detect clutter & allows bulk delete**\nHelps you maintain lean configurations by automatically identifying \"orphans\"—unused macros, combos, hold-taps, or layers—and letting you bulk delete them safely via an intuitive UI.\nNote: Custom Defined Behaviors are ignored.\n\n## IMPORTANT:  Custom Behaviors are not supported.",
+    "description": "**Detect clutter & allows bulk delete**\nHelps you maintain lean configurations by automatically identifying \"orphans\"—unused macros, combos, hold-taps, or layers—and letting you bulk delete them safely via an intuitive UI.\nNote: Custom Defined Behaviors are ignored.\n\n## IMPORTANT:  Custom Defined Behaviors are not supported.",
     "script": "",
-    "category": "ZSA Migration",
+    "category": "Cleanup",
     "appUrl": "https://sites.google.com/view/keyboards/tools/tailorkey-toolbox/layout-cleaner",
     "manifest": {
       "author": "moosyresearch",
@@ -321,7 +321,7 @@
       "theme": "purple"
     },
     "config": {
-      "category": "ZSA Migration",
+      "category": "Cleanup",
       "num": "123"
     },
     "param": [],
