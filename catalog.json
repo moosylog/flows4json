@@ -429,9 +429,9 @@
   },
   {
     "uid": "l_oryx_swap",
-    "title": "Oryx Migration Assistant",
+    "title": "ZSA Oryx Migration",
     "subtitle": "🚀 External App",
-    "description": "Oryx Migration Assistant\n\nMigrate your ZSA ORYX Layout to MoErgo Go60 \nThis tool converts a Oryx layouts to the Layout Editor.",
+    "description": "##Oryx Migration Assistant\n\nMigrate your ZSA ORYX Layout to MoErgo Go60 \nThis tool converts a Oryx layouts to the Layout Editor.",
     "script": "",
     "category": "ZSA Migration",
     "appUrl": "https://github.com/moosylog/oma/blob/main/README.md",
