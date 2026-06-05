@@ -1,7 +1,7 @@
-uid = "macro_string"
+uid = "macro_wizard"
 type = "mutation"
 language = "us"
-title = "String Macro"
+title = "String Wizard"
 subtitle = "Fabulous Generator"
 description = """
 This creates a macro with the specified name that displays the text entered below in Configuration Options. The symbols are based on en-US language settings.
