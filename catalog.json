@@ -199,7 +199,7 @@
     "subtitle": "🚀 External App",
     "description": "Configure your RGB\r\n\r\nMore info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)",
     "script": "",
-    "category": "Key Decorations & RGB",
+    "category": "Decorations & RGB",
     "appUrl": "https://sites.google.com/view/kiilix/",
     "manifest": {
       "author": "moosyresearch",
@@ -211,7 +211,7 @@
       "theme": "yellow"
     },
     "config": {
-      "category": "Key Decorations & RGB",
+      "category": "Decorations & RGB",
       "num": "123"
     },
     "param": [],
