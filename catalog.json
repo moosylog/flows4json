@@ -509,7 +509,7 @@
       },
       {
         "id": "overwrite_macro",
-        "label": "Overwrite if exists?",
+        "label": "Allow Macro Overwrite?",
         "type": "boolean",
         "default": true
       }
