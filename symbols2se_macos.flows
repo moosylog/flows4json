@@ -106,5 +106,5 @@ icon = "🇸🇪"
 # Optional: red, green, blue, purple, yellow, orange
 theme = "purple" 
 [config]
-category = "Languages & Symbols"
+category = "Symbols"
 num = 123
