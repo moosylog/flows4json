@@ -2,7 +2,7 @@ uid = "l_hrm_tuner"
 type = "mutation"
 language = "us"
 title = "HRM Configurator ⭐⭐"
-subtitle =  "External App"
+subtitle = "🚀 External App"
 description = """
 Advanced Home-Row Mod Configurator is an **external application** that lets you bulk-edit home-row mod settings by applying best-practice presets from Sunaku and Urob, or by setting manual values, across your entire layout at once.
 
