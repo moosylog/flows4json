@@ -1,7 +1,7 @@
 uid = "mouse_layer60"
 type = "mutation"
 language = "us"
-title = "🖱️ Mouse Emulation"
+title = "Mouse Emulation"
 subtitle = "Adds Mouse Emulation Layers"
 description = """
 Turns your keyboard into a powerful mouse control system with dedicated movement and click layers.
