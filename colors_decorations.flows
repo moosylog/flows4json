@@ -13,69 +13,67 @@ Supports dynamically swapping modifiers (Pinky and Middle finger colors are swap
 # JQ SCRIPT
 # ==============================================================================
 script = """
-# 1. HARDWARE ABSTRACTION
-# ---------------------------------------------------------
-def GetHardware:
-  (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
-  if $kb == "glove80" then {
-    left_pinky: 35, left_ring: 36, left_middy: 37, left_index: 38,
-    right_index: 41, right_middy: 42, right_ring: 43, right_pinky: 44
-  } elif $kb == "go60" then {
-    left_pinky: 25, left_ring: 26, left_middy: 27, left_index: 28,
-    right_index: 31, right_middy: 32, right_ring: 33, right_pinky: 34
-  } else
-    empty
-  end;
 
-# 2. THEME DICTIONARY
-# ---------------------------------------------------------
-# To add a new theme, just add a new 'elif' block here.
-def GetTheme($themeName):
-  if $themeName == "engrammer" then
-    {
-      left:  { pinky: {bg: "#ffcdd2ff", ic: "fa-align-left"}, ring: {bg: "#bbdefbff", ic: "fa-align-left"}, middy: {bg: "#dcedc8ff", ic: "fa-align-left"}, index: {bg: "#ffecb3ff", ic: "fa-align-left"} },
-      right: { pinky: {bg: "#ffcdd2ff", ic: "fa-align-right"}, ring: {bg: "#bbdefbff", ic: "fa-align-right"}, middy: {bg: "#dcedc8ff", ic: "fa-align-right"}, index: {bg: "#ffecb3ff", ic: "fa-align-right"} }
-    }
-  elif $themeName == "tailorkey" then
-    # PLACEHOLDER: Update these with your exact TailorKey hex codes!
-    {
-      left:  { pinky: {bg: "#e57373ff", ic: "fa-align-left"}, ring: {bg: "#81c784ff", ic: "fa-align-left"}, middy: {bg: "#64b5f6ff", ic: "fa-align-left"}, index: {bg: "#ffd54fff", ic: "fa-align-left"} },
-      right: { pinky: {bg: "#e57373ff", ic: "fa-align-right"}, ring: {bg: "#81c784ff", ic: "fa-align-right"}, middy: {bg: "#64b5f6ff", ic: "fa-align-right"}, index: {bg: "#ffd54fff", ic: "fa-align-right"} }
-    }
-  else empty end;
-
-# 3. PRE-PROCESS STATE
-# ---------------------------------------------------------
-GetTheme($theme) as $t |
-
-# If OS is Mac, intercept the theme and swap Pinky/Middy objects
-(if $os == "mac" then
-  $t |
-  .left.pinky as $lp | .left.middy as $lm |
-  .right.pinky as $rp | .right.middy as $rm |
-  .left.pinky = $lm | .left.middy = $lp |
-  .right.pinky = $rm | .right.middy = $rp
-else
-  $t
-end) as $active_theme |
-
-GetHardware as $hw |
-
-# Build a fast-lookup dictionary mapping the physical hardware index to the color object
-{
-  "\\($hw.left_pinky)": $active_theme.left.pinky,
-  "\\($hw.left_ring)": $active_theme.left.ring,
-  "\\($hw.left_middy)": $active_theme.left.middy,
-  "\\($hw.left_index)": $active_theme.left.index,
-  "\\($hw.right_index)": $active_theme.right.index,
-  "\\($hw.right_middy)": $active_theme.right.middy,
-  "\\($hw.right_ring)": $active_theme.right.ring,
-  "\\($hw.right_pinky)": $active_theme.right.pinky
-} as $idx_map |
-
-# 4. MUTATION ENGINE
-# ---------------------------------------------------------
 (.keymap // .) |= (
+  
+  # 1. HARDWARE ABSTRACTION (Moved inside to prevent syntax crashes)
+  # ---------------------------------------------------------
+  def GetHardware:
+    (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
+    if $kb == "glove80" then {
+      left_pinky: 35, left_ring: 36, left_middy: 37, left_index: 38,
+      right_index: 41, right_middy: 42, right_ring: 43, right_pinky: 44
+    } elif $kb == "go60" then {
+      left_pinky: 25, left_ring: 26, left_middy: 27, left_index: 28,
+      right_index: 31, right_middy: 32, right_ring: 33, right_pinky: 34
+    } else
+      empty
+    end;
+
+  # 2. THEME DICTIONARY
+  # ---------------------------------------------------------
+  def GetTheme($themeName):
+    if $themeName == "engrammer" then
+      {
+        left:  { pinky: {bg: "#ffcdd2ff", ic: "fa-align-left"}, ring: {bg: "#bbdefbff", ic: "fa-align-left"}, middy: {bg: "#dcedc8ff", ic: "fa-align-left"}, index: {bg: "#ffecb3ff", ic: "fa-align-left"} },
+        right: { pinky: {bg: "#ffcdd2ff", ic: "fa-align-right"}, ring: {bg: "#bbdefbff", ic: "fa-align-right"}, middy: {bg: "#dcedc8ff", ic: "fa-align-right"}, index: {bg: "#ffecb3ff", ic: "fa-align-right"} }
+      }
+    elif $themeName == "tailorkey" then
+      {
+        left:  { pinky: {bg: "#e57373ff", ic: "fa-align-left"}, ring: {bg: "#81c784ff", ic: "fa-align-left"}, middy: {bg: "#64b5f6ff", ic: "fa-align-left"}, index: {bg: "#ffd54fff", ic: "fa-align-left"} },
+        right: { pinky: {bg: "#e57373ff", ic: "fa-align-right"}, ring: {bg: "#81c784ff", ic: "fa-align-right"}, middy: {bg: "#64b5f6ff", ic: "fa-align-right"}, index: {bg: "#ffd54fff", ic: "fa-align-right"} }
+      }
+    else empty end;
+
+  # 3. PRE-PROCESS STATE
+  # ---------------------------------------------------------
+  GetTheme($theme) as $t |
+
+  (if $os == "mac" then
+    $t |
+    .left.pinky as $lp | .left.middy as $lm |
+    .right.pinky as $rp | .right.middy as $rm |
+    .left.pinky = $lm | .left.middy = $lp |
+    .right.pinky = $rm | .right.middy = $rp
+  else
+    $t
+  end) as $active_theme |
+
+  GetHardware as $hw |
+
+  {
+    "\\($hw.left_pinky)": $active_theme.left.pinky,
+    "\\($hw.left_ring)": $active_theme.left.ring,
+    "\\($hw.left_middy)": $active_theme.left.middy,
+    "\\($hw.left_index)": $active_theme.left.index,
+    "\\($hw.right_index)": $active_theme.right.index,
+    "\\($hw.right_middy)": $active_theme.right.middy,
+    "\\($hw.right_ring)": $active_theme.right.ring,
+    "\\($hw.right_pinky)": $active_theme.right.pinky
+  } as $idx_map |
+
+  # 4. MUTATION ENGINE
+  # ---------------------------------------------------------
   .layers |= [
     range(length) as $layerIdx | .[$layerIdx] |
     [
@@ -83,7 +81,7 @@ GetHardware as $hw |
       ( $idx_map["\\($i)"] ) as $dec_update |
       
       if $dec_update then
-        # Safely merge our new background and icon without destroying existing text labels or text colors
+        # This safely merges the new background/icon. Existing labels/text colors are preserved.
         .decoration = ((.decoration // {}) + { background: $dec_update.bg, icon: $dec_update.ic })
       else
         .
@@ -91,6 +89,7 @@ GetHardware as $hw |
     ]
   ]
 )
+
 """
 
 # ==============================================================================
