@@ -1,0 +1,24 @@
+uid = "l_cleaner"
+type = "mutation"
+language = "us"
+title = "Layout Cleaner"
+subtitle = "External App"
+description = """
+**Detect clutter & allows bulk delete**
+Helps you maintain lean configurations by automatically identifying "orphans"—unused macros, combos, hold-taps, or layers—and letting you bulk delete them safely via an intuitive UI.
+Note: Custom Defined Behaviors are ignored.
+
+## IMPORTANT:  Custom Behaviors are not supported. 
+
+"""
+appUrl = "https://sites.google.com/view/keyboards/tools/tailorkey-toolbox/layout-cleaner"
+script = ""
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🧹"      
+# Optional: red, green, blue, purple, yellow, orange
+theme = "purple" 
+[config]
+category = "ZSA Migration"
+num = 123
