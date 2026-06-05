@@ -118,7 +118,7 @@
     "mediaUrl": "https://moosylog.github.io/flows4json/autoshift.png"
   },
   {
-    "uid": "rgb_",
+    "uid": "colors_createRGBscheme",
     "title": "PR36 Scheme Creator",
     "subtitle": "Generate schemes using decorators",
     "description": "This creates a PR36 Scheme based on your key decorators in your Device Tree section.\n\nIt's basically donig the same thing as [Kiilix](https://sites.google.com/view/kiilix/).\n\nMore info about RGB, see [this](https://sites.google.com/view/tailorkey/how-to/rgb)\n\n⚠️ **WARNING:** THIS OVERWRITES THE COMPLETE DEVICE TREE CONTENT",
