@@ -151,7 +151,7 @@ id = "mode"
 label = "Execution Mode"
 type = "select"
 options = ["apply", "delete"]
-labels = ["🎨 Apply Theme Colors", "🗑️ DELETE ALL Decorators (Clean Slate)"]
+labels = ["🎨 Apply Theme Colors", "🗑️ DELETE APPLIED Decorators"]
 default = "apply"
 
 [[param]]
