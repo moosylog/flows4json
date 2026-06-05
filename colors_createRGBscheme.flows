@@ -1,4 +1,4 @@
-uid = "rgb_"
+uid = "colors_createRGBscheme"
 type = "mutation"
 language = "en-US"
 title = "PR36 Scheme Creator"
