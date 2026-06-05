@@ -6,6 +6,8 @@ subtitle = "Visual Themes & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes. 
 
+# NOT WORKING - Work in progress
+
 Supports dynamically swapping modifiers (Pinky and Middle finger colors are swapped) for macOS users. **This targets the physical location of the keys**, meaning your home row will always be perfectly colored regardless of what letters you have mapped there.
 """
 
