@@ -6,7 +6,9 @@ subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
 
-* Includes a **Clean Slate** mode to delete all decorations across your entire layout.
+## Work in Progress but works OK
+
+* Includes a **Clean Slate** mode to delete all applied decorations across your entire layout.
 * Supports macOS modifier swapping for the home row.
 * Easily expandable inside the Developer Console by adding new signature strings!
 """
@@ -23,10 +25,14 @@ script = """
 # --- 1. COLOR PALETTE CLASS ---
 (if $theme == "engrammer" then {
   pinky: "#ffcdd2", ring: "#bbdefb", middy: "#dcedc8", index: "#ffecb3",
-  action_copy: "#fffec9", action_paste: "#e0ebf6", action_search: "#fbe6fe"
+  action_copy: "#fffec9", 
+  action_paste: "#e0ebf6", 
+  action_search: "#fbe6fe"
 } elif $theme == "tailorkey" then {
   pinky: "#fbe6fe", ring: "#e5feff", middy: "#d9f9c9", index: "#fffec9",
-  action_copy: "#fffec9", action_paste: "#e0ebf6", action_search: "#e5feff"
+  action_copy: "#fffec9", 
+  action_paste: "#e0ebf6", 
+  action_search: "#e5feff"
 } else {} end) as $pal |
 
 # --- 2. LOGICAL SEARCH MAP ---
