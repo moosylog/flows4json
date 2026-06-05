@@ -116,5 +116,5 @@ keyboards = ["go60","glove80"]
 icon = "🎨"      
 theme = "green" 
 [config]
-category = "Decorations & RGB"
+category = "Key Decorations & RGB"
 num = 124
