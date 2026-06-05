@@ -52,29 +52,26 @@ script = """
     $t
   end) as $active_theme |
 
-  # 4. MUTATION ENGINE
-  .layers |= [
-    range(length) as $layerIdx | .[$layerIdx] |
-    [
-      range(length) as $i | .[$i] |
+  # 4. MUTATION ENGINE (LAYER 0 ONLY)
+  .layers[0] |= [
+    range(length) as $i | .[$i] |
+    
+    # Use native tostring to avoid TOML string escaping traps!
+    ($hw_map[$i | tostring]) as $finger |
+    
+    if $finger then
+      # Dynamically fetch the nested style object (e.g. left.pinky)
+      ($active_theme | getpath($finger | split("."))) as $style |
       
-      # Use double-backslash in TOML to properly inject variables into JQ
-      ($hw_map["\\($i)"]) as $finger |
-      
-      if $finger then
-        # Dynamically fetch the nested style object (e.g. left.pinky)
-        ($active_theme | getpath($finger | split("."))) as $style |
-        
-        # Safely apply decoration, ensuring primitive strings don't crash the compiler
-        if type == "object" then
-          .decoration = ((.decoration // {}) + { background: $style.bg, icon: $style.ic })
-        else
-          { "value": ., "params": [], "decoration": { "background": $style.bg, "icon": $style.ic } }
-        end
+      # Safely apply decoration, ensuring primitive strings don't crash the compiler
+      if type == "object" then
+        .decoration = ((.decoration // {}) + { background: $style.bg, icon: $style.ic })
       else
-        .
+        { "value": ., "params": [], "decoration": { "background": $style.bg, "icon": $style.ic } }
       end
-    ]
+    else
+      .
+    end
   ]
 )
 """
