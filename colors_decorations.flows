@@ -101,6 +101,7 @@ script = """
         "&kp(RET)": { },
         "&kp(ESC)": { }
         "&kp(BSPC))": { icon: "fa-backspace" },
+        "&kp(SPACE))": { icon: "fa-space" },
       }
     },
     {
