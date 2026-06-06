@@ -4,9 +4,9 @@ language = "en-US"
 title = "Symbols Layer"
 subtitle = "Adds Sunaku's Symbol layer"
 description = """
-This Flow automatically injects a brand new "Symbols" layer on **Go60 or Glove80** the very bottom of your layer stack and one macro for '..'
+This adds a "Symbol" layer to your **Go60 or Glove80** layout. 
 
-It also automatically installs the required `&symb_dotdot_v1_TKZ` macro. 
+It also creates one macro, `&symb_dotdot_v1_TKZ` allowing a single key on the Symbol layer to output '..'  
 """
 # ==============================================================================
 # JQ SCRIPT
