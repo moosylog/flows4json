@@ -90,7 +90,7 @@ script = """
         "&kp(UP)": { description: "Up" },
         "&kp(DOWN)": { description: "Down" },
         "&kp(UP)": { description: "Up" },
-        "&kp(LEFT)": {  },
+        "&kp(LEFT)": { label: "" },
         "&kp(RIGHT)": { description: "Right" },
         "&kp(PG_UP)": { description: "Page Up" },
         "&kp(PG_DN)": { description: "Page Down" },
