@@ -23,8 +23,8 @@ https://zmk.dev/docs/keymaps/behaviors/mouse-emulation
 """
 
 script = """
-# ZMK Autonomous Injection Script (V5.5) - "Hardware-Safe Mouse Engine"
-# Strategy: Explicit Keyboard Detection + Non-Destructive Base Layer Injection
+# ZMK Autonomous Injection Script (V5.6) - "Hardware-Safe Mouse Engine"
+# Strategy: Explicit Keyboard Detection + Fully Populated Go60 Matrix
 
 # --- STEP 1: CAPTURE HARDWARE STRING FROM ROOT ---
 (.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
@@ -50,10 +50,12 @@ script = """
     key_count: 60,
     base_lt_idx: 58,
     mappings: [
-      [14, "&msc", "SCRL_LEFT"],  [15, "&mmv", "MOVE_UP"],    [16, "&msc", "SCRL_RIGHT"],
+      [13, "&msc", "SCRL_UP"],    [14, "&msc", "SCRL_LEFT"],  [15, "&mmv", "MOVE_UP"],    [16, "&msc", "SCRL_RIGHT"], [17, "&msc", "SCRL_DOWN"],
+      [25, "&msc", "SCRL_DOWN"],  [26, "&mmv", "MOVE_LEFT"],  [27, "&mmv", "MOVE_DOWN"],  [28, "&mmv", "MOVE_RIGHT"],
       [31, "&mo", "warp"],        [32, "&mo", "fast"],        [33, "&mo", "slow"],
       [38, "&mo", "slow"],        [39, "&mo", "fast"],        [40, "&mo", "warp"],
-      [51, "&mkp", "LCLK"],       [52, "&mkp", "RCLK"],       [57, "&mkp", "LCLK"],       [58, "&mkp", "RCLK"]
+      [50, "&mkp", "MCLK"],       [51, "&mkp", "LCLK"],       [52, "&mkp", "RCLK"],
+      [56, "&mkp", "MCLK"],       [57, "&mkp", "LCLK"],       [58, "&mkp", "RCLK"]
     ]
   } end) as $cfg |
 
