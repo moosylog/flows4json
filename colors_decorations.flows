@@ -263,7 +263,7 @@ label = "Color Theme"
 type = "select"
 options = ["engrammer", "tailorkey"]
 labels = ["Glorious Engrammer", "TailorKey"]
-default = "engrammer"
+default = "tailorkey"
 
 # ==============================================================================
 # METADATA & CONFIG
