@@ -29,7 +29,7 @@ script = """
   clipboard: "#ffecb3", app: "#ffcdd2", system: "#dcedc8", nav: "#bbdefb", select: "#e0ebf6", browser: "#fbe6fe"
 } elif $theme == "tailorkey" then {
   pinky: "#fbe6fe", ring: "#e5feff", middy: "#d9f9c9", index: "#fffec9",
-  clipboard: "#fffec9", app: "#fbe6fe", system: "#d9f9c9", nav: "#e5feff", select: "#e0ebf6", browser: "#fbe6fe"
+  clipboard: "#fffec9", app: "#fbe6fe", system: "#f8e6d7", nav: "#d9f9c9", select: "#e0ebf6", browser: "#fbe6fe"
 } else {} end) as $pal |
 
 # --- 2. DYNAMIC OS MODIFIER ---
@@ -54,6 +54,11 @@ script = """
     {
       bg: $pal.app,
       items: {
+        "&kp(__MOD__(Z))": { icon: "fa-undo", label: "Undo" },
+        "&kp(__MOD__(Y))": { icon: "fa-redo", label: "Redo" },
+        "&kp(LS(__MOD__(Z)))": { icon: "fa-redo", label: "Redo" },
+        "&kp(__MOD__(LS(Z)))": { icon: "fa-redo", label: "Redo" }
+
         "&kp(__MOD__(S))": { icon: "fa-save", label: "Save" },
         "&kp(LG(Q))": { icon: "fa-power-off", label: "Quit App" },
         "&kp(LA(F4))": { icon: "fa-power-off", label: "Quit App" },
@@ -79,7 +84,14 @@ script = """
     {
       bg: $pal.nav,
       items: {
-        "&kp(HOME)": { icon: "fa-step-backward", label: "Line Start" },
+        "&kp(HOME)": { description:  "Home" },
+        "&kp(END)": { description "End" },
+        "&kp(UP)": { description "Up" },
+        "&kp(Down)": { description "Down" },
+        "&kp(UP)": { description "Up" },
+        "&kp(LEFT)": { description "Left" },
+        "&kp(RIGHT)": { description "Right" },
+
         "&kp(LG(LEFT))": { icon: "fa-step-backward", label: "Line Start" },
         "&kp(END)": { icon: "fa-step-forward", label: "Line End" },
         "&kp(LG(RIGHT))": { icon: "fa-step-forward", label: "Line End" },
