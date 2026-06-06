@@ -7,7 +7,7 @@ description = """
 
 Automatically assigns key decorators based on key values, selected visual theme, and your operating system.
 
-# Work in progress but really cool!!  Try it! Beta!  🏳️‍🌈 left3
+# Work in progress but really cool!!  Try it! Beta!  🏳️‍🌈 left4
 
 * **Home Row** styles apply exclusively to Layer 0.
 * **Smart Shortcuts** (like Copy, Paste, Search, and Navigation) are automatically detected across *all* layers and assigned matching colors, labels, and icons.
@@ -90,7 +90,7 @@ script = """
         "&kp(UP)": { description: "Up" },
         "&kp(DOWN)": { description: "Down" },
         "&kp(UP)": { description: "Up" },
-        "&kp(LEFT)": { label: "" },
+        "&kp(LEFT)": {  },
         "&kp(RIGHT)": { description: "Right" },
         "&kp(PG_UP)": { description: "Page Up" },
         "&kp(PG_DN)": { description: "Page Down" },
