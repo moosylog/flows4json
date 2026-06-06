@@ -44,11 +44,7 @@ script = """
       items: {
         "&kp(__MOD__(C))": { icon: "fa-copy", label: "Copy" },
         "&kp(__MOD__(V))": { icon: "fa-paste", label: "Paste" },
-        "&kp(__MOD__(X))": { icon: "fa-cut", label: "Cut" },
-        "&kp(__MOD__(Z))": { icon: "fa-undo", label: "Undo" },
-        "&kp(__MOD__(Y))": { icon: "fa-redo", label: "Redo" },
-        "&kp(LS(__MOD__(Z)))": { icon: "fa-redo", label: "Redo" },
-        "&kp(__MOD__(LS(Z)))": { icon: "fa-redo", label: "Redo" }
+        "&kp(__MOD__(X))": { icon: "fa-cut", label: "Cut" }
       }
     },
     {
@@ -57,7 +53,7 @@ script = """
         "&kp(__MOD__(Z))": { icon: "fa-undo", label: "Undo" },
         "&kp(__MOD__(Y))": { icon: "fa-redo", label: "Redo" },
         "&kp(LS(__MOD__(Z)))": { icon: "fa-redo", label: "Redo" },
-        "&kp(__MOD__(LS(Z)))": { icon: "fa-redo", label: "Redo" }
+        "&kp(__MOD__(LS(Z)))": { icon: "fa-redo", label: "Redo" },
 
         "&kp(__MOD__(S))": { icon: "fa-save", label: "Save" },
         "&kp(LG(Q))": { icon: "fa-power-off", label: "Quit App" },
