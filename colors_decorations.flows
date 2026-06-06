@@ -85,12 +85,12 @@ script = """
       bg: $pal.nav,
       items: {
         "&kp(HOME)": { description:  "Home" },
-        "&kp(END)": { description "End" },
-        "&kp(UP)": { description "Up" },
-        "&kp(Down)": { description "Down" },
-        "&kp(UP)": { description "Up" },
-        "&kp(LEFT)": { description "Left" },
-        "&kp(RIGHT)": { description "Right" },
+        "&kp(END)": { description: "End" },
+        "&kp(UP)": { description: "Up" },
+        "&kp(Down)": { description: "Down" },
+        "&kp(UP)": { description: "Up" },
+        "&kp(LEFT)": { description: "Left" },
+        "&kp(RIGHT)": { description: "Right" },
 
         "&kp(LG(LEFT))": { icon: "fa-step-backward", label: "Line Start" },
         "&kp(END)": { icon: "fa-step-forward", label: "Line End" },
