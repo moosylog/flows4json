@@ -160,7 +160,6 @@ script = """
         "&kp(LC(TAB))": { icon: "fa-chevron-right", label: "Next Tab" },
         "&kp(LS(LC(TAB)))": { icon: "fa-chevron-left", label: "Prev Tab" },
         "&kp(__MOD__(R))": { icon: "fa-sync", label: "Refresh" },
-        "&kp(F5)": { icon: "fa-sync", label: "Refresh", os: "win" },
         "&kp(LS(__MOD__(R)))": { icon: "fa-sync-alt", label: "Hard Refresh" },
         "&kp(LC(F5))": { icon: "fa-sync-alt", label: "Hard Refresh", os: "win" }
       }
