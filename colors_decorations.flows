@@ -77,8 +77,8 @@ script = """
         "&kp(LA(ESC))": { icon: "fa-window-restore", label: "Next Win" },
         "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win"},
 
-        "&kp(RET)": { description:  "Enter / Return" },
-        "&kp(ESC)": { label:  "" }
+        "&kp(RET)": {  },
+        "&kp(ESC)": {  }
       }
     },
     {
@@ -88,10 +88,10 @@ script = """
         "&kp(END)": {  },
         "&kp(UP)": {   },
         "&kp(DOWN)": {  },
-        "&kp(LEFT)": { label:  ""  },
-        "&kp(RIGHT)": { label:  "" },
-        "&kp(PG_UP)": { description: "Page Up" },
-        "&kp(PG_DN)": { description: "Page Down" },
+        "&kp(LEFT)": {  },
+        "&kp(RIGHT)": {  },
+        "&kp(PG_UP)": {  },
+        "&kp(PG_DN)": {  },
 
         "&kp(LG(LEFT))": { icon: "fa-step-backward", label: "Line Start" },
         "&kp(END)": { icon: "fa-step-forward", label: "Line End" },
