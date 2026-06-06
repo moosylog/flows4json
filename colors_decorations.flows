@@ -76,7 +76,7 @@ script = """
         "&kp(LA(TAB))": { icon: "fa-exchange-alt", label: "Switch App" },
         "&kp(LG(TAB))": { icon: "fa-exchange-alt", label: "Switch App" },
         "&kp(LA(ESC))": { icon: "fa-window-restore", label: "Next Win" },
-        "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win",
+        "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win"},
 
         "&kp(ENTER)": { description:  "Enter / Return" },
         "&kp(ESC)": { description:  "" }
