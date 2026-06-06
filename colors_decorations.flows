@@ -54,6 +54,9 @@ script = """
         "&kp(__MOD__(Y))": { icon: "fa-redo", label: "Redo" },
         "&kp(LS(__MOD__(Z)))": { icon: "fa-redo", label: "Redo" },
         "&kp(__MOD__(LS(Z)))": { icon: "fa-redo", label: "Redo" },
+        "&kp(__MOD__(F))": { icon: "fa-search", label: "Find" }
+        "&kp(__MOD__(G))": { icon: "fa-search-plus", label: "Next" }
+        "&kp(__MOD__(LS(G)))": { icon: "fa-search-minus", label: "Prev" },
 
         "&kp(__MOD__(S))": { icon: "fa-save", label: "Save" },
         "&kp(LG(Q))": { icon: "fa-power-off", label: "Quit App" },
@@ -73,8 +76,12 @@ script = """
         "&kp(LA(TAB))": { icon: "fa-exchange-alt", label: "Switch App" },
         "&kp(LG(TAB))": { icon: "fa-exchange-alt", label: "Switch App" },
         "&kp(LA(ESC))": { icon: "fa-window-restore", label: "Next Win" },
-        "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win" },
-        "&kp(__MOD__(F))": { icon: "fa-search", label: "Find" }
+        "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win",
+
+        "&kp(ENTER)": { description:  "Enter / Return" },
+        "&kp(ESC)": {  }
+
+
       }
     },
     {
@@ -83,10 +90,12 @@ script = """
         "&kp(HOME)": { description:  "Home" },
         "&kp(END)": { description: "End" },
         "&kp(UP)": { description: "Up" },
-        "&kp(Down)": { description: "Down" },
+        "&kp(DOWN)": { description: "Down" },
         "&kp(UP)": { description: "Up" },
         "&kp(LEFT)": { description: "Left" },
         "&kp(RIGHT)": { description: "Right" },
+        "&kp(PG_UP)": { description: "Page Up" },
+        "&kp(PG_DN)": { description: "Page Down" },
 
         "&kp(LG(LEFT))": { icon: "fa-step-backward", label: "Line Start" },
         "&kp(END)": { icon: "fa-step-forward", label: "Line End" },
