@@ -224,19 +224,22 @@ end) as $homerow_theme |
               end
             else . end) as $raw_label |
             
-            (if $raw_label != null then ($raw_label | tostring) else "" end) as $fallback_label |
-            ($target_style.label // $fallback_label) as $final_label |
-            
-            # Compile the decoration payload, explicitly stripping any missing or blank properties
-            (
-              {
-                background: $target_style.background,
-                color: $target_style.color,
-                icon: $target_style.icon,
-                description: $target_style.description,
-                label: $final_label
-              } | with_entries(select(.value != null and .value != ""))
-            ) as $new_dec |
+          # If we have a raw label, cast it to a string. Otherwise, leave it as null.
+          (if $raw_label != null then ($raw_label | tostring) else null end) as $safe_raw_label |
+          
+          # Prefer the custom label, fallback to the safe raw label
+          ($target_style.label // $safe_raw_label) as $final_label |
+          
+          # Compile the decoration payload, explicitly stripping any missing or blank properties
+          (
+            {
+              background: $target_style.background,
+              color: $target_style.color,
+              icon: $target_style.icon,
+              description: $target_style.description,
+              label: $final_label
+            } | with_entries(select(.value != null and .value != ""))
+          ) as $new_dec |
             
             # Apply the dynamic payload securely
             if type == "object" then
