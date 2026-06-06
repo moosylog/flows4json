@@ -143,7 +143,7 @@
   },
   {
     "uid": "theme_colors",
-    "title": "Smart Theme Colorizer 1",
+    "title": "Smart Theme Colorizer 🌈",
     "subtitle": "Visual Themes, Macros & OS Swaps",
     "description": "Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.\r\n\r\n## Work in Progress but works OK\r\n\r\n* Includes a **Clean Slate** mode to delete all applied decorations across your entire layout.\r\n* Supports macOS modifier swapping for the home row.\r\n* Easily expandable inside the Developer Console by adding new signature strings!",
     "script": "",
