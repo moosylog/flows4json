@@ -1,7 +1,7 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer 🌈"
+title = "Smart Theme Colorizer 🌈🌈"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
