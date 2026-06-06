@@ -79,9 +79,7 @@ script = """
         "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win",
 
         "&kp(ENTER)": { description:  "Enter / Return" },
-        "&kp(ESC)": {icon: ""  }
-
-
+        "&kp(ESC)": { description:  "" }
       }
     },
     {
