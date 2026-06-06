@@ -1,16 +1,14 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer 🌈3"
+title = "Smart Theme Colorizer 🌈"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
 
-## Work in Progress but works OK
-
 * Includes a **Clean Slate** mode to delete all applied decorations across your entire layout.
-* Supports macOS modifier swapping for the home row.
-* Easily expandable inside the Developer Console by adding new signature strings!
+* Home Row styles apply ONLY to Layer 0.
+* Macro shortcuts (Copy, Paste, Search) are styled globally across ALL layers!
 """
 
 # ==============================================================================
@@ -34,30 +32,30 @@ script = """
 (if $os == "mac" then "LG" else "LC" end) as $mod |
 
 # --- 3. CATEGORIZED SEARCH MAP ---
-# Use the $MOD placeholder safely without worrying about TOML backslash escaping!
+# Use the __MOD__ placeholder to safely inject Command or Control
 [
   {
     bg: $pal.clipboard,
     items: {
-      "&kp($MOD(C))": { icon: "fa-copy", label: "Copy" },
-      "&kp($MOD(V))": { icon: "fa-paste", label: "Paste" },
-      "&kp($MOD(X))": { icon: "fa-cut", label: "Cut" },
-      "&kp($MOD(Z))": { icon: "fa-undo", label: "Undo" },
-      "&kp($MOD(Y))": { icon: "fa-redo", label: "Redo" },
-      "&kp(LS($MOD(Z)))": { icon: "fa-redo", label: "Redo" },
-      "&kp($MOD(LS(Z)))": { icon: "fa-redo", label: "Redo" }
+      "&kp(__MOD__(C))": { icon: "fa-copy", label: "Copy" },
+      "&kp(__MOD__(V))": { icon: "fa-paste", label: "Paste" },
+      "&kp(__MOD__(X))": { icon: "fa-cut", label: "Cut" },
+      "&kp(__MOD__(Z))": { icon: "fa-undo", label: "Undo" },
+      "&kp(__MOD__(Y))": { icon: "fa-redo", label: "Redo" },
+      "&kp(LS(__MOD__(Z)))": { icon: "fa-redo", label: "Redo" },
+      "&kp(__MOD__(LS(Z)))": { icon: "fa-redo", label: "Redo" }
     }
   },
   {
     bg: $pal.app,
     items: {
-      "&kp($MOD(S))": { icon: "fa-save", label: "Save" },
+      "&kp(__MOD__(S))": { icon: "fa-save", label: "Save" },
       "&kp(LG(Q))": { icon: "fa-power-off", label: "Quit App" },
       "&kp(LA(F4))": { icon: "fa-power-off", label: "Quit App" },
-      "&kp($MOD(W))": { icon: "fa-times", label: "Close" },
-      "&kp($MOD(N))": { icon: "fa-plus", label: "New" },
-      "&kp($MOD(O))": { icon: "fa-folder-open", label: "Open" },
-      "&kp($MOD(P))": { icon: "fa-print", label: "Print" },
+      "&kp(__MOD__(W))": { icon: "fa-times", label: "Close" },
+      "&kp(__MOD__(N))": { icon: "fa-plus", label: "New" },
+      "&kp(__MOD__(O))": { icon: "fa-folder-open", label: "Open" },
+      "&kp(__MOD__(P))": { icon: "fa-print", label: "Print" },
       "&kp(LG(H))": { icon: "fa-eye-slash", label: "Hide App" },
       "&kp(LG(DOWN))": { icon: "fa-eye-slash", label: "Min App" }
     }
@@ -70,7 +68,7 @@ script = """
       "&kp(LG(TAB))": { icon: "fa-exchange-alt", label: "Switch App" },
       "&kp(LA(ESC))": { icon: "fa-window-restore", label: "Next Win" },
       "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win" },
-      "&kp($MOD(F))": { icon: "fa-search", label: "Find" }
+      "&kp(__MOD__(F))": { icon: "fa-search", label: "Find" }
     }
   },
   {
@@ -93,7 +91,7 @@ script = """
   {
     bg: $pal.select,
     items: {
-      "&kp($MOD(A))": { icon: "fa-object-group", label: "Select All" },
+      "&kp(__MOD__(A))": { icon: "fa-object-group", label: "Select All" },
       "&kp(LS(HOME))": { icon: "fa-outdent", label: "Sel Start" },
       "&kp(LS(LG(LEFT)))": { icon: "fa-outdent", label: "Sel Start" },
       "&kp(LS(END))": { icon: "fa-indent", label: "Sel End" },
@@ -107,17 +105,18 @@ script = """
   {
     bg: $pal.browser,
     items: {
-      "&kp(LS($MOD(T)))": { icon: "fa-history", label: "Reopen Tab" },
+      "&kp(LS(__MOD__(T)))": { icon: "fa-history", label: "Reopen Tab" },
       "&kp(LC(TAB))": { icon: "fa-chevron-right", label: "Next Tab" },
       "&kp(LS(LC(TAB)))": { icon: "fa-chevron-left", label: "Prev Tab" },
-      "&kp($MOD(R))": { icon: "fa-sync", label: "Refresh" },
+      "&kp(__MOD__(R))": { icon: "fa-sync", label: "Refresh" },
       "&kp(F5)": { icon: "fa-sync", label: "Refresh" },
-      "&kp(LS($MOD(R)))": { icon: "fa-sync-alt", label: "Hard Refresh" },
+      "&kp(LS(__MOD__(R)))": { icon: "fa-sync-alt", label: "Hard Refresh" },
       "&kp(LC(F5))": { icon: "fa-sync-alt", label: "Hard Refresh" }
     }
   }
 ] 
-| map(.bg as $bg | .items | with_entries(.key |= gsub("\\\\$MOD"; $mod) | .value.background = $bg)) | add as $logical_map |
+| map(.bg as $bg | .items | with_entries(.key |= gsub("__MOD__"; $mod) | .value.background = $bg)) | add as $logical_map |
+
 
 # =========================================================
 # ⚙️ INTERNAL ENGINE 
@@ -150,7 +149,7 @@ end) as $homerow_theme |
 # --- MUTATION ENGINE ---
 (.keymap // .) |= (
   
-  # --- DEEP SEARCH FLATTENER (Now completely Type-Safe) ---
+  # --- DEEP SEARCH FLATTENER (Completely Type-Safe) ---
   def GetSignature:
     if type == "object" and .value != null then
       if (.params | type == "array" and length > 0) then
@@ -172,11 +171,11 @@ end) as $homerow_theme |
       [
         range(length) as $keyIdx | .[$keyIdx] |
         
-        # A. Resolve Physical Home Row Style (Layer 0 Only)
+        # A. Resolve Physical Home Row Style (Layer 0 ONLY)
         (if $layerIdx == 0 then $hw_map[$keyIdx | tostring] else null end) as $finger_path |
         (if $finger_path then ($homerow_theme | getpath($finger_path | split("."))) else null end) as $physical_style |
         
-        # B. Resolve Logical Search Style (All Layers)
+        # B. Resolve Logical Search Style (ALL Layers)
         (GetSignature) as $sig |
         ($logical_map[$sig]) as $logical_style |
         
@@ -187,11 +186,9 @@ end) as $homerow_theme |
         
         if $target_style then
           
-          # Smart Label Extraction (Fallback if no explicit label is given)
+          # Smart Label Extraction (Safely uses the ? operator to prevent Null crashes on empty keys)
           (if type == "object" then
-            if .params[1] != null then (.params[1].value // .params[1])
-            elif .params[0] != null then (.params[0].value // .params[0])
-            else .value end | tostring
+            (.params[1]?.value // .params[1]? // .params[0]?.value // .params[0]? // .value) | tostring
           else . | tostring end) as $fallback_label |
           
           ($target_style.label // $fallback_label) as $final_label |
