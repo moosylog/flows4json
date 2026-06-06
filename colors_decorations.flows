@@ -1,7 +1,7 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer 🌈5"
+title = "Smart Theme Colorizer 🌈"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
@@ -149,11 +149,12 @@ end) as $homerow_theme |
 # --- MUTATION ENGINE ---
 (.keymap // .) |= (
   
-  # --- DEEP SEARCH FLATTENER (Completely Type-Safe) ---
+  # --- DEEP SEARCH FLATTENER (Completely Type-Safe & Null-Proof) ---
   def GetSignature:
     if type == "object" and .value != null then
-      if (.params | type == "array" and length > 0) then
-        (.value | tostring) + "(" + (.params | map(GetSignature) | join(",")) + ")"
+      (.params // []) as $p |
+      if ($p | length > 0) then
+        (.value | tostring) + "(" + ($p | map(GetSignature) | join(",")) + ")"
       else
         (.value | tostring)
       end
@@ -163,65 +164,70 @@ end) as $homerow_theme |
 
   if $mode == "delete" then
     # OVERRIDE: Strip ALL decorators from EVERY key on ALL layers
-    .layers |= map(map(if type == "object" then del(.decoration) else . end))
+    if .layers then
+      .layers |= map(map(if type == "object" then del(.decoration) else . end))
+    else . end
   else
     # --- APPLY STYLES ---
-    .layers |= [
-      range(length) as $layerIdx | .[$layerIdx] |
-      [
-        range(length) as $keyIdx | .[$keyIdx] |
-        
-        # A. Resolve Physical Home Row Style (Layer 0 ONLY)
-        (if $layerIdx == 0 then $hw_map[$keyIdx | tostring] else null end) as $finger_path |
-        (if $finger_path then ($homerow_theme | getpath($finger_path | split("."))) else null end) as $physical_style |
-        
-        # B. Resolve Logical Search Style (ALL Layers)
-        (GetSignature) as $sig |
-        ($logical_map[$sig]) as $logical_style |
-        
-        # C. Priority logic (Logical Macros override Home Row colors)
-        (if $logical_style then $logical_style
-         elif $physical_style then $physical_style
-         else null end) as $target_style |
-        
-        if $target_style then
+    if .layers then
+      .layers |= [
+        range(length) as $layerIdx | .[$layerIdx] |
+        [
+          range(length) as $keyIdx | .[$keyIdx] |
           
-          # Smart Label Extraction (Safely handles empty arrays preventing null pointer crashes)
-          (if type == "object" then
-            (.params // []) as $p |
-            if ($p | length > 1) then
-              (if ($p[1] | type == "object") then ($p[1].value // $p[1]) else $p[1] end)
-            elif ($p | length > 0) then
-              (if ($p[0] | type == "object") then ($p[0].value // $p[0]) else $p[0] end)
+          # A. Resolve Physical Home Row Style (Layer 0 ONLY)
+          (if $layerIdx == 0 then $hw_map[$keyIdx | tostring] else null end) as $finger_path |
+          (if $finger_path then ($homerow_theme | getpath($finger_path | split("."))) else null end) as $physical_style |
+          
+          # B. Resolve Logical Search Style (ALL Layers)
+          (GetSignature) as $sig |
+          ($logical_map[$sig]) as $logical_style |
+          
+          # C. Priority logic (Logical Macros override Home Row colors)
+          (if $logical_style then $logical_style
+           elif $physical_style then $physical_style
+           else null end) as $target_style |
+          
+          if $target_style then
+            
+            # Smart Label Extraction (Safely handles empty arrays preventing null pointer crashes)
+            (if type == "object" then
+              (.params // []) as $p |
+              if ($p | length > 1) then
+                (if ($p[1] | type == "object") then ($p[1].value // $p[1]) else $p[1] end)
+              elif ($p | length > 0) then
+                (if ($p[0] | type == "object") then ($p[0].value // $p[0]) else $p[0] end)
+              else
+                .value
+              end
+            else . end) as $raw_label |
+            
+            (if $raw_label != null then ($raw_label | tostring) else "" end) as $fallback_label |
+            ($target_style.label // $fallback_label) as $final_label |
+            
+            # Compile the decoration payload, explicitly stripping any missing or blank properties
+            (
+              {
+                background: $target_style.background,
+                color: $target_style.color,
+                icon: $target_style.icon,
+                description: $target_style.description,
+                label: $final_label
+              } | with_entries(select(.value != null and .value != ""))
+            ) as $new_dec |
+            
+            # Apply the dynamic payload securely
+            if type == "object" then
+              .decoration = ((.decoration // {}) + $new_dec)
             else
-              .value
-            end | tostring
-          else . | tostring end) as $fallback_label |
-          
-          ($target_style.label // $fallback_label) as $final_label |
-          
-          # Compile the decoration payload, explicitly stripping any missing or blank properties
-          (
-            {
-              background: $target_style.background,
-              color: $target_style.color,
-              icon: $target_style.icon,
-              description: $target_style.description,
-              label: $final_label
-            } | with_entries(select(.value != null and .value != ""))
-          ) as $new_dec |
-          
-          # Apply the dynamic payload securely
-          if type == "object" then
-            .decoration = ((.decoration // {}) + $new_dec)
+              { "value": ., "params": [], "decoration": $new_dec }
+            end
           else
-            { "value": ., "params": [], "decoration": $new_dec }
+            .
           end
-        else
-          .
-        end
+        ]
       ]
-    ]
+    else . end
   end
 )
 """
