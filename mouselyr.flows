@@ -5,26 +5,20 @@ title = "Mouse Emulation"
 subtitle = "Adds Mouse Emulation Layers"
 description = """
 Turns your keyboard into a powerful mouse control system with dedicated movement and click layers.
-
-This example showcases **Keyboard Mouse Emulation Behaviors** — including cursor movement, scrolling, and mouse button presses — powered by the Layout Editor’s built-in (native) Behaviors and Input Listeners.
-
-✅ Enable HID_POINTING in Advanced Configuration
-
-✅ First-time users clear all Bluetooth profiles and re-pair with their devices.
-
-This example draws from Glorious Engrammer / TailorKey.
-We’d like to acknowledge Sunaku and Moosy for their support and contributions to the Glove80 community.
-
-🔍 For more details, please visit:
-https://zmk.dev/docs/keymaps/behaviors/mouse-emulation
-
+Adds smooth cursor control, scrolling, and click actions directly from your keys.
+Includes multiple speed modes so you can switch between precise movement and fast navigation.
+Designed for *Go60* and *Glove80* to give you full mouse control without touching a physical mouse.
+Lets you temporarily activate mouse mode for quick interactions and productivity tasks.
+Supports scroll, movement, and click behaviors all in one unified control system.
+Built for efficiency when coding, designing, or navigating without leaving the keyboard.
+Keeps controls intuitive while giving you advanced multi-speed cursor handling.
 
 🚩 To turn it on, you manually add a layer switch using &to or &tog or &layer.
 """
 
 script = """
-# ZMK Autonomous Injection Script (V5.4) - "Hardware-Safe Mouse Engine"
-# Strategy: Explicit Keyboard Property Detection
+# ZMK Autonomous Injection Script (V5.5) - "Hardware-Safe Mouse Engine"
+# Strategy: Explicit Keyboard Detection + Non-Destructive Base Layer Injection
 
 # --- STEP 1: CAPTURE HARDWARE STRING FROM ROOT ---
 (.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
@@ -34,7 +28,7 @@ script = """
   # --- STEP 2: BUILD HARDWARE-SPECIFIC ARRAYS ---
   (if $kb == "glove80" then {
     key_count: 80,
-    base_lt: [73, "RET"],
+    base_lt_idx: 73,
     mappings: [
       [24, "&msc", "SCRL_LEFT"],  [25, "&mmv", "MOVE_UP"],    [26, "&msc", "SCRL_RIGHT"],
       [29, "&msc", "SCRL_LEFT"],  [30, "&msc", "SCRL_UP"],    [31, "&msc", "SCRL_DOWN"],  [32, "&msc", "SCRL_RIGHT"],
@@ -48,7 +42,7 @@ script = """
     ]
   } else {
     key_count: 60,
-    base_lt: [58, "SPACE"],
+    base_lt_idx: 58,
     mappings: [
       [14, "&msc", "SCRL_LEFT"],  [15, "&mmv", "MOVE_UP"],    [16, "&msc", "SCRL_RIGHT"],
       [31, "&mo", "warp"],        [32, "&mo", "fast"],        [33, "&mo", "slow"],
@@ -77,14 +71,23 @@ script = """
   (.layer_names | index("MouseFast")) as $idx_fast |
   (.layer_names | index("MouseWarp")) as $idx_warp |
 
-  # --- STEP 5: LAYER-TAP INJECTION ON BASE LAYER ---
-  .layers[0][$cfg.base_lt[0]] = {
-    "value": "&lt",
-    "params": [
-      {"value": $idx_mouse, "params": []},
-      {"value": $cfg.base_lt[1], "params": []}
-    ]
-  } |
+  # --- STEP 5: NON-DESTRUCTIVE LAYER-TAP INJECTION ON BASE LAYER ---
+  (
+    .layers[0][$cfg.base_lt_idx] as $target_key |
+    
+    # Only upgrade the key if it is a simple &kp so we don't break custom Hold-Taps/Macros
+    if $target_key.value == "&kp" then
+      .layers[0][$cfg.base_lt_idx] = {
+        "value": "&lt",
+        "params": [
+          {"value": $idx_mouse, "params": []},
+          $target_key.params[0] # Dynamically reuse their existing keycode!
+        ]
+      } + (if $target_key.decoration then {decoration: $target_key.decoration} else {} end)
+    else
+      .
+    end
+  ) |
 
   # --- STEP 6: CONDITIONAL KEYMAP INJECTION ---
   reduce $cfg.mappings[] as $b (.;
