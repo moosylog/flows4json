@@ -48,7 +48,7 @@ script = """
         "&kp(__MOD__(C))": { icon: "fa-copy", label: "Copy" },
         "&kp(__MOD__(V))": { icon: "fa-paste", label: "Paste" },
         "&kp(__MOD__(X))": { icon: "fa-cut", label: "Cut" },
-        "&kp(__MOD__(A))": { icon: "fa-object-group", label: "Select All" },
+        "&kp(__MOD__(A))": { label: "Select All" },
         "&kp(__MOD__(Z))": { icon: "fa-undo", label: "Undo" },
         "&kp(__MOD__(Y))": { icon: "fa-redo", label: "Redo", os: "win" },
         "&kp(LS(__MOD__(Z)))": { icon: "fa-redo", label: "Redo" },
