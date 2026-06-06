@@ -94,7 +94,6 @@ script = """
         "&kp(PG_DN)": {  },
 
         "&kp(LG(LEFT))": { icon: "fa-step-backward", label: "Line Start" },
-        "&kp(END)": { icon: "fa-step-forward", label: "Line End" },
         "&kp(LG(RIGHT))": { icon: "fa-step-forward", label: "Line End" },
         "&kp(LC(HOME))": { icon: "fa-fast-backward", label: "Doc Top" },
         "&kp(LG(UP))": { icon: "fa-fast-backward", label: "Doc Top" },
