@@ -4,7 +4,7 @@ language = "en-US"
 title = "Symbols Layer"
 subtitle = "Adds Sunaku's Symbol layer"
 description = """
-This Flow automatically injects a brand new "Symbols_Flows" layer on **Go60 or Glove80** the very bottom of your layer stack and one macro for '..'
+This Flow automatically injects a brand new "Symbols" layer on **Go60 or Glove80** the very bottom of your layer stack and one macro for '..'
 
 It also automatically installs the required `&symb_dotdot_v1_TKZ` macro. 
 """
@@ -13,7 +13,7 @@ It also automatically installs the required `&symb_dotdot_v1_TKZ` macro.
 # ==============================================================================
 script = """
 # --- CONFIGURATION CONSTANTS ---
-"Symbols_Flows" as $layer_name |
+"Symbols" as $layer_name |
 "&symb_dotdot_v1_TKZ" as $macro_name |
 
 # 1. Capture hardware type
