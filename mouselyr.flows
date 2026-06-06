@@ -6,11 +6,11 @@ subtitle = "Adds Mouse Emulation Layers"
 description = """
 Turns your keyboard into a powerful mouse control system with dedicated movement and click layers.
 🖱️  Mouse Emulation Example (using Layout Editor’s built-in capabilities)
-This **example showcases Mouse Emulation Behaviors** — including cursor movement, scrolling, and mouse button presses — powered by the Layout Editor’s built-in (native) Behaviors and Input Listeners.
+This example showcases Mouse Emulation Behaviors — including cursor movement, scrolling, and mouse button presses — powered by the Layout Editor’s built-in (native) Behaviors and Input Listeners.
 
-✅ Enable HID_POINTING in Advanced Configuration
+✅ **Enable HID_POINTING in Advanced Configuration**
 
-✅ First-time users clear all Bluetooth profiles and re-pair with their devices.
+✅ **First-time users clear all Bluetooth profiles and re-pair with their devices.**
 
 This example draws from Glorious Engrammer / TailorKey.
 We’d like to acknowledge Sunaku and Moosy for their support and contributions to the Glove80 community.
