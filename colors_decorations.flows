@@ -1,7 +1,7 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer 🌈"
+title = "Smart Theme Colorizer 🌈1"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
@@ -16,7 +16,6 @@ Colors your physical home row keys based on selected visual themes, and searches
 # ==============================================================================
 # JQ SCRIPT
 # ==============================================================================
-# Switched to TOML literal strings (''') so backslash escaping is ignored!
 script = '''
 # =========================================================
 # 🛠️ USER CONFIGURATION ZONE 
@@ -147,21 +146,23 @@ else
   }
 end) as $homerow_theme |
 
-# --- DEEP SEARCH FLATTENER (HOISTED) ---
-def GetSignature:
-  if type == "string" then .
-  elif type == "object" and .value then
-    if (.params | type == "array" and length > 0) then
-      .value + "(" + (.params | map(GetSignature) | join(",")) + ")"
-    else
-      .value
-    end
-  else
-    ""
-  end;
-
 # --- MUTATION ENGINE ---
 (.keymap // .) |= (
+  
+  # --- DEEP SEARCH FLATTENER ---
+  # Safely scoped inside the mutation block
+  def GetSignature:
+    if type == "string" then .
+    elif type == "object" and .value then
+      if (.params | type == "array" and length > 0) then
+        .value + "(" + (.params | map(GetSignature) | join(",")) + ")"
+      else
+        .value
+      end
+    else
+      ""
+    end;
+
   if $mode == "delete" then
     # OVERRIDE: Strip ALL decorators from EVERY key on ALL layers
     .layers |= map(map(if type == "object" then del(.decoration) else . end))
