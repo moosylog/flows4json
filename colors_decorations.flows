@@ -98,8 +98,9 @@ script = """
         "&kp(LG(DOT))": { icon: "fa-smile", label: "Emoji", os: "win" },
         "&kp(LC(LG(SPACE)))": { icon: "fa-smile", label: "Emoji", os: "mac" },
 
-        "&kp(RET)": { description:  "Enter / Return" },
-        "&kp(ESC)": { label:  "" }
+        "&kp(RET)": { },
+        "&kp(ESC)": { }
+        "&kp(BSPC))": { icon: "fa-backspace" },
       }
     },
     {
@@ -127,9 +128,9 @@ script = """
         "&kp(LC(RIGHT))": { icon: "fa-angle-double-right", label: "Next Word", os: "win" },
         "&kp(LA(RIGHT))": { icon: "fa-angle-double-right", label: "Next Word", os: "mac" },
 
-        "&kp(LC(BSPC))": { icon: "fa-backspace", label: "Del Word", os: "win" },
-        "&kp(LA(BSPC))": { icon: "fa-backspace", label: "Del Word", os: "mac" },
-        "&kp(LG(BSPC))": { icon: "fa-times-circle", label: "Del Line", os: "mac" }
+        "&kp(LC(BSPC))": {  label: "Del Word", os: "win" },
+        "&kp(LA(BSPC))": {  label: "Del Word", os: "mac" },
+        "&kp(LG(BSPC))": {  label: "Del Line", os: "mac" }
       }
     },
     {
