@@ -1,7 +1,7 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer 🌈"
+title = "Smart Theme Colorizer"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Automatically assigns key decorators based on key values, selected visual theme, and your operating system.
