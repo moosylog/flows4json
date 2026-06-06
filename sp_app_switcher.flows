@@ -1,0 +1,89 @@
+uid = "app_switcher_macro"
+type = "mutation"
+language = "en-US"
+title = "Alt-Tab App Switcher 🔄"
+subtitle = "Simplify Task Switching"
+description = """
+Alt-Tab or the tab switcher is a keyboard shortcut used to quickly toggle between open applications or windows.
+This function can also be assigned to a single key using a macro, making switching between tasks even more efficient.
+
+This flow automatically generates the `&AppSwitch` macro for you with optimal timings.
+* Adjust `tapMs` and `waitMs` to your preference directly in the editor if needed.
+* Finally, assign the macro to a key!
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+# ZMK Autonomous Injection Script - "App Switcher Macro"
+# Strategy: Safely append the Alt-Tab macro using strict MoErgo AST compliance
+
+(if .keymap then .keymap else . end) |= (
+  .macros |= (
+    (if . == null then [] else . end) as $m |
+    
+    # Check if '&AppSwitch' already exists to prevent duplicate injections
+    if ($m | map(.name) | index("&AppSwitch") == null) then
+      $m + [
+        {
+          "name": "&AppSwitch",
+          "description": "Alt-Tab App Switcher Macro",
+          "waitMs": 100,
+          "tapMs": 40,
+          "params": [],
+          "bindings": [
+            {
+              "value": "&macro_press",
+              "params": []
+            },
+            {
+              "value": "&kp",
+              "params": [ { "value": "LALT" } ]
+            },
+            {
+              "value": "&macro_tap",
+              "params": []
+            },
+            {
+              "value": "&kp",
+              "params": [ { "value": "TAB" } ]
+            },
+            {
+              "value": "&macro_tap",
+              "params": []
+            },
+            {
+              "value": "&sk",
+              "params": [ { "value": "LALT" } ]
+            },
+            {
+              "value": "&macro_release",
+              "params": []
+            },
+            {
+              "value": "&kp",
+              "params": [ { "value": "LALT" } ]
+            }
+          ]
+        }
+      ]
+    else
+      $m
+    end
+  )
+)
+"""
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60", "glove80"]
+icon = "💊"
+theme = "blue"
+
+[config]
+category = "Special keys"
