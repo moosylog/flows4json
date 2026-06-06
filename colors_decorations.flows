@@ -138,7 +138,7 @@ script = """
   | map(.bg as $bg | .items | with_entries(.key |= gsub("__MOD__"; $mod) | .value.background = $bg)) 
   | add
 ) as $logical_map |
-]
+# ] bvl
 
 # =========================================================
 # ⚙️ INTERNAL ENGINE 
