@@ -6,7 +6,7 @@ subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Automatically assigns key decorators based on key values, selected visual theme, and your operating system.
 
-# Work in progress and the GE colors need to be done!!  Try it, it's pretty cool!
+# GE theme colors are a WiP, but the TK colors work fine. Pretty cool!
 
 * **Home Row** styles apply exclusively to Layer 0.
 * **Smart Shortcuts** (like Copy, Paste, Search, and Navigation) are automatically detected across *all* layers and assigned matching colors, labels, and icons.
