@@ -6,7 +6,7 @@ subtitle = "Adds Mouse Emulation Layers"
 description = """
 Turns your keyboard into a powerful mouse control system with dedicated movement and click layers.
 🖱️  Mouse Emulation Example (using Layout Editor’s built-in capabilities)
-This example showcases Mouse Emulation Behaviors — including cursor movement, scrolling, and mouse button presses — powered by the Layout Editor’s built-in (native) Behaviors and Input Listeners.
+This **example showcases Mouse Emulation Behaviors** — including cursor movement, scrolling, and mouse button presses — powered by the Layout Editor’s built-in (native) Behaviors and Input Listeners.
 
 ✅ Enable HID_POINTING in Advanced Configuration
 
