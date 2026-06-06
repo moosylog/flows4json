@@ -5,13 +5,19 @@ title = "Mouse Emulation"
 subtitle = "Adds Mouse Emulation Layers"
 description = """
 Turns your keyboard into a powerful mouse control system with dedicated movement and click layers.
-Adds smooth cursor control, scrolling, and click actions directly from your keys.
-Includes multiple speed modes so you can switch between precise movement and fast navigation.
-Designed for *Go60* and *Glove80* to give you full mouse control without touching a physical mouse.
-Lets you temporarily activate mouse mode for quick interactions and productivity tasks.
-Supports scroll, movement, and click behaviors all in one unified control system.
-Built for efficiency when coding, designing, or navigating without leaving the keyboard.
-Keeps controls intuitive while giving you advanced multi-speed cursor handling.
+🖱️  Mouse Emulation Example (using Layout Editor’s built-in capabilities)
+This example showcases Mouse Emulation Behaviors — including cursor movement, scrolling, and mouse button presses — powered by the Layout Editor’s built-in (native) Behaviors and Input Listeners.
+
+✅ Enable HID_POINTING in Advanced Configuration
+
+✅ First-time users clear all Bluetooth profiles and re-pair with their devices.
+
+This example draws from Glorious Engrammer / TailorKey.
+We’d like to acknowledge Sunaku and Moosy for their support and contributions to the Glove80 community.
+
+🔍 For more details, please visit:
+https://zmk.dev/docs/keymaps/behaviors/mouse-emulation
+
 
 🚩 To turn it on, you manually add a layer switch using &to or &tog or &layer.
 """
