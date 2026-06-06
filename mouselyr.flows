@@ -23,14 +23,15 @@ https://zmk.dev/docs/keymaps/behaviors/mouse-emulation
 """
 
 script = """
-# ZMK Autonomous Injection Script (V5.2) - "Universal Mouse Engine"
-# Strategy: Keyboard Detection + Dynamic Mapping Arrays
+# ZMK Autonomous Injection Script (V5.4) - "Hardware-Safe Mouse Engine"
+# Strategy: Explicit Keyboard Property Detection
+
+# --- STEP 1: CAPTURE HARDWARE STRING FROM ROOT ---
+(.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
 
 (if .keymap then .keymap else . end) |= (
 
-  # --- STEP 1: DETECT KEYBOARD HARDWARE ---
-  (.keyboard? | if type == "string" then ascii_downcase else "glove80" end) as $kb |
-
+  # --- STEP 2: BUILD HARDWARE-SPECIFIC ARRAYS ---
   (if $kb == "glove80" then {
     key_count: 80,
     base_lt: [73, "RET"],
@@ -56,7 +57,7 @@ script = """
     ]
   } end) as $cfg |
 
-  # --- STEP 2: INITIALIZE NAMES & LAYERS ---
+  # --- STEP 3: INITIALIZE NAMES & LAYERS ---
   ["Mouse", "MouseSlow", "MouseFast", "MouseWarp"] as $required |
 
   .layer_names |= (if . == null then [] else . end) |
@@ -70,13 +71,13 @@ script = """
     end
   ) |
 
-  # --- STEP 3: RESOLVE DYNAMIC INDICES ---
+  # --- STEP 4: RESOLVE DYNAMIC INDICES ---
   (.layer_names | index("Mouse")) as $idx_mouse |
   (.layer_names | index("MouseSlow")) as $idx_slow |
   (.layer_names | index("MouseFast")) as $idx_fast |
   (.layer_names | index("MouseWarp")) as $idx_warp |
 
-  # --- STEP 4: LAYER-TAP INJECTION ON BASE LAYER ---
+  # --- STEP 5: LAYER-TAP INJECTION ON BASE LAYER ---
   .layers[0][$cfg.base_lt[0]] = {
     "value": "&lt",
     "params": [
@@ -85,7 +86,7 @@ script = """
     ]
   } |
 
-  # --- STEP 5: CONDITIONAL KEYMAP INJECTION ---
+  # --- STEP 6: CONDITIONAL KEYMAP INJECTION ---
   reduce $cfg.mappings[] as $b (.;
     (if $b[2] == "slow" then $idx_slow
      elif $b[2] == "fast" then $idx_fast
@@ -100,7 +101,7 @@ script = """
     }
   ) |
 
-  # --- STEP 6: COMPREHENSIVE INPUT LISTENERS ---
+  # --- STEP 7: COMPREHENSIVE INPUT LISTENERS ---
   .inputListeners = [
     {
       "code": "&mmv_input_listener",
