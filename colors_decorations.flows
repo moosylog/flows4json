@@ -1,7 +1,7 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer 🌈"
+title = "Smart Theme Colorizer 🌈5"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Colors your physical home row keys based on selected visual themes, and searches your entire layout for specific nested macros (like Copy/Paste) to style them automatically.
@@ -186,9 +186,16 @@ end) as $homerow_theme |
         
         if $target_style then
           
-          # Smart Label Extraction (Safely uses the ? operator to prevent Null crashes on empty keys)
+          # Smart Label Extraction (Safely handles empty arrays preventing null pointer crashes)
           (if type == "object" then
-            (.params[1]?.value // .params[1]? // .params[0]?.value // .params[0]? // .value) | tostring
+            (.params // []) as $p |
+            if ($p | length > 1) then
+              (if ($p[1] | type == "object") then ($p[1].value // $p[1]) else $p[1] end)
+            elif ($p | length > 0) then
+              (if ($p[0] | type == "object") then ($p[0].value // $p[0]) else $p[0] end)
+            else
+              .value
+            end | tostring
           else . | tostring end) as $fallback_label |
           
           ($target_style.label // $fallback_label) as $final_label |
