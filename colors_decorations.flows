@@ -99,9 +99,9 @@ script = """
         "&kp(LC(LG(SPACE)))": { icon: "fa-smile", label: "Emoji", os: "mac" },
 
         "&kp(RET)": { },
-        "&kp(ESC)": { }
+        "&kp(ESC)": { },
         "&kp(BSPC))": { icon: "fa-backspace" },
-        "&kp(SPACE))": { icon: "fa-space" },
+        "&kp(SPACE))": { icon: "fa-space" }
       }
     },
     {
