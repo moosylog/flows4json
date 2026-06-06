@@ -1,12 +1,10 @@
 uid = "theme_colors"
 type = "mutation"
 language = "en-US"
-title = "Smart Theme Colorizer"
+title = "Smart Theme Colorizer 🌈"
 subtitle = "Visual Themes, Macros & OS Swaps"
 description = """
 Automatically assigns key decorators based on key values, selected visual theme, and your operating system.
-
-# GE theme colors are a WiP, but the TK colors work fine. Pretty cool!
 
 * **Home Row** styles apply exclusively to Layer 0.
 * **Smart Shortcuts** (like Copy, Paste, Search, and Navigation) are automatically detected across *all* layers and assigned matching colors, labels, and icons.
@@ -29,6 +27,12 @@ script = """
 } elif $theme == "tailorkey" then {
   pinky: "#fbe6fe", ring: "#e5feff", middy: "#d9f9c9", index: "#fffec9",
   clipboard: "#fffec9", app: "#fbe6fe", system: "#f8e6d7", nav: "#d9f9c9", select: "#e0ebf6", browser: "#fbe6fe"
+} elif $theme == "nordic" then {
+  pinky: "#eceff4", ring: "#d8dee9", middy: "#b3d4e0", index: "#a3c9c6",
+  clipboard: "#f0e2b6", app: "#e8b4b8", system: "#c4d7b2", nav: "#b3d4e0", select: "#a3c9c6", browser: "#d2c4d4"
+} elif $theme == "sunset" then {
+  pinky: "#ffc8a2", ring: "#ffb7b2", middy: "#e2f0cb", index: "#b5ead7",
+  clipboard: "#fff2b2", app: "#ff9aa2", system: "#ffd3b6", nav: "#c7ceea", select: "#b5ead7", browser: "#e2b6cf"
 } else {} end) as $pal |
 
 # --- 2. DYNAMIC OS MODIFIER ---
@@ -77,21 +81,21 @@ script = """
         "&kp(LA(ESC))": { icon: "fa-window-restore", label: "Next Win" },
         "&kp(LG(GRAVE))": { icon: "fa-window-restore", label: "Next Win"},
 
-        "&kp(RET)": {  },
-        "&kp(ESC)": {  }
+        "&kp(RET)": { description:  "Enter / Return" },
+        "&kp(ESC)": { label:  "" }
       }
     },
     {
       bg: $pal.nav,
       items: {
-        "&kp(HOME)": {  },
-        "&kp(END)": {  },
-        "&kp(UP)": {   },
-        "&kp(DOWN)": {  },
-        "&kp(LEFT)": {  },
-        "&kp(RIGHT)": {  },
-        "&kp(PG_UP)": {  },
-        "&kp(PG_DN)": {  },
+        "&kp(HOME)": { label:  ""  },
+        "&kp(END)": { label:  ""  },
+        "&kp(UP)": { label:  ""  },
+        "&kp(DOWN)": { label:  "" },
+        "&kp(LEFT)": { label:  ""  },
+        "&kp(RIGHT)": { label:  "" },
+        "&kp(PG_UP)": { description: "Page Up" },
+        "&kp(PG_DN)": { description: "Page Down" },
 
         "&kp(LG(LEFT))": { icon: "fa-step-backward", label: "Line Start" },
         "&kp(LG(RIGHT))": { icon: "fa-step-forward", label: "Line End" },
@@ -261,8 +265,8 @@ default = "win"
 id = "theme"
 label = "Color Theme"
 type = "select"
-options = ["engrammer", "tailorkey"]
-labels = ["Glorious Engrammer", "TailorKey"]
+options = ["engrammer", "tailorkey", "nordic", "sunset"]
+labels = ["Glorious Engrammer", "TailorKey", "Nordic Frost", "Sunset Horizon"]
 default = "tailorkey"
 
 # ==============================================================================
