@@ -6,7 +6,7 @@ subtitle = "Adds Sunaku's Symbol Layer"
 description = """
 This adds Sunaku’s Symbol Layer to your **Go60** or **Glove80** layout.
 
-### What’s created
+### Result
 
 - A new layer named **Symbol**
 - A macro, `&symb_dotdot_v1_TKZ`, that outputs `..` with a single key press on the Symbol layer
