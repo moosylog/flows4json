@@ -44,11 +44,10 @@ Instead of reading a 20-minute tutorial on how to program a new feature, communi
 
 Using the app takes less than a minute. Here is the step-by-step workflow:
 
-1. **Export your Layout:** Go to your standard keyboard layout editor (like the MoErgo web tool) and download your current layout as a `.json` file.
-2. **Open Flows4JSON:** Go to the web app and click **Upload Layout**. Select the file you just downloaded.
-3. **Go Shopping:** Browse the App Store for features you want. When you find one, adjust the simple settings (like picking a "Flavor" or a "Style") and click **Add to List**.
-4. **Apply Changes:** Open your Custom List (the bottom drawer) and click **Apply All to Layout**. 
-5. **Download & Flash:** Click the green Download button. You will get a brand new `.json` file. Just load this file back into your keyboard's editor and flash your keyboard!
+1. **Export your layout:** Open the MoErgo Layout Editor and download your layout as a `.json` file.  
+2. **Start Flows4JSON:** Select a package you want to deploy, click **Apply**, and upload the `.json` file you just exported.  
+3. **Download new JSON file** A modified `.json` file will be automatically downloaded to your Downloads folder. 
+4. **Import it:** Import it back into the MoErgo Layout Editor, make any necessary adjustments, and flash your keyboard.
 
 ---
 
