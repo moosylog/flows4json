@@ -1153,7 +1153,11 @@
                     const cat = this.getCategory(f);
                     const devices = this.getDevices(f);
                     const matchesCat = this.activeCategory === 'All' || cat === this.activeCategory;
-                    const matchesSearch = f.title.toLowerCase().includes(searchQ) || f.description.toLowerCase().includes(searchQ);
+                    const matchesSearch = 
+						(f.uid || "").toLowerCase().includes(searchQ) ||
+						(f.title || "").toLowerCase().includes(searchQ) || 
+						(f.subtitle || "").toLowerCase().includes(searchQ) || 
+						(f.description || "").toLowerCase().includes(searchQ);
                     let matchesDevice = activeDevice === 'all' ? true : devices.map(d => d.toLowerCase()).includes(activeDevice);
                     return matchesCat && matchesSearch && matchesDevice;
                 });
