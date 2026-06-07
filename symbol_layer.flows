@@ -1,4 +1,4 @@
-uid = "add_symbol_layer_v1"
+uid = "add_symbol_lyr"
 type = "mutation"
 language = "en-US"
 title = "Symbol Layer"
