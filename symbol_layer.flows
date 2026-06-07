@@ -11,7 +11,6 @@ This adds a Symbol layer to your **Go60** or **Glove80** layout.
 - A new layer named **Symbol**
 - A macro, `&symb_dotdot_v1_TKZ`, that outputs `..` with a single key press on the Symbol layer
 - When `RH-T1` is configured as a normal key press (`&kp`), it will be replaced with a layer-tap (`&lt`) that activates the new `Symbol` layer when held. Otherwise, the layer activation needs to be configured manually.
-
 """
 # ==============================================================================
 # JQ SCRIPT
