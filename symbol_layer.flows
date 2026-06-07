@@ -4,9 +4,14 @@ language = "en-US"
 title = "Symbol Layer"
 subtitle = "Adds Sunaku's Symbol layer"
 description = """
-This adds a "Symbol" layer to your **Go60 or Glove80** layout. 
+This adds a Symbol layer to your **Go60** or **Glove80** layout.
 
-It also creates one macro, `&symb_dotdot_v1_TKZ` allowing a single key on the Symbol layer to output '..'  
+### What’s created
+
+- A new layer named **Symbol**
+- A macro, `&symb_dotdot_v1_TKZ`, that outputs `..` with a single key press on the Symbol layer
+- If `RH-T1` was previously a normal key press (`&kp`), it will be replaced with a layer-tap key that activates the Symbol layer when held
+
 """
 # ==============================================================================
 # JQ SCRIPT
