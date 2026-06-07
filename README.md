@@ -32,9 +32,9 @@ There is a better way. When you build a layout in the MoErgo Layout Editor, you 
 ---
 
 ### 📦 What is a "Flow" package?
-Think of a **Flow** as a mini-app or a "smart plugin" for your keyboard. 
+Think of a **Flow** as a mini-app or an "automation" for your keyboard. 
 
-Instead of reading a 20-minute tutorial on how to program a new feature, community developers can package that feature into a single "Flow." When you select a Flow in the store, it asks you a few simple preference questions (like a setup wizard) and then automatically applies it to your layout.
+Instead of reading a 20-minute tutorial on how to create a new feature, community developers can package that feature into a single "Flow." When you select a Flow in the store, it asks you a few simple preference questions (like a setup wizard) and then automatically applies it to your layout.
 
 **Examples of what Flows can do:**
 * 🎨 **Home-Row Mods:** Automatically turns your home row (A, S, D, F, etc.) into modifier keys (Shift, Ctrl, Alt, Gui) when you hold them down, but keeps them as normal letters when you tap them.
