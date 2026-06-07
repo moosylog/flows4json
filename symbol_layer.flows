@@ -179,6 +179,27 @@ end) as $new_layer |
 (.keymap // .) |= (
   .layer_names = (.layer_names // []) + [$layer_name] |
   .layers = (.layers // []) + [$new_layer]
+) |
+
+# 6. Engine STEP C: Non-destructive Layer-Tap injection on base layer
+(.keymap // .) |= (
+  (.layer_names | index($layer_name)) as $idx_symbol |
+  (if $kb == "glove80" then 74 else 59 end) as $base_lt_idx |
+  
+  .layers[0][$base_lt_idx] as $target_key |
+  
+  # Only upgrade the key if it is a simple &kp so we don't break custom Hold-Taps/Macros
+  if $target_key.value == "&kp" then
+    .layers[0][$base_lt_idx] = {
+      "value": "&lt",
+      "params": [
+        {"value": $idx_symbol, "params": []},
+        $target_key.params[0] # Dynamically reuse their existing keycode!
+      ]
+    } + (if $target_key.decoration then {decoration: $target_key.decoration} else {} end)
+  else
+    .
+  end
 )
 """
 
