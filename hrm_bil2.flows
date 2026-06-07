@@ -1,11 +1,11 @@
-uid = "hrm_bil2"
+uid = "hrm_bil80"
 type = "mutation"
 language = "us"
-title = "☠️ DEV Bilateral HRM"
+title = "Sunaku's Bilateral HRM"
 subtitle = "Adds Home-Row Modifiers"
 description = """
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
-#☠️ DEV
+
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)
 
 
@@ -100,7 +100,7 @@ default = "GACS"
 [manifest]
 author = "moosyresearch"
 keyboards = ["glove80"]
-icon = "☠️"        
+icon = "📦"        
 # Optional: red, green, blue, purple, yellow, orange
 theme = "red" 
 [config]
