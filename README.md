@@ -3,11 +3,15 @@
 
 # 🌊 Flows4JSON: The App Store for Keyboard Layouts
 
-Welcome to **Flows4JSON**! Customizing advanced mechanical keyboards (like the Glove80 or Go60) is amazing, but adding complex features usually means staring at confusing code, copying and pasting huge blocks of text, and praying you didn't break a comma somewhere. 
+Customizing advanced mechanical keyboards like the Glove80 or Go60 is powerful — but adding complex features often means digging through confusing examples, copying things around, and hoping everything works the way you want.
 
-Flows4JSON changes all of that. We built an interactive, point-and-click "App Store" for your keyboard layout. 
+**Flows4JSON changes that.**
 
-You simply upload your layout file, browse for the features you want, and click "Apply." The app does all the heavy lifting and gives you a perfectly updated file ready to flash to your keyboard. **Zero coding required.**
+We built an interactive, point-and-click “App Store” for keyboard packages.
+
+Browse the features you want, click **Apply**, upload your layout `.json` file, and you’re done. Flows4JSON handles all the heavy lifting and generates an updated file ready to flash to your keyboard.
+
+**Zero coding required.**
 <br>
 
 <a href="https://moosylog.github.io/flows4json/" target="_blank">
