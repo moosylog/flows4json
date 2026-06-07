@@ -645,7 +645,7 @@
     "mediaUrl": "https://moosylog.github.io/flows4json/sym_PrimNumRow.png"
   },
   {
-    "uid": "add_symbol_lyr",
+    "uid": "add_symbl_lyr",
     "title": "Symbol Layer",
     "subtitle": "Adds Sunaku's Symbol Layer",
     "description": "This adds Sunaku’s Symbol Layer to your **Go60** or **Glove80** layout.\r\n\r\n### What’s created\r\n\r\n- A new layer named **Symbol**\r\n- A macro, `&symb_dotdot_v1_TKZ`, that outputs `..` with a single key press on the Symbol layer\r\n- When `RH-T1` is configured as a normal key press (`&kp`), it will be replaced with a layer-tap (`&lt`) that activates the new `Symbol` layer when held. Otherwise, the layer activation needs to be configured manually.",
