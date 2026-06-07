@@ -54,7 +54,7 @@ Using the app takes less than a minute. Here is the step-by-step workflow:
 ### ⌨️ Supported Hardware
 Flows4JSON is built to be smart. When you upload your layout, it automatically detects what keyboard you are using. Currently, the store supports:
 * **MoErgo Glove80**
-* **Go60**
+* **MoErgo Go60**
 
 *(If a specific Flow package is not compatible with your hardware, the app will safely disable the "Apply" button so you can't accidentally break your layout!)*
 
