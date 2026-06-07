@@ -2,9 +2,9 @@ uid = "add_symbol_layer_v1"
 type = "mutation"
 language = "en-US"
 title = "Symbol Layer"
-subtitle = "Adds Sunaku's Symbol layer"
+subtitle = "Adds Sunaku's Symbol Layer"
 description = """
-This adds a Symbol layer to your **Go60** or **Glove80** layout.
+This adds Sunaku’s Symbol Layer to your **Go60** or **Glove80** layout.
 
 ### What’s created
 
