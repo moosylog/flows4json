@@ -1,21 +1,27 @@
 uid = "app_switcher_macro"
 type = "mutation"
 language = "en-US"
-title = "Alt-Tab App Switcher 🔄"
-subtitle = "Simplify Task Switching"
+title = "Alt-Tab Switcher Layer"
+subtitle = "Using a Layer"
 description = """
 
-#Work in progress
-# Work in progress
+This is the great AppSwitch navigation layer.
 
-Injects the optimized **Flows_Nav** layer into your layout, dynamically adapting to either the Go60 or Glove80 hardware.
+It creates two macro:
+- macros:  `&mod_tab_chord_v2_TKZ`and `mod_tab_switcher_chord`
+- layer: `Flows_Nav`
 
-**Includes:**
-* `Flows_Nav` Keymap Layer (Cut, Copy, Paste, Navigation, Sticky Modifiers).
-* `&mod_tab_chord_v2_TKZ` Macro.
-* `&mod_tab_v1_TKZ` Macro.
 
-*Note: Macros are injected safely to prevent duplicate overwrites.*
+You create a key or combo that calls `&mod_tab_chord_v2_TKZ`with the layer `Flows_Nav` and your modifier.
+
+In TailorKey we have:
+
+- left_alt_tab_switcher_v1_TKZ with LALT
+
+- left_ctrl_tab_switcher_v1_TKZ with LCTRL
+
+- left_win_tab_switcher_v1_TKZ with LGUI
+
 """
 
 # ==============================================================================
