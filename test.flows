@@ -15,67 +15,40 @@ These combinations condense punctuation, macros, and layer toggles into highly o
 * **4 Macros** (e.g., End-of-Line, Arrow Operator)
 
 
-# 1. Thumb Keys (Requires 1 Parameter for the "Hold" action)
+### 1. Thumb Keys (Requires 1 Parameter for the "Hold" action)
 *Bind these to your primary thumb arcs:*
-<ol>
-<li>`&ht_thumb_bspc` (Set param to a Layer Number, e.g., 1)</li>
- <ol>
-<li>Hold: Nav Layer | Tap: Backspace | Shift+Tap: Delete</li>
-</ol>
-</ol>
 
-&ht_spc_peek_lock (Set param to a Layer Number, e.g., 2)
+| Behavior Action | Behavior Code & Parameter |
+| :--- | :--- |
+| **Hold:** Nav Layer <br> **Tap:** Backspace <br> **Shift+Tap:** Delete | `&ht_thumb_bspc` <br> *(Set param to a Layer Number, e.g., `1`)* |
+| **Hold:** Num Layer <br> **Tap:** Space <br> **Double-Tap:** Locks Num Layer | `&ht_spc_peek_lock` <br> *(Set param to a Layer Number, e.g., `2`)* |
+| **Hold:** Right Shift <br> **Tap:** Enter <br> **Double-Tap:** End of Line + `;` + Enter | `&ht_shift_enter` <br> *(Set param to `RSHFT`)* |
+| **Hold:** Left Shift <br> **Tap:** `(` <br> **Double-Tap:** `)` | `&ht_space_cadet` <br> *(Set param to `LSHFT`)* |
 
-Hold: Num Layer | Tap: Space | Double-Tap: Locks Num Layer
+---
 
-`&ht_shift_enter` (Set param to RSHFT)
-
-Hold: Right Shift | Tap: Enter | Double-Tap: End of Line + ; + Enter
-
-`&ht_space_cadet` (Set param to LSHFT)
-
-Hold: Left Shift | Tap: ( | Double-Tap: )
-
-# 2. Punctuation & Alphas (0 Parameters required)
+### 2. Punctuation & Alphas (0 Parameters required)
 *Drop these directly onto your base QWERTY layer in place of the standard symbol keys:*
 
-`&td_punct_power` -> Replace your . (Period) key.
+| Behavior Action | Behavior Code & Parameter |
+| :--- | :--- |
+| **Tap:** `.` <br> **Shift+Tap:** `:` <br> **Double-Tap:** `...` | `&td_punct_power` <br> *(Replace your `.` key)* |
+| **Tap:** `(` <br> **Shift+Tap:** `<` <br> **Double-Tap:** `[` <br> **Shift+Double:** `{` | `&td_nested_brackets` <br> *(Replace your `[` key)* |
+| **Tap:** `/` <br> **Shift+Tap:** `?` <br> **Double-Tap:** `!` | `&td_quest_excl` <br> *(Replace your `/` key)* |
+| **Tap:** `-` <br> **Shift+Tap:** `_` <br> **Double-Tap:** `->` | `&td_dash_arrow` <br> *(Replace your `-` key)* |
+| **Tap:** `=` <br> **Shift+Tap:** `+` <br> **Double-Tap:** `=>` | `&td_math_logic` <br> *(Replace your `=` key)* |
 
-Tap: . | Shift+Tap: : | Double-Tap: ...
+---
 
-`&td_nested_brackets` -> Replace your [ (L-Bracket) key.
+### 3. Modifiers & System (Requires 1 Parameter for the "Hold" action)
+*Bind these to your outer columns or function rows:*
 
-Tap: ( | Shift+Tap: < | Double-Tap: [ | Shift+Double: {
-
-`&td_quest_excl` -> Replace your / (Slash) key.
-
-Tap: / | Shift+Tap: ? | Double-Tap: !
-
-`&td_dash_arrow` -> Replace your - (Dash) key.
-
-Tap: - | Shift+Tap: _ | Double-Tap: ->
-
-`&td_math_logi`c -> Replace your = (Equal) key.
-
-Tap: = | Shift+Tap: + | Double-Tap: =>
-
-# 3. Modifiers & System (Requires 1 Parameter for the "Hold" action)
-*&ht_ctrl_esc (Set param to LCTRL) -> Replace your top-left ESC key.*
-
-- Hold: Ctrl | Tap: ESC | Shift+Tap: ~
-
- - `&ht_alt_tab` (Set param to LALT or LGUI) -> Replace your TAB key.
-
-Hold: Alt | Tap: Tab | Shift+Tap: Shift+Tab (App Switcher)
-
-`&ht_shift_caps` (Set param to LSHFT) -> Replace your primary Shift key.
-
-Hold: Shift | Tap: Shift | Double-Tap: Activates Caps Word
-
-`&ht_vol_media` (Set param to C_VOL_UP) -> Put on a Navigation Layer.
-
-Hold: Vol Up | Tap: Play/Pause | Double: Next | Triple: Prev
-
+| Behavior Action | Behavior Code & Parameter |
+| :--- | :--- |
+| **Hold:** Ctrl <br> **Tap:** ESC <br> **Shift+Tap:** `~` | `&ht_ctrl_esc` <br> *(Set param to `LCTRL`)* |
+| **Hold:** Alt <br> **Tap:** Tab <br> **Shift+Tap:** Shift+Tab | `&ht_alt_tab` <br> *(Set param to `LALT` or `LGUI`)* |
+| **Hold:** Shift <br> **Tap:** Shift <br> **Double-Tap:** Caps Word | `&ht_shift_caps` <br> *(Set param to `LSHFT`)* |
+| **Hold:** Vol Up <br> **Tap:** Play/Pause <br> **Double:** Next <br> **Triple:** Prev | `&ht_vol_media` <br> *(Set param to `C_VOL_UP`)* |
 *Note: Uses Safe-Merge architecture. It will only add new behaviors and will never delete your existing setup.*
 """
 
