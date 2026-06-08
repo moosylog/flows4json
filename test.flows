@@ -14,6 +14,66 @@ These combinations condense punctuation, macros, and layer toggles into highly o
 * **12 Tap-Dances** (e.g., Peek-or-Lock Layer Space, Nested Brackets)
 * **4 Macros** (e.g., End-of-Line, Arrow Operator)
 
+
+#1. Thumb Keys (Requires 1 Parameter for the "Hold" action)
+*Bind these to your primary thumb arcs:*
+
+- `&ht_thumb_bspc` (Set param to a Layer Number, e.g., 1)
+
+** Hold: Nav Layer | Tap: Backspace | Shift+Tap: Delete
+
+&ht_spc_peek_lock (Set param to a Layer Number, e.g., 2)
+
+Hold: Num Layer | Tap: Space | Double-Tap: Locks Num Layer
+
+&ht_shift_enter (Set param to RSHFT)
+
+Hold: Right Shift | Tap: Enter | Double-Tap: End of Line + ; + Enter
+
+&ht_space_cadet (Set param to LSHFT)
+
+Hold: Left Shift | Tap: ( | Double-Tap: )
+
+2. Punctuation & Alphas (0 Parameters required)
+Drop these directly onto your base QWERTY layer in place of the standard symbol keys:
+
+&td_punct_power -> Replace your . (Period) key.
+
+Tap: . | Shift+Tap: : | Double-Tap: ...
+
+&td_nested_brackets -> Replace your [ (L-Bracket) key.
+
+Tap: ( | Shift+Tap: < | Double-Tap: [ | Shift+Double: {
+
+&td_quest_excl -> Replace your / (Slash) key.
+
+Tap: / | Shift+Tap: ? | Double-Tap: !
+
+&td_dash_arrow -> Replace your - (Dash) key.
+
+Tap: - | Shift+Tap: _ | Double-Tap: ->
+
+&td_math_logic -> Replace your = (Equal) key.
+
+Tap: = | Shift+Tap: + | Double-Tap: =>
+
+3. Modifiers & System (Requires 1 Parameter for the "Hold" action)
+&ht_ctrl_esc (Set param to LCTRL) -> Replace your top-left ESC key.
+
+Hold: Ctrl | Tap: ESC | Shift+Tap: ~
+
+&ht_alt_tab (Set param to LALT or LGUI) -> Replace your TAB key.
+
+Hold: Alt | Tap: Tab | Shift+Tap: Shift+Tab (App Switcher)
+
+&ht_shift_caps (Set param to LSHFT) -> Replace your primary Shift key.
+
+Hold: Shift | Tap: Shift | Double-Tap: Activates Caps Word
+
+&ht_vol_media (Set param to C_VOL_UP) -> Put on a Navigation Layer.
+
+Hold: Vol Up | Tap: Play/Pause | Double: Next | Triple: Prev
+
 *Note: Uses Safe-Merge architecture. It will only add new behaviors and will never delete your existing setup.*
 """
 
