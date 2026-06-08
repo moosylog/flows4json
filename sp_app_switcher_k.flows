@@ -9,7 +9,7 @@ This function can also be assigned to a single key using a macro, making switchi
 
 This flow automatically generates the `&AppSwitch` macro for you with optimal timings.
 * Adjust `tapMs` and `waitMs` to your preference directly in the editor if needed.
-* Finally, assign the macro to a key!
+* **You manually need to assign the macro to a key or combo**
 
 """
 
