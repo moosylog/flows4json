@@ -628,6 +628,42 @@
     "mediaUrl": null
   },
   {
+    "uid": "magic_key_decorator",
+    "title": "Magic Key Stylizer",
+    "subtitle": "Decorate or clear all Magic keys",
+    "description": "Instantly applies a uniform visual style to all `&magic` keys across every single layer in your layout. \r\n\r\n* Includes the classic `moergo-long` icon.\r\n* Customize the background and icon color via the parameters.\r\n* **To instantly remove all magic key decorators:** Just delete the text in the Background parameter and hit Apply!",
+    "script": "# ZMK Autonomous Injection Script - \"Magic Key Stylizer\"\r\n# Strategy: Deep map across all layers to target and mutate &magic behaviors\r\n\r\n(.keymap // .) |= (\r\n  if .layers then\r\n    .layers |= map(map(\r\n      \r\n      # 1. Target only the keys that are &magic\r\n      if type == \"object\" and .value == \"&magic\" then\r\n        \r\n        # 2. Check if the user wants to clear the decorations (blank background)\r\n        if ($background == null or $background == \"\") then\r\n          del(.decoration)\r\n          \r\n        # 3. Otherwise, apply the new styling\r\n        else\r\n          .decoration = {\r\n            \"icon\": \"moergo-long\",\r\n            \"background\": $background,\r\n            \"color\": $color\r\n          }\r\n        end\r\n        \r\n      # Leave all non-magic keys completely untouched\r\n      else\r\n        .\r\n      end\r\n    ))\r\n  else . end\r\n)",
+    "category": "Special keys",
+    "appUrl": null,
+    "manifest": {
+      "author": "moosyresearch",
+      "keyboards": [
+        "go60",
+        "glove80"
+      ],
+      "icon": "✨",
+      "theme": "purple"
+    },
+    "config": {
+      "category": "Special keys"
+    },
+    "param": [
+      {
+        "id": "background",
+        "label": "Background Color (Leave blank to remove styling)",
+        "type": "text",
+        "default": "#d4dde1ff"
+      },
+      {
+        "id": "color",
+        "label": "Icon Color",
+        "type": "text",
+        "default": "#000000ff"
+      }
+    ],
+    "mediaUrl": null
+  },
+  {
     "uid": "sym_numrow",
     "title": "Primeagen's NumRow",
     "subtitle": "Custom Number Row",
