@@ -1,7 +1,7 @@
-uid = "app_switcher_macro"
+uid = "app_switcher_key"
 type = "mutation"
 language = "en-US"
-title = "Alt-Tab App Switch Key"
+title = "Alt-Tab Switcher Key"
 subtitle = "Adds one macro"
 description = """
 Alt-Tab or the tab switcher is a keyboard shortcut used to quickly toggle between open applications or windows.
