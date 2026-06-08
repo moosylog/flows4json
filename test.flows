@@ -19,8 +19,10 @@ These combinations condense punctuation, macros, and layer toggles into highly o
 *Bind these to your primary thumb arcs:*
 <ol>
 <li>`&ht_thumb_bspc` (Set param to a Layer Number, e.g., 1)</li>
-
-* ** Hold: Nav Layer | Tap: Backspace | Shift+Tap: Delete
+ <ol>
+<li>Hold: Nav Layer | Tap: Backspace | Shift+Tap: Delete</li>
+</ol>
+</ol>
 
 &ht_spc_peek_lock (Set param to a Layer Number, e.g., 2)
 
