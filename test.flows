@@ -1,0 +1,275 @@
+uid = "adv. examples"
+type = "mutation"
+language = "en-US"
+title = "test"
+subtitle = "Mod-Morphs, Tap-Dances & Hold-Taps"
+description = """
+Injects a powerhouse collection of advanced community-vetted behaviors into your layout!
+
+Based on ZMK top community use-cases, this package adds highly optimized symbol and number behaviors directly to your dictionary.
+
+**Includes:**
+* **13 Mod-Morphs:** Smart symbol clusters (e.g., Tap for `[`, Shift+Tap for `@`).
+* **12 Tap-Dances:** Double-tap logic for advanced punctuation and numbers.
+* **1 Hold-Tap:** The `&ht_primeagen` behavior for optimized NumRow typing.
+
+*Safe Merge: Automatically skips duplicates and protects your existing layout behaviors.*
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+# ZMK Autonomous Injection Script - "Advanced Symbol Behaviors"
+
+# 1. Define Mod-Morphs
+([
+  {
+    "name": "&sym_plus_v1_TKZ",
+    "description": "Smart Plus: Tap '+', Shift '@'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "EQUAL", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N2", "params": [] } ] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym0_ast_v1_TKZ",
+    "description": "Smart Asterisk: Tap '*', Shift ')'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N8", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N0", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym1_excl_v1_TKZ",
+    "description": "Smart Exclamation: Tap '!', Shift '!'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N1", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N1", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym2_lbracket_v1_TKZ",
+    "description": "Smart L-Bracket: Tap '[', Shift '@'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LBKT", "params": [] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N2", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym2_lparen_v1_TKZ",
+    "description": "Smart L-Paren: Tap '(', Shift '$'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N9", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N4", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym3_hash_v1_TKZ",
+    "description": "Smart Hash: Tap '#', Shift '^'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N3", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N6", "params": [] } ] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym3_lbrace_v1_TKZ",
+    "description": "Smart L-Brace: Tap '{', Shift '#'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "LBKT", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N3", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym4_dollar_v1_TKZ",
+    "description": "Smart Dollar: Tap '$', Shift '%'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N4", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N5", "params": [] } ] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym6_equal_v1_TKZ",
+    "description": "Smart Equal: Tap '=', Shift '^'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "EQUAL", "params": [] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N6", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym7_amp_v1_TKZ",
+    "description": "**bold**\nor ** bold **",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N7", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N5", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym7_rparen_v1_TKZ",
+    "description": "Smart R-Paren: Tap ')', Shift '&'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "N0", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N7", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym8_rbrace_v1_TKZ",
+    "description": "Smart R-Brace: Tap '}', Shift '*'",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "LS", "params": [ { "value": "RBKT", "params": [] } ] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N8", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  },
+  {
+    "name": "&sym9_rbracket_v1_TKZ",
+    "description": "Smart R-Bracket: Tap ']', Shift '('",
+    "cases": [
+      { "binding": { "value": "&kp", "params": [ { "value": "RBKT", "params": [] } ] }, "mods": [], "keepMods": [] },
+      { "binding": { "value": "&kp", "params": [ { "value": "N9", "params": [] } ] }, "mods": [ "MOD_LSFT", "MOD_RSFT" ], "keepMods": [] }
+    ]
+  }
+]) as $new_morphs |
+
+# 2. Define Tap-Dances
+([
+  {
+    "name": "&td__hash_v1_TKZ",
+    "description": "Tap-Dance: '#' / '^'",
+    "bindings": [
+      { "params": [ { "value": "LS", "params": [ { "value": "N3", "params": [] } ] } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N6", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td__plus_v1_TKZ",
+    "description": "Tap-Dance: '+' / '@'",
+    "bindings": [
+      { "params": [ { "value": "LS", "params": [ { "value": "EQUAL", "params": [] } ] } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N2", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td0__ast_v1_TKZ",
+    "description": "Tap-Dance: '0' / '*'",
+    "bindings": [
+      { "params": [ { "value": "N0" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N8", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td1__excl_v1_TKZ",
+    "description": "Tap-Dance: '1' / '!'",
+    "bindings": [
+      { "params": [ { "value": "N1" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N1" } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td2__lbracket_v1_TKZ",
+    "description": "Tap-Dance: '3' / '['",
+    "bindings": [
+      { "params": [ { "value": "N3" } ], "value": "&kp" },
+      { "params": [ { "value": "LBKT" } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td3__lbrace_v1_TKZ",
+    "description": "Tap-Dance: '3' / '{'",
+    "bindings": [
+      { "params": [ { "value": "N3" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "LBKT", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td4__lparen_v1_TKZ",
+    "description": "Tap-Dance: '4' / '('",
+    "bindings": [
+      { "params": [ { "value": "N4" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N9", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td5_amp_v1_TKZ",
+    "description": "Tap-Dance: '5' / '&'",
+    "bindings": [
+      { "params": [ { "value": "N5" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N7", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td6__equal_v1_TKZ",
+    "description": "Tap-Dance: '6' / '='",
+    "bindings": [
+      { "params": [ { "value": "N6" } ], "value": "&kp" },
+      { "params": [ { "value": "EQUAL" } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td7__rparen_v1_TKZ",
+    "description": "Tap-Dance: '7' / ')'",
+    "bindings": [
+      { "params": [ { "value": "N7" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "N0", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td8__rbrace_v1_TKZ",
+    "description": "Tap-Dance: '8' / '}'",
+    "bindings": [
+      { "params": [ { "value": "N8" } ], "value": "&kp" },
+      { "params": [ { "value": "LS", "params": [ { "value": "RBKT", "params": [] } ] } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  },
+  {
+    "name": "&td9__rbracket_v1_TKZ",
+    "description": "Tap-Dance: '9' / ']'",
+    "bindings": [
+      { "params": [ { "value": "N9" } ], "value": "&kp" },
+      { "params": [ { "value": "RBKT" } ], "value": "&kp" }
+    ],
+    "tappingTermMs": 200
+  }
+]) as $new_dances |
+
+# 3. Define Hold-Taps
+([
+  {
+    "name": "&ht_primeagen",
+    "description": "Primeagen NumRow Hold-Tap (200ms)",
+    "bindings": [ "&kp", "&kp" ],
+    "tappingTermMs": 200,
+    "flavor": "tap-preferred"
+  }
+]) as $new_holds |
+
+# 4. Safe Merge Injection
+(.keymap // .) |= (
+  .modMorphs = ($new_morphs + (.modMorphs // []) | unique_by(.name)) |
+  .tapDances = ($new_dances + (.tapDances // []) | unique_by(.name)) |
+  .holdTaps  = ($new_holds  + (.holdTaps  // []) | unique_by(.name))
+)
+"""
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60", "glove80"]
+icon = "🧠"
+theme = "green"
+
+[config]
+category = "Test"
