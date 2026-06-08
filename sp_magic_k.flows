@@ -1,0 +1,77 @@
+uid = "magic_key_decorator"
+type = "mutation"
+language = "en-US"
+title = "Magic Key Stylizer"
+subtitle = "Decorate or clear all Magic keys"
+description = """
+Instantly applies a uniform visual style to all `&magic` keys across every single layer in your layout. 
+
+* Includes the classic `moergo-long` icon.
+* Customize the background and icon color via the parameters.
+* **To instantly remove all magic key decorators:** Just delete the text in the Background parameter and hit Apply!
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+# ZMK Autonomous Injection Script - "Magic Key Stylizer"
+# Strategy: Deep map across all layers to target and mutate &magic behaviors
+
+(.keymap // .) |= (
+  if .layers then
+    .layers |= map(map(
+      
+      # 1. Target only the keys that are &magic
+      if type == "object" and .value == "&magic" then
+        
+        # 2. Check if the user wants to clear the decorations (blank background)
+        if ($background == null or $background == "") then
+          del(.decoration)
+          
+        # 3. Otherwise, apply the new styling
+        else
+          .decoration = {
+            "icon": "moergo-long",
+            "background": $background,
+            "color": $color
+          }
+        end
+        
+      # Leave all non-magic keys completely untouched
+      else
+        .
+      end
+    ))
+  else . end
+)
+"""
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "background"
+label = "Background Color (Leave blank to remove styling)"
+type = "text"
+default = "#d4dde1ff"
+
+[[param]]
+id = "color"
+label = "Icon Color"
+type = "text"
+default = "#000000ff"
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60", "glove80"]
+icon = "✨"
+theme = "purple"
+
+[config]
+category = "Special keys"
