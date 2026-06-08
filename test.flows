@@ -1,8 +1,8 @@
 uid = "top_15_zmk_behaviors"
 type = "mutation"
 language = "en-US"
-title = "Top 15 Advanced Behaviors 🛠️"
-subtitle = "Community Vetted Tap-Dances & Mod-Morphs"
+title = "DEV: Top 15 Advanced Behaviors 🛠️"
+subtitle = "DEV: Community Vetted Tap-Dances & Mod-Morphs"
 description = """
 Injects the **Top 15 Community-Vetted Use Cases** directly into your layout dictionary.
 
@@ -65,4 +65,4 @@ icon = "🏆"
 theme = "green"
 
 [config]
-category = "Test"
+category = "Test/Dev"
