@@ -7,14 +7,14 @@ description = """
 
 This is the great AppSwitch navigation layer.
 
-It creates two macro:
+It creates two macros and and a layer for you:
 - macros:  `&mod_tab_chord_v2_TKZ`and `mod_tab_switcher_chord`
 - layer: `Flows_Nav`
 
 
-You create a key or combo that calls `&mod_tab_chord_v2_TKZ`with the layer `Flows_Nav` and your modifier.
+You create a key or combo that calls `&mod_tab_chord_v2_TKZ`with the `Flows_Nav` layer and your modifier.
 
-In TailorKey we have:
+In TailorKey we have 3 bindings:
 
 - left_alt_tab_switcher_v1_TKZ with LALT
 
