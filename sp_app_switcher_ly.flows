@@ -12,7 +12,7 @@ It creates two macros and and a layer for you:
 - layer: `Flows_Nav`
 
 
-You create a key or combo that calls `&mod_tab_chord_v2_TKZ`with the `Flows_Nav` layer and your modifier.
+You **manually create** a key or combo that calls `&mod_tab_chord_v2_TKZ`with the `Flows_Nav` layer and your modifier.
 
 In TailorKey we have 3 bindings:
 
