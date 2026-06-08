@@ -1,4 +1,4 @@
-uid = "magic_key_decorator"
+uid = "color_magic"
 type = "mutation"
 language = "en-US"
 title = "Magic Key Stylizer"
@@ -74,4 +74,4 @@ icon = "✨"
 theme = "purple"
 
 [config]
-category = "Special keys"
+category = "Decorations & RGB"
