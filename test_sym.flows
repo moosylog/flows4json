@@ -11,9 +11,10 @@ Inspired by ThePrimeagen, this maps specific programmer symbols directly onto th
 **⚠️Warning: It replaces your current NumRow on layer0**
 
 Supports dynamically injecting:
-* **Hold-Tap:** 1 Behavior definition (Hold for symbol, tap for number).
-* **Tap-Dance:** 12 Explicit definitions (Double-tap for symbol, tap for number).
-* **Mod-Morph:** 12 Explicit definitions (Shift for number, tap for symbol).
+* **Hold-Tap:** 1 Behavior definition (Tap for Symbol, Hold for Number).
+* **Tap-Dance:** 12 Explicit definitions (Tap for Symbol, Double-Tap for Number).
+* **Mod-Morph:** 12 Explicit definitions (Tap for Symbol, Shift for Number).
+* **Restore Defaults:** Reverts the row back to standard QWERTY NumRow (`=`, `1`-`0`, `-`).
 """
 
 # ==============================================================================
@@ -49,7 +50,7 @@ def get_primeagen_holdtap: {
   "flavor": "tap-preferred"
 };
 
-# Explicitly defined Mod-Morphs (12 definitions - Terminal Keycodes lack empty params)
+# Explicitly defined Mod-Morphs (12 definitions)
 ([
   { "name": "&mm_pr_0", "description": "Mod-Morph: + / @", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2"}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
   { "name": "&mm_pr_1", "description": "Mod-Morph: ! / 1", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N1"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
@@ -68,16 +69,16 @@ def get_primeagen_holdtap: {
 # Explicitly defined Tap-Dances (12 definitions)
 ([
   { "name": "&td_pr_0", "description": "Tap-Dance: + / @", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL"}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2"}]}] } ] },
-  { "name": "&td_pr_1", "description": "Tap-Dance: 1 / !", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N1"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1"}]}] } ] },
-  { "name": "&td_pr_2", "description": "Tap-Dance: 2 / [", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N2"}] }, { "value": "&kp", "params": [{"value": "LBKT"}] } ] },
-  { "name": "&td_pr_3", "description": "Tap-Dance: 3 / {", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N3"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT"}]}] } ] },
-  { "name": "&td_pr_4", "description": "Tap-Dance: 4 / (", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N4"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9"}]}] } ] },
-  { "name": "&td_pr_5", "description": "Tap-Dance: 5 / &", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N5"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7"}]}] } ] },
-  { "name": "&td_pr_6", "description": "Tap-Dance: 6 / =", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N6"}] }, { "value": "&kp", "params": [{"value": "EQUAL"}] } ] },
-  { "name": "&td_pr_7", "description": "Tap-Dance: 7 / )", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N7"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0"}]}] } ] },
-  { "name": "&td_pr_8", "description": "Tap-Dance: 8 / }", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N8"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT"}]}] } ] },
-  { "name": "&td_pr_9", "description": "Tap-Dance: 9 / ]", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N9"}] }, { "value": "&kp", "params": [{"value": "RBKT"}] } ] },
-  { "name": "&td_pr_10", "description": "Tap-Dance: 0 / *", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N0"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8"}]}] } ] },
+  { "name": "&td_pr_1", "description": "Tap-Dance: ! / 1", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1"}]}] }, { "value": "&kp", "params": [{"value": "N1"}] } ] },
+  { "name": "&td_pr_2", "description": "Tap-Dance: [ / 2", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LBKT"}] }, { "value": "&kp", "params": [{"value": "N2"}] } ] },
+  { "name": "&td_pr_3", "description": "Tap-Dance: { / 3", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT"}]}] }, { "value": "&kp", "params": [{"value": "N3"}] } ] },
+  { "name": "&td_pr_4", "description": "Tap-Dance: ( / 4", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9"}]}] }, { "value": "&kp", "params": [{"value": "N4"}] } ] },
+  { "name": "&td_pr_5", "description": "Tap-Dance: & / 5", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7"}]}] }, { "value": "&kp", "params": [{"value": "N5"}] } ] },
+  { "name": "&td_pr_6", "description": "Tap-Dance: = / 6", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "EQUAL"}] }, { "value": "&kp", "params": [{"value": "N6"}] } ] },
+  { "name": "&td_pr_7", "description": "Tap-Dance: ) / 7", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0"}]}] }, { "value": "&kp", "params": [{"value": "N7"}] } ] },
+  { "name": "&td_pr_8", "description": "Tap-Dance: } / 8", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT"}]}] }, { "value": "&kp", "params": [{"value": "N8"}] } ] },
+  { "name": "&td_pr_9", "description": "Tap-Dance: ] / 9", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "RBKT"}] }, { "value": "&kp", "params": [{"value": "N9"}] } ] },
+  { "name": "&td_pr_10", "description": "Tap-Dance: * / 0", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8"}]}] }, { "value": "&kp", "params": [{"value": "N0"}] } ] },
   { "name": "&td_pr_11", "description": "Tap-Dance: $ / %", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4"}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5"}]}] } ] }
 ]) as $new_dances |
 
@@ -97,6 +98,9 @@ def get_primeagen_holdtap: {
   [ {"value": "LS", "params": [{"value": "N4"}]}, {"value": "LS", "params": [{"value": "N5"}]} ]
 ] as $ht_params |
 
+# Array 3: Defaults (for Restore option)
+["EQUAL","N1","N2","N3","N4","N5","N6","N7","N8","N9","N0","MINUS"] as $arr_defaults |
+
 (GetHardware) as $hw |
 
 # ==============================================================================
@@ -105,7 +109,7 @@ def get_primeagen_holdtap: {
 
 (.keymap // .) |= (
   
-  # Step 1: Safely inject ONLY the selected behaviors into the AST
+  # Step 1: Safely inject ONLY the selected behaviors into the AST (Skipped on Restore)
   .holdTaps = (if $behavior_type == "hold-tap" then ((.holdTaps // []) + [get_primeagen_holdtap] | unique_by(.name)) else (.holdTaps // []) end) |
   .modMorphs = (if $behavior_type == "mod-morph" then ((.modMorphs // []) + $new_morphs | unique_by(.name)) else (.modMorphs // []) end) |
   .tapDances = (if $behavior_type == "tap-dance" then ((.tapDances // []) + $new_dances | unique_by(.name)) else (.tapDances // []) end) |
@@ -122,7 +126,13 @@ def get_primeagen_holdtap: {
       # Safely preserve any UI decorators the user has applied
       (if type == "object" and .decoration then { decoration: .decoration } else {} end) as $dec |
       
-      if $behavior_type == "hold-tap" then
+      if $behavior_type == "restore" then
+        {
+          value: "&kp",
+          params: [{"value": $arr_defaults[$idx]}]
+        } + $dec
+        
+      elif $behavior_type == "hold-tap" then
         {
           value: "&ht_primeagen",
           params: $ht_params[$idx]
@@ -157,8 +167,13 @@ def get_primeagen_holdtap: {
 id = "behavior_type"
 label = "Trigger Behavior"
 type = "select"
-options = ["hold-tap", "tap-dance", "mod-morph"]
-labels = ["Hold-Tap (Hold for Symbol, Tap for Number)", "Tap-Dance (Double Tap for Symbol, Tap for Number)", "Mod-Morph (Shift for Number, Tap for Symbol)"]
+options = ["hold-tap", "tap-dance", "mod-morph", "restore"]
+labels = [
+  "Hold-Tap (Tap for Number, Hold for Symbol)", 
+  "Tap-Dance (Tap for Symbol, Double-Tap for Number)", 
+  "Mod-Morph (Tap for Symbol, Shift for Number)",
+  "Restore Defaults (Standard NumRow)"
+]
 default = "hold-tap"
 
 # ==============================================================================
