@@ -1,7 +1,7 @@
-uid = "sym_numrow"
+uid = "sym_numrw"
 type = "mutation"
 language = "en-US"
-title = "Primeagen's NumRow"
+title = "Primeagen's NumRow DEV"
 subtitle = "Custom Number Row"
 description = """
 Modifies the number row to use dual-function keys.
