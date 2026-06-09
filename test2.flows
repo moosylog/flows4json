@@ -1,19 +1,19 @@
 uid = "top_15_zmk_behaviors"
 type = "mutation"
 language = "en-US"
-title = "Tetst 🛠️"
+title = "Advanced 🛠️"
 subtitle = "Community Vetted Tap-Dances & Mod-Morphs"
 description = """
 Injects the **Top 15 Community-Vetted Use Cases** directly into your layout dictionary.
 
 These combinations condense punctuation, macros, and layer toggles into highly optimized keys without disrupting your typing rhythm.
 
-> **Community Golden Rule:** *Mod-Morph* is highly preferred for alphanumeric keys because it executes instantly. *Tap-Dance* introduces a slight tapping delay, making it better suited for thumb keys, outer columns, macros, and layer toggles where rapid typing rhythm isn't affected.
+> **Community Golden Rule:** *Tap-Dance* must be the outer behavior to protect the timing window, while *Mod-Morph* lives inside it to instantly route Shifted keys.
 
 **Includes nested combinations:**
-* **3 Hold-Taps** (e.g., App Switcher Engine)
-* **9 Mod-Morphs** (e.g., Smart Escape Corner, Nested Brackets)
-* **13 Tap-Dances** (e.g., Peek-or-Lock Layer Space, Punctuation Powerhouse)
+* **4 Hold-Taps** (e.g., God-Tier Thumb, Safe HRM Escape)
+* **9 Mod-Morphs** (e.g., Smart Escape Corner, Nested Brackets Base)
+* **12 Tap-Dances** (e.g., Peek-or-Lock Layer Space, Punctuation Powerhouse)
 * **4 Macros** (e.g., End-of-Line, Arrow Operator)
 
 *If "Implement on layer0" is YES, it will automatically seek out standard keys (`BSPC`, `SPACE`, `/`, `[`, etc.) on your base layer and seamlessly upgrade them to these new behaviors!*
@@ -23,7 +23,7 @@ These combinations condense punctuation, macros, and layer toggles into highly o
 # JQ SCRIPT
 # ==============================================================================
 script = """
-# ZMK Autonomous Injection Script - "Top 15 Advanced Behaviors" (V8 - Properly Inverted Nesting)
+# ZMK Autonomous Injection Script - "Top 15 Advanced Behaviors" (V9 - Strict Tap-Dance Outer Logic)
 
 # --- PRE-REQUISITE: RESOLVE TARGET LAYERS ---
 (if $auto_bind == "yes" then
@@ -49,7 +49,7 @@ else . end) |
 # STEP 1: CREATE NESTED BEHAVIORS
 # ==============================================================================
 
-# --- A. MACROS ---
+# --- A. MACROS (Strict Root Params) ---
 ([
   { "name": "&mac_eol_semi", "params": [], "description": "4. End of Line Macro", "waitMs": 0, "tapMs": 0, "bindings": [ { "value": "&macro_tap", "params": [] }, { "value": "&kp", "params": [{"value": "END", "params": []}] }, { "value": "&kp", "params": [{"value": "SEMI", "params": []}] }, { "value": "&kp", "params": [{"value": "RET", "params": []}] } ] },
   { "name": "&mac_ellipsis", "params": [], "description": "9. Ellipsis Macro", "waitMs": 0, "tapMs": 0, "bindings": [ { "value": "&macro_tap", "params": [] }, { "value": "&kp", "params": [{"value": "DOT", "params": []}] }, { "value": "&kp", "params": [{"value": "DOT", "params": []}] }, { "value": "&kp", "params": [{"value": "DOT", "params": []}] } ] },
@@ -57,39 +57,39 @@ else . end) |
   { "name": "&mac_fat_arrow", "params": [], "description": "14. Fat Arrow Macro", "waitMs": 0, "tapMs": 0, "bindings": [ { "value": "&macro_tap", "params": [] }, { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] }, { "value": "&kp", "params": [{"value": "GT", "params": []}] } ] }
 ]) as $new_macros |
 
-# --- B. TAP-DANCES (Hold-Taps are nested inside Step 1 using &mt / &lt) ---
-([
-  { "name": "&td_spc_tog", "description": "2. Peek-or-Lock Layer Space", "tappingTermMs": 200, "bindings": [ { "value": "&lt", "params": [{"value": $idx_num}, {"value": "SPACE", "params": []}] }, { "value": "&tog", "params": [{"value": $idx_num}] } ] },
-  { "name": "&td_parens", "description": "3. Space Cadet Evolved", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "LSHFT", "params": []}, {"value": "LPAR", "params": []}] }, { "value": "&kp", "params": [{"value": "RPAR", "params": []}] } ] },
-  { "name": "&td_enter_eol", "description": "4. Enter / Shift / EOL", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "RSHFT", "params": []}, {"value": "RET", "params": []}] }, { "value": "&mac_eol_semi", "params": [] } ] },
-  { "name": "&td_hrm_f", "description": "5. Safe HRM Escape (F)", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "LSHFT", "params": []}, {"value": "F", "params": []}] }, { "value": "&kp", "params": [{"value": "F", "params": []}] } ] },
-  { "name": "&td_caps_word", "description": "7. Caps Word Trigger", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "LSHFT", "params": []}, {"value": "LSHFT", "params": []}] }, { "value": "&caps_word", "params": [] } ] },
-  { "name": "&td_dot_ellipsis", "description": "9. Base: '.' / '...'", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "DOT", "params": []}] }, { "value": "&mac_ellipsis", "params": [] } ] },
-  { "name": "&td_paren_brack", "description": "10. Base: '(' / '['", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LPAR", "params": []}] }, { "value": "&kp", "params": [{"value": "LBKT", "params": []}] } ] },
-  { "name": "&td_angle_brace", "description": "10. Shift: '<' / '{'", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LT", "params": []}] }, { "value": "&kp", "params": [{"value": "LBRC", "params": []}] } ] },
-  { "name": "&td_slash_excl", "description": "11. Base: '/' / '!'", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "FSLH", "params": []}] }, { "value": "&kp", "params": [{"value": "EXCL", "params": []}] } ] },
-  { "name": "&td_dash_arrow", "description": "12. Base: '-' / '->'", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "MINUS", "params": []}] }, { "value": "&mac_arrow", "params": [] } ] },
-  { "name": "&td_media", "description": "13. Media Maestro", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "C_VOL_UP", "params": []}, {"value": "C_PP", "params": []}] }, { "value": "&kp", "params": [{"value": "C_NEXT", "params": []}] }, { "value": "&kp", "params": [{"value": "C_PREV", "params": []}] } ] },
-  { "name": "&td_eq_fat", "description": "14. Base: '=' / '=>'", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] }, { "value": "&mac_fat_arrow", "params": [] } ] },
-  { "name": "&td_pscrn_sleep", "description": "15. Base: PSCRN / SLEEP", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "PSCRN", "params": []}] }, { "value": "&kp", "params": [{"value": "C_SLEEP", "params": []}] } ] }
-]) as $new_dances |
-
-# --- C. MOD-MORPHS (Wrapping Tap-Dances where required) ---
+# --- B. MOD-MORPHS (Inner behaviors that transform Tap 1 based on Shift) ---
 ([
   { "name": "&mm_bspc_del", "description": "1. Mod-Morph: BSPC / DEL", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "BSPC", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "DEL", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
   { "name": "&mm_esc_tilde", "description": "6. Mod-Morph: ESC / ~", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "ESC", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "GRAVE", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
   { "name": "&mm_tab_bck", "description": "8. Mod-Morph: TAB / LS(TAB)", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "TAB", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "TAB", "params": []}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_punct_power", "description": "9. Punctuation Powerhouse", "cases": [ { "binding": { "value": "&td_dot_ellipsis", "params": [] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "COLON", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_nested_brackets", "description": "10. Coder's Nested Brackets", "cases": [ { "binding": { "value": "&td_paren_brack", "params": [] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&td_angle_brace", "params": [] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_quest_excl", "description": "11. Question & Exclamation", "cases": [ { "binding": { "value": "&td_slash_excl", "params": [] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "QMARK", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_dash_arrow", "description": "12. Dash & Arrow", "cases": [ { "binding": { "value": "&td_dash_arrow", "params": [] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "UNDER", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_math_logic", "description": "14. Math & Logic Operator", "cases": [ { "binding": { "value": "&td_eq_fat", "params": [] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "PLUS", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_os_power", "description": "15. OS Power & Screenshot", "cases": [ { "binding": { "value": "&td_pscrn_sleep", "params": [] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LG", "params": [{"value": "LS", "params": [{"value": "S", "params": []}]}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] }
+  { "name": "&mm_dot_colon", "description": "9. Mod-Morph: DOT / COLON", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "DOT", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "COLON", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_paren_angle", "description": "10. Mod-Morph: ( / <", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LPAR", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LT", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_brack_brace", "description": "10. Mod-Morph: [ / {", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LBKT", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LBRC", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_slash_qmark", "description": "11. Mod-Morph: / / ?", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "FSLH", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "QMARK", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_dash_under", "description": "12. Mod-Morph: - / _", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "MINUS", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "UNDER", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_eq_plus", "description": "14. Mod-Morph: = / +", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "PLUS", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pscrn_snip", "description": "15. Mod-Morph: PSCRN / Snip", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "PSCRN", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LG", "params": [{"value": "LS", "params": [{"value": "S", "params": []}]}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] }
 ]) as $new_morphs |
 
-# --- D. HOLD-TAPS (Wrapping Mod-Morphs where instantaneous evaluation is safe) ---
+# --- C. TAP-DANCES (Outer behaviors that protect timing windows) ---
+([
+  { "name": "&td_spc_tog", "description": "2. Peek-or-Lock Layer Space", "tappingTermMs": 200, "bindings": [ { "value": "&lt", "params": [{"value": $idx_num}, {"value": "SPACE", "params": []}] }, { "value": "&tog", "params": [{"value": $idx_num}] } ] },
+  { "name": "&td_parens", "description": "3. Space Cadet Evolved", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "LSHFT", "params": []}, {"value": "LPAR", "params": []}] }, { "value": "&kp", "params": [{"value": "RPAR", "params": []}] } ] },
+  { "name": "&td_enter_eol", "description": "4. Enter / Shift / EOL", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "RSHFT", "params": []}, {"value": "RET", "params": []}] }, { "value": "&mac_eol_semi", "params": [] } ] },
+  { "name": "&td_caps_word", "description": "7. Caps Word Trigger", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "LSHFT", "params": []}, {"value": "LSHFT", "params": []}] }, { "value": "&caps_word", "params": [] } ] },
+  { "name": "&td_punct_power", "description": "9. Punctuation Powerhouse", "tappingTermMs": 200, "bindings": [ { "value": "&mm_dot_colon", "params": [] }, { "value": "&mac_ellipsis", "params": [] } ] },
+  { "name": "&td_nested_brackets", "description": "10. Coder's Nested Brackets", "tappingTermMs": 200, "bindings": [ { "value": "&mm_paren_angle", "params": [] }, { "value": "&mm_brack_brace", "params": [] } ] },
+  { "name": "&td_quest_excl", "description": "11. Smart Question & Exclamation", "tappingTermMs": 200, "bindings": [ { "value": "&mm_slash_qmark", "params": [] }, { "value": "&kp", "params": [{"value": "EXCL", "params": []}] } ] },
+  { "name": "&td_dash_arrow", "description": "12. Dash & Arrow Macro Key", "tappingTermMs": 200, "bindings": [ { "value": "&mm_dash_under", "params": [] }, { "value": "&mac_arrow", "params": [] } ] },
+  { "name": "&td_media", "description": "13. Media Maestro", "tappingTermMs": 200, "bindings": [ { "value": "&mt", "params": [{"value": "C_VOL_UP", "params": []}, {"value": "C_PP", "params": []}] }, { "value": "&kp", "params": [{"value": "C_NEXT", "params": []}] }, { "value": "&kp", "params": [{"value": "C_PREV", "params": []}] } ] },
+  { "name": "&td_math_logic", "description": "14. Math & Logic Operator", "tappingTermMs": 200, "bindings": [ { "value": "&mm_eq_plus", "params": [] }, { "value": "&mac_fat_arrow", "params": [] } ] },
+  { "name": "&td_power_screen", "description": "15. OS Power & Screenshot Key", "tappingTermMs": 200, "bindings": [ { "value": "&mm_pscrn_snip", "params": [] }, { "value": "&kp", "params": [{"value": "C_SLEEP", "params": []}] } ] }
+]) as $new_dances |
+
+# --- D. HOLD-TAPS (Pure Hold-Taps, Quick-Tap enabled) ---
 ([
   { "name": "&ht_thumb_bspc", "description": "1. God-Tier Thumb Backspace", "bindings": [ "&mo", "&mm_bspc_del" ], "tappingTermMs": 200, "flavor": "tap-preferred" },
+  { "name": "&ht_hrm_safe", "description": "5. Safe HRM Escape (Generic)", "bindings": [ "&kp", "&kp" ], "tappingTermMs": 200, "requirePriorIdleMs": 150, "quickTapMs": 200, "flavor": "tap-preferred" },
   { "name": "&ht_ctrl_esc", "description": "6. 40% Smart Escape Corner", "bindings": [ "&kp", "&mm_esc_tilde" ], "tappingTermMs": 200, "flavor": "tap-preferred" },
   { "name": "&ht_alt_tab", "description": "8. App Switcher Engine", "bindings": [ "&kp", "&mm_tab_bck" ], "tappingTermMs": 200, "flavor": "tap-preferred" }
 ]) as $new_holds |
@@ -101,22 +101,22 @@ else . end) |
   .holdTaps  = ($new_holds  + (.holdTaps  // []) | unique_by(.name)) |
   
   # ==============================================================================
-  # STEP 2: AUTO-ASSIGN ON BASE LAYER
+  # STEP 2: AUTO-ASSIGN ON BASE LAYER (Strict Tap-Dance routing)
   # ==============================================================================
   (if $auto_bind == "yes" and (.layers | length > 0) then
     {
       "BSPC":     {"value": "&ht_thumb_bspc", "params": [{"value": $idx_nav}]},
       "SPACE":    {"value": "&td_spc_tog"},
       "RET":      {"value": "&td_enter_eol"},
-      "DOT":      {"value": "&mm_punct_power"},
-      "LBKT":     {"value": "&mm_nested_brackets"},
-      "FSLH":     {"value": "&mm_quest_excl"},
-      "MINUS":    {"value": "&mm_dash_arrow"},
-      "EQUAL":    {"value": "&mm_math_logic"},
+      "DOT":      {"value": "&td_punct_power"},
+      "LBKT":     {"value": "&td_nested_brackets"},
+      "FSLH":     {"value": "&td_quest_excl"},
+      "MINUS":    {"value": "&td_dash_arrow"},
+      "EQUAL":    {"value": "&td_math_logic"},
       "ESC":      {"value": "&ht_ctrl_esc", "params": [{"value": "LCTRL", "params": []}]},
       "TAB":      {"value": "&ht_alt_tab", "params": [{"value": "LALT", "params": []}]},
       "C_VOL_UP": {"value": "&td_media"},
-      "PSCRN":    {"value": "&mm_os_power"},
+      "PSCRN":    {"value": "&td_power_screen"},
       "LSHFT":    {"value": "&td_caps_word"}
     } as $map |
     
@@ -137,7 +137,7 @@ else . end) |
 
 [[param]]
 id = "auto_bind"
-label = "Implement on base layer (layer0)"
+label = "Test/Dev"
 type = "select"
 options = ["yes", "no"]
 labels = ["Yes", "No"]
@@ -154,4 +154,4 @@ icon = "🏆"
 theme = "green"
 
 [config]
-category = "Test/Dev"
+category = "Advanced Behaviors"
