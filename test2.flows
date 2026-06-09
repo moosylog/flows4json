@@ -1,7 +1,7 @@
 uid = "top_15_zmk_behaviors"
 type = "mutation"
 language = "en-US"
-title = "Test"
+title = "Test2"
 subtitle = "Community Vetted Tap-Dances & Mod-Morphs"
 description = """
 Injects the **Top 15 Community-Vetted Use Cases** directly into your layout dictionary.
@@ -23,10 +23,9 @@ These combinations condense punctuation, macros, and layer toggles into highly o
 # JQ SCRIPT
 # ==============================================================================
 script = """
-# ZMK Autonomous Injection Script - "Top 15 Advanced Behaviors" (V6 - Strict Two-Step)
+# ZMK Autonomous Injection Script - "Top 15 Advanced Behaviors" (V7 - AST Strict Auto-Bind)
 
 # --- PRE-REQUISITE: RESOLVE TARGET LAYERS ---
-# If auto-bind is enabled, ensure Nav and Num exist so thumb keys have a valid target.
 (if $auto_bind == "yes" then
   (
     ["Nav", "Num"] as $req_layers |
@@ -42,7 +41,6 @@ script = """
   )
 else . end) |
 
-# Capture indices (fallback to 1 and 2 if auto-bind is off so the Tap-Dances have valid defaults)
 (.layer_names | index("Nav") // 1) as $idx_nav |
 (.layer_names | index("Num") // 2) as $idx_num |
 
@@ -111,17 +109,17 @@ else . end) |
     {
       "BSPC":     {"value": "&ht_thumb_bspc", "params": [{"value": $idx_nav}]},
       "SPACE":    {"value": "&ht_spc_peek_lock", "params": [{"value": $idx_num}]},
-      "RET":      {"value": "&ht_shift_enter", "params": [{"value": "RSHFT"}]},
-      "DOT":      {"value": "&td_punct_power", "params": []},
-      "LBKT":     {"value": "&td_nested_brackets", "params": []},
-      "FSLH":     {"value": "&td_quest_excl", "params": []},
-      "MINUS":    {"value": "&td_dash_arrow", "params": []},
-      "EQUAL":    {"value": "&td_math_logic", "params": []},
-      "ESC":      {"value": "&ht_ctrl_esc", "params": [{"value": "LCTRL"}]},
-      "TAB":      {"value": "&ht_alt_tab", "params": [{"value": "LALT"}]},
-      "C_VOL_UP": {"value": "&ht_vol_media", "params": [{"value": "C_VOL_UP"}]},
-      "PSCRN":    {"value": "&td_power_screen", "params": []},
-      "LSHFT":    {"value": "&ht_shift_caps", "params": [{"value": "LSHFT"}]}
+      "RET":      {"value": "&ht_shift_enter", "params": [{"value": "RSHFT", "params": []}]},
+      "DOT":      {"value": "&td_punct_power"},
+      "LBKT":     {"value": "&td_nested_brackets"},
+      "FSLH":     {"value": "&td_quest_excl"},
+      "MINUS":    {"value": "&td_dash_arrow"},
+      "EQUAL":    {"value": "&td_math_logic"},
+      "ESC":      {"value": "&ht_ctrl_esc", "params": [{"value": "LCTRL", "params": []}]},
+      "TAB":      {"value": "&ht_alt_tab", "params": [{"value": "LALT", "params": []}]},
+      "C_VOL_UP": {"value": "&ht_vol_media", "params": [{"value": "C_VOL_UP", "params": []}]},
+      "PSCRN":    {"value": "&td_power_screen"},
+      "LSHFT":    {"value": "&ht_shift_caps", "params": [{"value": "LSHFT", "params": []}]}
     } as $map |
     
     .layers[0] |= map(
@@ -158,4 +156,4 @@ icon = "🏆"
 theme = "green"
 
 [config]
-category = "Advanced Behaviors"
+category = "Test/Dev"
