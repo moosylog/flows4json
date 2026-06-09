@@ -1,0 +1,175 @@
+uid = "sym_numrow"
+type = "mutation"
+language = "en-US"
+title = "Primeagen's NumRow"
+subtitle = "Custom Number Row"
+description = """
+Modifies the number row to use dual-function keys.
+
+Inspired by ThePrimeagen, this maps specific programmer symbols directly onto the number row so you don't have to stretch for the Shift key. 
+
+**⚠️Warning: It replaces your current NumRow on layer0**
+
+Supports dynamically injecting:
+* **Hold-Tap:** 1 Behavior definition (Hold for symbol, tap for number).
+* **Tap-Dance:** 12 Explicit definitions (Double-tap for symbol, tap for number).
+* **Mod-Morph:** 12 Explicit definitions (Shift for number, tap for symbol).
+"""
+
+# ==============================================================================
+# JQ SCRIPT (Must remain at the top before any headers!)
+# ==============================================================================
+script = """
+# ==============================================================================
+# 1. CORE UTILITIES & HARDWARE
+# ==============================================================================
+
+def log_err($msg):
+  ($msg | stderr) | empty;
+
+def GetHardware:
+  (.keyboard | if type == "string" then ascii_downcase else "" end) as $kb |
+  if $kb == "glove80" then
+    { offset: 10, len: 12 } # Glove80 number row is keys 10 through 22
+  elif $kb == "go60" then
+    { offset: 0, len: 12 }  # Go60 number row is keys 0 through 12
+  else
+    log_err("FATAL: Unsupported or missing keyboard property in layout") | halt
+  end;
+
+# ==============================================================================
+# 2. BEHAVIOR DEFINITIONS (Strict AST Matching your JSON Example)
+# ==============================================================================
+
+def get_primeagen_holdtap: {
+  "name": "&ht_primeagen",
+  "description": "Primeagen NumRow Hold-Tap",
+  "bindings": ["&kp", "&kp"],
+  "tappingTermMs": 200,
+  "flavor": "tap-preferred"
+};
+
+# Explicitly defined Mod-Morphs (12 definitions)
+([
+  { "name": "&mm_pr_0", "description": "Mod-Morph: + / @", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2", "params": []}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_1", "description": "Mod-Morph: ! / 1", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N1", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_2", "description": "Mod-Morph: [ / 2", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LBKT", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N2", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_3", "description": "Mod-Morph: { / 3", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N3", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_4", "description": "Mod-Morph: ( / 4", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N4", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_5", "description": "Mod-Morph: & / 5", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N5", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_6", "description": "Mod-Morph: = / 6", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N6", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_7", "description": "Mod-Morph: ) / 7", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N7", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_8", "description": "Mod-Morph: } / 8", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N8", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_9", "description": "Mod-Morph: ] / 9", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "RBKT", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N9", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_10", "description": "Mod-Morph: * / 0", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N0", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_11", "description": "Mod-Morph: $ / %", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5", "params": []}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] }
+]) as $new_morphs |
+
+# Explicitly defined Tap-Dances (12 definitions)
+([
+  { "name": "&td_pr_0", "description": "Tap-Dance: + / @", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2", "params": []}]}] } ] },
+  { "name": "&td_pr_1", "description": "Tap-Dance: 1 / !", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N1", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1", "params": []}]}] } ] },
+  { "name": "&td_pr_2", "description": "Tap-Dance: 2 / [", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N2", "params": []}] }, { "value": "&kp", "params": [{"value": "LBKT", "params": []}] } ] },
+  { "name": "&td_pr_3", "description": "Tap-Dance: 3 / {", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N3", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT", "params": []}]}] } ] },
+  { "name": "&td_pr_4", "description": "Tap-Dance: 4 / (", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N4", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9", "params": []}]}] } ] },
+  { "name": "&td_pr_5", "description": "Tap-Dance: 5 / &", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N5", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7", "params": []}]}] } ] },
+  { "name": "&td_pr_6", "description": "Tap-Dance: 6 / =", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N6", "params": []}] }, { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] } ] },
+  { "name": "&td_pr_7", "description": "Tap-Dance: 7 / )", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N7", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0", "params": []}]}] } ] },
+  { "name": "&td_pr_8", "description": "Tap-Dance: 8 / }", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N8", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}] } ] },
+  { "name": "&td_pr_9", "description": "Tap-Dance: 9 / ]", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N9", "params": []}] }, { "value": "&kp", "params": [{"value": "RBKT", "params": []}] } ] },
+  { "name": "&td_pr_10", "description": "Tap-Dance: 0 / *", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N0", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8", "params": []}]}] } ] },
+  { "name": "&td_pr_11", "description": "Tap-Dance: $ / %", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4", "params": []}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5", "params": []}]}] } ] }
+]) as $new_dances |
+
+# Explicitly mapped parameters for the single Hold-Tap behavior
+[
+  [ {"value": "LS", "params": [{"value": "N2", "params": []}]}, {"value": "LS", "params": [{"value": "EQUAL", "params": []}]} ],
+  [ {"value": "N1", "params": []}, {"value": "LS", "params": [{"value": "N1", "params": []}]} ],
+  [ {"value": "N2", "params": []}, {"value": "LBKT", "params": []} ],
+  [ {"value": "N3", "params": []}, {"value": "LS", "params": [{"value": "LBKT", "params": []}]} ],
+  [ {"value": "N4", "params": []}, {"value": "LS", "params": [{"value": "N9", "params": []}]} ],
+  [ {"value": "N5", "params": []}, {"value": "LS", "params": [{"value": "N7", "params": []}]} ],
+  [ {"value": "N6", "params": []}, {"value": "EQUAL", "params": []} ],
+  [ {"value": "N7", "params": []}, {"value": "LS", "params": [{"value": "N0", "params": []}]} ],
+  [ {"value": "N8", "params": []}, {"value": "LS", "params": [{"value": "RBKT", "params": []}]} ],
+  [ {"value": "N9", "params": []}, {"value": "RBKT", "params": []} ],
+  [ {"value": "N0", "params": []}, {"value": "LS", "params": [{"value": "N8", "params": []}]} ],
+  [ {"value": "LS", "params": [{"value": "N4", "params": []}]}, {"value": "LS", "params": [{"value": "N5", "params": []}]} ]
+] as $ht_params |
+
+(GetHardware) as $hw |
+
+# ==============================================================================
+# 3. MAIN TRANSFORMATION ENGINE
+# ==============================================================================
+
+(.keymap // .) |= (
+  
+  # Step 1: Safely inject ONLY the selected behaviors into the AST
+  .holdTaps = (if $behavior_type == "hold-tap" then ((.holdTaps // []) + [get_primeagen_holdtap] | unique_by(.name)) else (.holdTaps // []) end) |
+  .modMorphs = (if $behavior_type == "mod-morph" then ((.modMorphs // []) + $new_morphs | unique_by(.name)) else (.modMorphs // []) end) |
+  .tapDances = (if $behavior_type == "tap-dance" then ((.tapDances // []) + $new_dances | unique_by(.name)) else (.tapDances // []) end) |
+
+  # Step 2: Modify the Number Row on the Base Layer
+  .layers[0] |= [
+    range(length) as $i | .[$i] |
+    
+    # Check if the current key index is strictly inside the hardware's number row
+    if ($i >= $hw.offset) and ($i < ($hw.offset + $hw.len)) then
+      
+      ($i - $hw.offset) as $idx | # Maps index back to 0-11 to pull from our arrays cleanly
+
+      # Safely preserve any UI decorators the user has applied
+      (if type == "object" and .decoration then { decoration: .decoration } else {} end) as $dec |
+      
+      if $behavior_type == "hold-tap" then
+        {
+          value: "&ht_primeagen",
+          params: $ht_params[$idx]
+        } + $dec
+        
+      elif $behavior_type == "tap-dance" then
+        {
+          value: "&td_pr_\\($idx)"
+        } + $dec
+        
+      elif $behavior_type == "mod-morph" then
+        {
+          value: "&mm_pr_\\($idx)"
+        } + $dec
+        
+      else 
+        . 
+      end
+
+    else 
+      . # Leave keys outside the number row completely untouched
+    end
+  ]
+)
+"""
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "behavior_type"
+label = "Trigger Behavior"
+type = "select"
+options = ["hold-tap", "tap-dance", "mod-morph"]
+labels = ["Hold-Tap (Hold for Symbol, Tap for Number)", "Tap-Dance (Double Tap for Symbol, Tap for Number)", "Mod-Morph (Shift for Number, Tap for Symbol)"]
+default = "hold-tap"
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🔢"      
+theme = "yellow" 
+
+[config]
+category = "Test/Dev"
