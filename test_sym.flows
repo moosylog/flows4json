@@ -38,7 +38,7 @@ def GetHardware:
   end;
 
 # ==============================================================================
-# 2. BEHAVIOR DEFINITIONS (Strict AST Matching your JSON Example)
+# 2. BEHAVIOR DEFINITIONS (Strict AST Matching)
 # ==============================================================================
 
 def get_primeagen_holdtap: {
@@ -49,52 +49,52 @@ def get_primeagen_holdtap: {
   "flavor": "tap-preferred"
 };
 
-# Explicitly defined Mod-Morphs (12 definitions)
+# Explicitly defined Mod-Morphs (12 definitions - Terminal Keycodes lack empty params)
 ([
-  { "name": "&mm_pr_0", "description": "Mod-Morph: + / @", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2", "params": []}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_1", "description": "Mod-Morph: ! / 1", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N1", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_2", "description": "Mod-Morph: [ / 2", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LBKT", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N2", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_3", "description": "Mod-Morph: { / 3", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N3", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_4", "description": "Mod-Morph: ( / 4", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N4", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_5", "description": "Mod-Morph: & / 5", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N5", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_6", "description": "Mod-Morph: = / 6", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N6", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_7", "description": "Mod-Morph: ) / 7", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N7", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_8", "description": "Mod-Morph: } / 8", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N8", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_9", "description": "Mod-Morph: ] / 9", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "RBKT", "params": []}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N9", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_10", "description": "Mod-Morph: * / 0", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N0", "params": []}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
-  { "name": "&mm_pr_11", "description": "Mod-Morph: $ / %", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4", "params": []}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5", "params": []}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] }
+  { "name": "&mm_pr_0", "description": "Mod-Morph: + / @", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2"}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_1", "description": "Mod-Morph: ! / 1", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N1"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_2", "description": "Mod-Morph: [ / 2", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LBKT"}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N2"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_3", "description": "Mod-Morph: { / 3", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N3"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_4", "description": "Mod-Morph: ( / 4", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N4"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_5", "description": "Mod-Morph: & / 5", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N5"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_6", "description": "Mod-Morph: = / 6", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "EQUAL"}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N6"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_7", "description": "Mod-Morph: ) / 7", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N7"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_8", "description": "Mod-Morph: } / 8", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N8"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_9", "description": "Mod-Morph: ] / 9", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "RBKT"}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N9"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_10", "description": "Mod-Morph: * / 0", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "N0"}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] },
+  { "name": "&mm_pr_11", "description": "Mod-Morph: $ / %", "cases": [ { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4"}]}] }, "mods": [], "keepMods": [] }, { "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5"}]}] }, "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": [] } ] }
 ]) as $new_morphs |
 
 # Explicitly defined Tap-Dances (12 definitions)
 ([
-  { "name": "&td_pr_0", "description": "Tap-Dance: + / @", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL", "params": []}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2", "params": []}]}] } ] },
-  { "name": "&td_pr_1", "description": "Tap-Dance: 1 / !", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N1", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1", "params": []}]}] } ] },
-  { "name": "&td_pr_2", "description": "Tap-Dance: 2 / [", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N2", "params": []}] }, { "value": "&kp", "params": [{"value": "LBKT", "params": []}] } ] },
-  { "name": "&td_pr_3", "description": "Tap-Dance: 3 / {", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N3", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT", "params": []}]}] } ] },
-  { "name": "&td_pr_4", "description": "Tap-Dance: 4 / (", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N4", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9", "params": []}]}] } ] },
-  { "name": "&td_pr_5", "description": "Tap-Dance: 5 / &", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N5", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7", "params": []}]}] } ] },
-  { "name": "&td_pr_6", "description": "Tap-Dance: 6 / =", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N6", "params": []}] }, { "value": "&kp", "params": [{"value": "EQUAL", "params": []}] } ] },
-  { "name": "&td_pr_7", "description": "Tap-Dance: 7 / )", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N7", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0", "params": []}]}] } ] },
-  { "name": "&td_pr_8", "description": "Tap-Dance: 8 / }", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N8", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT", "params": []}]}] } ] },
-  { "name": "&td_pr_9", "description": "Tap-Dance: 9 / ]", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N9", "params": []}] }, { "value": "&kp", "params": [{"value": "RBKT", "params": []}] } ] },
-  { "name": "&td_pr_10", "description": "Tap-Dance: 0 / *", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N0", "params": []}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8", "params": []}]}] } ] },
-  { "name": "&td_pr_11", "description": "Tap-Dance: $ / %", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4", "params": []}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5", "params": []}]}] } ] }
+  { "name": "&td_pr_0", "description": "Tap-Dance: + / @", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "EQUAL"}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N2"}]}] } ] },
+  { "name": "&td_pr_1", "description": "Tap-Dance: 1 / !", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N1"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N1"}]}] } ] },
+  { "name": "&td_pr_2", "description": "Tap-Dance: 2 / [", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N2"}] }, { "value": "&kp", "params": [{"value": "LBKT"}] } ] },
+  { "name": "&td_pr_3", "description": "Tap-Dance: 3 / {", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N3"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "LBKT"}]}] } ] },
+  { "name": "&td_pr_4", "description": "Tap-Dance: 4 / (", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N4"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N9"}]}] } ] },
+  { "name": "&td_pr_5", "description": "Tap-Dance: 5 / &", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N5"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N7"}]}] } ] },
+  { "name": "&td_pr_6", "description": "Tap-Dance: 6 / =", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N6"}] }, { "value": "&kp", "params": [{"value": "EQUAL"}] } ] },
+  { "name": "&td_pr_7", "description": "Tap-Dance: 7 / )", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N7"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N0"}]}] } ] },
+  { "name": "&td_pr_8", "description": "Tap-Dance: 8 / }", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N8"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "RBKT"}]}] } ] },
+  { "name": "&td_pr_9", "description": "Tap-Dance: 9 / ]", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N9"}] }, { "value": "&kp", "params": [{"value": "RBKT"}] } ] },
+  { "name": "&td_pr_10", "description": "Tap-Dance: 0 / *", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "N0"}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N8"}]}] } ] },
+  { "name": "&td_pr_11", "description": "Tap-Dance: $ / %", "tappingTermMs": 200, "bindings": [ { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N4"}]}] }, { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "N5"}]}] } ] }
 ]) as $new_dances |
 
 # Explicitly mapped parameters for the single Hold-Tap behavior
 [
-  [ {"value": "LS", "params": [{"value": "N2", "params": []}]}, {"value": "LS", "params": [{"value": "EQUAL", "params": []}]} ],
-  [ {"value": "N1", "params": []}, {"value": "LS", "params": [{"value": "N1", "params": []}]} ],
-  [ {"value": "N2", "params": []}, {"value": "LBKT", "params": []} ],
-  [ {"value": "N3", "params": []}, {"value": "LS", "params": [{"value": "LBKT", "params": []}]} ],
-  [ {"value": "N4", "params": []}, {"value": "LS", "params": [{"value": "N9", "params": []}]} ],
-  [ {"value": "N5", "params": []}, {"value": "LS", "params": [{"value": "N7", "params": []}]} ],
-  [ {"value": "N6", "params": []}, {"value": "EQUAL", "params": []} ],
-  [ {"value": "N7", "params": []}, {"value": "LS", "params": [{"value": "N0", "params": []}]} ],
-  [ {"value": "N8", "params": []}, {"value": "LS", "params": [{"value": "RBKT", "params": []}]} ],
-  [ {"value": "N9", "params": []}, {"value": "RBKT", "params": []} ],
-  [ {"value": "N0", "params": []}, {"value": "LS", "params": [{"value": "N8", "params": []}]} ],
-  [ {"value": "LS", "params": [{"value": "N4", "params": []}]}, {"value": "LS", "params": [{"value": "N5", "params": []}]} ]
+  [ {"value": "LS", "params": [{"value": "N2"}]}, {"value": "LS", "params": [{"value": "EQUAL"}]} ],
+  [ {"value": "N1"}, {"value": "LS", "params": [{"value": "N1"}]} ],
+  [ {"value": "N2"}, {"value": "LBKT"} ],
+  [ {"value": "N3"}, {"value": "LS", "params": [{"value": "LBKT"}]} ],
+  [ {"value": "N4"}, {"value": "LS", "params": [{"value": "N9"}]} ],
+  [ {"value": "N5"}, {"value": "LS", "params": [{"value": "N7"}]} ],
+  [ {"value": "N6"}, {"value": "EQUAL"} ],
+  [ {"value": "N7"}, {"value": "LS", "params": [{"value": "N0"}]} ],
+  [ {"value": "N8"}, {"value": "LS", "params": [{"value": "RBKT"}]} ],
+  [ {"value": "N9"}, {"value": "RBKT"} ],
+  [ {"value": "N0"}, {"value": "LS", "params": [{"value": "N8"}]} ],
+  [ {"value": "LS", "params": [{"value": "N4"}]}, {"value": "LS", "params": [{"value": "N5"}]} ]
 ] as $ht_params |
 
 (GetHardware) as $hw |
@@ -130,12 +130,12 @@ def get_primeagen_holdtap: {
         
       elif $behavior_type == "tap-dance" then
         {
-          value: "&td_pr_\\($idx)"
+          value: ("&td_pr_" + ($idx | tostring))
         } + $dec
         
       elif $behavior_type == "mod-morph" then
         {
-          value: "&mm_pr_\\($idx)"
+          value: ("&mm_pr_" + ($idx | tostring))
         } + $dec
         
       else 
