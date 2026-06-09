@@ -1,7 +1,7 @@
 uid = "top_15_zmk_behaviors"
 type = "mutation"
 language = "en-US"
-title = "Advanced 🛠️"
+title = "Top 15 Advanced V8 Turbo"
 subtitle = "Community Vetted Tap-Dances & Mod-Morphs"
 description = """
 Injects the **Top 15 Community-Vetted Use Cases** directly into your layout dictionary.
@@ -137,7 +137,7 @@ else . end) |
 
 [[param]]
 id = "auto_bind"
-label = "Test/Dev"
+label = "Implement on base layer (layer0)"
 type = "select"
 options = ["yes", "no"]
 labels = ["Yes", "No"]
@@ -154,4 +154,4 @@ icon = "🏆"
 theme = "green"
 
 [config]
-category = "Advanced Behaviors"
+category = "Test/Dev"
