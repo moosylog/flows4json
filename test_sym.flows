@@ -11,9 +11,9 @@ Inspired by ThePrimeagen, this maps specific programmer symbols directly onto th
 **⚠️Warning: It replaces your current NumRow on layer0**
 
 Supports dynamically injecting:
-* **Hold-Tap:** 1 Behavior definition (Tap for Symbol, Hold for Number).
-* **Tap-Dance:** 12 Explicit definitions (Tap for Symbol, Double-Tap for Number).
-* **Mod-Morph:** 12 Explicit definitions (Tap for Symbol, Shift for Number).
+* **Hold-Tap:** Tap for Symbol, Hold for Number  *(1 Behavior definition)*
+* **Tap-Dance:** Tap for Symbol, Double-Tap for Number  *(12 Behavior definition)*
+* **Mod-Morph:** Tap for Symbol, Shift for Number  *(12 Behavior definition)*
 * **Restore Defaults:** Reverts the row back to standard QWERTY NumRow (`=`, `1`-`0`, `-`).
 """
 
