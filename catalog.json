@@ -901,7 +901,12 @@
           "mod-morph",
           "restore"
         ],
-        "labels": "[",
+        "labels": [
+          "Hold-Tap (Tap for Number, Hold for Symbol)",
+          "Tap-Dance (Tap for Symbol, Double-Tap for Number)",
+          "Mod-Morph (Tap for Symbol, Shift for Number)",
+          "Restore Defaults (Standard NumRow)"
+        ],
         "default": "hold-tap"
       }
     ],
