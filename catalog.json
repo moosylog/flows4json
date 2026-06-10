@@ -876,7 +876,7 @@
     "subtitle": "Invert Semicolon & Quotes",
     "description": "Swaps the shifted and unshifted states of common punctuation keys using Mod-Morphs.\r\n\r\nProgrammers often use Colons (`:`) and Double Quotes (`\"`) far more often than their unshifted counterparts. This script inverts them so the primary symbol requires no Shift key.\r\n\r\n**Features:**\r\n* Generates strict, ZMK-compliant Mod-Morph behaviors.\r\n* Safely finds `&kp SEMI` and `&kp SQT` on your base layer and automatically upgrades them.\r\n* Fully independent toggles (you can swap one, both, or neither).",
     "script": "# ZMK Autonomous Injection Script - Punctuation Swap\r\n\r\n# ==============================================================================\r\n# 1. BEHAVIOR DEFINITIONS\r\n# ==============================================================================\r\n\r\ndef get_mm_semi: {\r\n  \"name\": \"&mm_swap_semi\",\r\n  \"description\": \"Mod-Morph: Colon / Semicolon\",\r\n  \"cases\": [\r\n    {\r\n      \"binding\": { \"value\": \"&kp\", \"params\": [{\"value\": \"LS\", \"params\": [{\"value\": \"SEMI\"}]}] },\r\n      \"mods\": [],\r\n      \"keepMods\": []\r\n    },\r\n    {\r\n      \"binding\": { \"value\": \"&kp\", \"params\": [{\"value\": \"SEMI\"}] },\r\n      \"mods\": [\"MOD_LSFT\", \"MOD_RSFT\"],\r\n      \"keepMods\": []\r\n    }\r\n  ]\r\n};\r\n\r\ndef get_mm_sqt: {\r\n  \"name\": \"&mm_swap_sqt\",\r\n  \"description\": \"Mod-Morph: D-Quote / S-Quote\",\r\n  \"cases\": [\r\n    {\r\n      \"binding\": { \"value\": \"&kp\", \"params\": [{\"value\": \"LS\", \"params\": [{\"value\": \"SQT\"}]}] },\r\n      \"mods\": [],\r\n      \"keepMods\": []\r\n    },\r\n    {\r\n      \"binding\": { \"value\": \"&kp\", \"params\": [{\"value\": \"SQT\"}] },\r\n      \"mods\": [\"MOD_LSFT\", \"MOD_RSFT\"],\r\n      \"keepMods\": []\r\n    }\r\n  ]\r\n};\r\n\r\n# ==============================================================================\r\n# 2. MAIN TRANSFORMATION ENGINE\r\n# ==============================================================================\r\n\r\n(.keymap // .) |= (\r\n  \r\n  # Step 1: Inject behaviors into AST if enabled by UI parameters\r\n  .modMorphs = (\r\n    (.modMorphs // []) \r\n    + (if $swap_semi == \"yes\" then [get_mm_semi] else [] end)\r\n    + (if $swap_sqt == \"yes\" then [get_mm_sqt] else [] end)\r\n    | unique_by(.name)\r\n  ) |\r\n\r\n  # Step 2: Auto-Assign on Base Layer (Layer 0)\r\n  (if (.layers | length > 0) then\r\n    \r\n    # Build a target map based on UI selections\r\n    (\r\n      (if $swap_semi == \"yes\" then { \"SEMI\": {\"value\": \"&mm_swap_semi\"} } else {} end) +\r\n      (if $swap_sqt == \"yes\"  then { \"SQT\":  {\"value\": \"&mm_swap_sqt\"} } else {} end)\r\n    ) as $map |\r\n    \r\n    # Iterate over the base layer keys\r\n    .layers[0] |= map(\r\n      if type == \"object\" and .value == \"&kp\" and .params and (.params | length > 0) and (.params[0].value | in($map)) then\r\n        # Replace the key with the mapped Mod-Morph (0 parameters) and preserve decorations\r\n        $map[.params[0].value] + (if .decoration then {decoration: .decoration} else {} end)\r\n      else\r\n        .\r\n      end\r\n    )\r\n    \r\n  else . end)\r\n)",
-    "category": "Advanced Behaviors",
+    "category": "Test/Dev",
     "appUrl": null,
     "manifest": {
       "author": "moosyresearch",
@@ -888,7 +888,7 @@
       "theme": "blue"
     },
     "config": {
-      "category": "Advanced Behaviors"
+      "category": "Test/Dev"
     },
     "param": [
       {
