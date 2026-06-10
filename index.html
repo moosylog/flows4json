@@ -1103,21 +1103,24 @@
                     if (!response.ok) throw new Error("Could not reach the App Store server.");
                     
                     this.catalog = await response.json();
+const urlParams = new URLSearchParams(window.location.search);
+const flowId = urlParams.get('id');
+const searchQ = urlParams.get('q');
 
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const flowId = urlParams.get('id');
-                    const searchQ = urlParams.get('q');
+// 1. Grab the category from the URL (e.g., ?category=symbols)
+const catQ = urlParams.get('category');
 
-                    if (searchQ) document.getElementById('searchInput').value = searchQ;
+if (searchQ) document.getElementById('searchInput').value = searchQ;
 
-                    if (flowId) {
-                        const targetFlow = this.catalog.find(f => f.uid === flowId);
-                        if (targetFlow) {
-                            this.renderCategories();
-                            this.showStudio(targetFlow, true);
-                            return; 
-                        }
-                    }
+// 2. If a category is in the URL, match it safely and set it as active
+if (catQ) {
+    const allUniqueCats = ['All', ...new Set(this.catalog.map(f => this.getCategory(f)))];
+    // Find the real category name (ignoring case)
+    const realCat = allUniqueCats.find(c => c.toLowerCase() === catQ.toLowerCase().replace(/-/g, ' '));
+    if (realCat) {
+        this.activeCategory = realCat;
+    }
+}
 
                     this.renderCategories();
                     this.renderGrid();
