@@ -10,7 +10,7 @@ Hold the key a bit longer to type the shifted character (like A). [Watch video](
 
 How it works:
 Autoshift does nothing until you switch to the Autoshift layer. 
-1. Creates AutoShift layer based on base layer0
+1. Generates an AutoShift layer based on your Base Layer0, so it works with any layout, not just QWERTY.
 2. Create Behaviors &AS_v1_TKZ,  &AS_Shifted_v1_TKZ, and &AS_HT_v2_TKZ
 
 🚩 **To enable the Autoshift layer:** add a layer switch key (&to, &tog, or &layer), or set the Autoshift layer as the base layer (layer 0).
