@@ -126,4 +126,4 @@ icon = "🔀"
 theme = "blue" 
 
 [config]
-category = "Advanced Behaviors"
+category = "Test/Dev"
