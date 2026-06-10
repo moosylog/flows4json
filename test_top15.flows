@@ -16,6 +16,56 @@ These combinations condense punctuation, macros, and layer toggles into highly o
 * **12 Tap-Dances** (e.g., Peek-or-Lock Layer Space, Punctuation Powerhouse)
 * **4 Macros** (e.g., End-of-Line, Arrow Operator)
 
+
+Injects the **Top 15 Community-Vetted Use Cases** directly into your layout dictionary.
+
+These combinations condense punctuation, macros, and layer toggles into highly optimized keys without disrupting your typing rhythm.
+
+> **Community Golden Rule:** *Mod-Morph* is highly preferred for alphanumeric keys because it executes instantly. *Tap-Dance* introduces a slight tapping delay, making it better suited for thumb keys, outer columns, macros, and layer toggles where rapid typing rhythm isn't affected.
+
+**Includes:**
+* **9 Hold-Taps** (e.g., God-Tier Thumb Backspace, Media Maestro)
+* **10 Mod-Morphs** (e.g., Smart Escape Corner, Punctuation Powerhouse)
+* **12 Tap-Dances** (e.g., Peek-or-Lock Layer Space, Nested Brackets)
+* **4 Macros** (e.g., End-of-Line, Arrow Operator)
+
+---
+
+### 1. Thumb Keys (Requires 1 Parameter for the "Hold" action)
+*Thumb keys are prime real estate. These combinations squeeze maximum utility out of just 2 to 3 thumb keys per hand.*
+
+| Behavior Code & Parameter | Action | Why it's useful |
+| :--- | :--- | :--- |
+| **`&ht_thumb_bspc`** <br> *(Set param to a Layer Number, e.g., `1`)* | **Hold:** Nav Layer <br> **Tap:** Backspace <br> **Shift+Tap:** Delete | **The "God-Tier" Thumb Backspace:** Instead of wasting a thumb key on a basic layer toggle, it combines it with text deletion that natively respects the Shift modifier. |
+| **`&ht_spc_peek_lock`** <br> *(Set param to a Layer Number, e.g., `2`)* | **Hold:** Num Layer <br> **Tap:** Space <br> **Double-Tap:** Locks Num Layer | **The Peek-or-Lock Layer Space:** A standard pattern for Numpad layers. Hold to briefly type numbers, or double-tap to lock the layer for Excel data entry. |
+| **`&ht_shift_enter`** <br> *(Set param to `RSHFT`)* | **Hold:** Right Shift <br> **Tap:** Enter <br> **Double-Tap:** End of Line + `;` + Enter | **Enter / Shift / End-of-Line Macro:** A coder's favorite for the right thumb. Handles formatting, capitalizing, and statement completion in one cluster. |
+| **`&ht_space_cadet`** <br> *(Set param to `LSHFT`)* | **Hold:** Left Shift <br> **Tap:** `(` <br> **Double-Tap:** `)` | **Space Cadet Shift Evolved:** A modernized take on Space Cadet Shift. Outputs paired parentheses without leaving the home row, while acting as a normal shift key when held. |
+
+---
+
+### 2. Punctuation & Alphas (0 Parameters required)
+*By nesting behaviors, these condense symbols that are normally scattered across the far reaches of a keyboard into the center.*
+
+| Behavior Code & Parameter | Action | Why it's useful |
+| :--- | :--- | :--- |
+| **`&td_punct_power`** <br> *(Replace your `.` key)* | **Tap:** `.` <br> **Shift+Tap:** `:` <br> **Double-Tap:** `...` | **The Punctuation Powerhouse:** Reclaims default comma/period keys by overwriting `<` and `>` with more common prose punctuation. |
+| **`&td_nested_brackets`** <br> *(Replace your `[` key)* | **Tap:** `(` <br> **Shift+Tap:** `<` <br> **Double-Tap:** `[` <br> **Shift+Double:** `{` | **The Coder's Nested Brackets:** Puts all three major bracket types on a single key. Shift handles angle brackets, tapping handles the rest. |
+| **`&td_quest_excl`** <br> *(Replace your `/` key)* | **Tap:** `/` <br> **Shift+Tap:** `?` <br> **Double-Tap:** `!` | **Smart Question & Exclamation:** Groups interrogative and exclamatory punctuation into a single intuitive cluster. |
+| **`&td_dash_arrow`** <br> *(Replace your `-` key)* | **Tap:** `-` <br> **Shift+Tap:** `_` <br> **Double-Tap:** `->` | **The Dash & Arrow Macro Key:** Essential for C++, PHP, or Markdown where arrows are used frequently. |
+| **`&td_math_logic`** <br> *(Replace your `=` key)* | **Tap:** `=` <br> **Shift+Tap:** `+` <br> **Double-Tap:** `=>` | **The Math & Logic Operator:** Combines standard mathematical equality with coding logical operators. |
+
+---
+
+### 3. Modifiers & System (Requires 1 Parameter for the "Hold" action)
+*Safe, zero-latency combinations for the outer columns to handle system utility and window management.*
+
+| Behavior Code & Parameter | Action | Why it's useful |
+| :--- | :--- | :--- |
+| **`&ht_ctrl_esc`** <br> *(Set param to `LCTRL`)* | **Hold:** Ctrl <br> **Tap:** ESC <br> **Shift+Tap:** `~` | **The 40% Smart Escape Corner:** Solves the classic 60%/40% dilemma where Esc and Tilde share the top-left physical key. |
+| **`&ht_alt_tab`** <br> *(Set param to `LALT` or `LGUI`)* | **Hold:** Alt <br> **Tap:** Tab <br> **Shift+Tap:** Shift+Tab | **The App Switcher Engine:** Condenses the entire Alt-Tab multi-tasking workflow into a single left-hand column key. |
+| **`&ht_shift_caps`** <br> *(Set param to `LSHFT`)* | **Hold:** Shift <br> **Tap:** Shift <br> **Double-Tap:** Caps Word | **Smart Caps Word Trigger:** Nests ZMK's `caps_word` into existing Shift keys so you don't need a dedicated Caps Lock key. |
+| **`&ht_vol_media`** <br> *(Set param to `C_VOL_UP`)* | **Hold:** Vol Up <br> **Tap:** Play/Pause <br> **Double:** Next <br> **Triple:** Prev | **The Media Maestro:** One key on a secondary layer controls the entire music playback experience via tap repetition. |
+
 *If "Implement on layer0" is YES, it will automatically seek out standard keys (`BSPC`, `SPACE`, `/`, `[`, etc.) on your base layer and seamlessly upgrade them to these new behaviors!*
 """
 
