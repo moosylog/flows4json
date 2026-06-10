@@ -1,0 +1,129 @@
+uid = "punct_swap"
+type = "mutation"
+language = "en-US"
+title = "Programmer Punctuation Swap"
+subtitle = "Invert Semicolon & Quotes"
+description = """
+Swaps the shifted and unshifted states of common punctuation keys using Mod-Morphs.
+
+Programmers often use Colons (`:`) and Double Quotes (`"`) far more often than their unshifted counterparts. This script inverts them so the primary symbol requires no Shift key.
+
+**Features:**
+* Generates strict, ZMK-compliant Mod-Morph behaviors.
+* Safely finds `&kp SEMI` and `&kp SQT` on your base layer and automatically upgrades them.
+* Fully independent toggles (you can swap one, both, or neither).
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+# ZMK Autonomous Injection Script - Punctuation Swap
+
+# ==============================================================================
+# 1. BEHAVIOR DEFINITIONS
+# ==============================================================================
+
+def get_mm_semi: {
+  "name": "&mm_swap_semi",
+  "description": "Mod-Morph: Colon / Semicolon",
+  "cases": [
+    {
+      "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "SEMI"}]}] },
+      "mods": [],
+      "keepMods": []
+    },
+    {
+      "binding": { "value": "&kp", "params": [{"value": "SEMI"}] },
+      "mods": ["MOD_LSFT", "MOD_RSFT"],
+      "keepMods": []
+    }
+  ]
+};
+
+def get_mm_sqt: {
+  "name": "&mm_swap_sqt",
+  "description": "Mod-Morph: D-Quote / S-Quote",
+  "cases": [
+    {
+      "binding": { "value": "&kp", "params": [{"value": "LS", "params": [{"value": "SQT"}]}] },
+      "mods": [],
+      "keepMods": []
+    },
+    {
+      "binding": { "value": "&kp", "params": [{"value": "SQT"}] },
+      "mods": ["MOD_LSFT", "MOD_RSFT"],
+      "keepMods": []
+    }
+  ]
+};
+
+# ==============================================================================
+# 2. MAIN TRANSFORMATION ENGINE
+# ==============================================================================
+
+(.keymap // .) |= (
+  
+  # Step 1: Inject behaviors into AST if enabled by UI parameters
+  .modMorphs = (
+    (.modMorphs // []) 
+    + (if $swap_semi == "yes" then [get_mm_semi] else [] end)
+    + (if $swap_sqt == "yes" then [get_mm_sqt] else [] end)
+    | unique_by(.name)
+  ) |
+
+  # Step 2: Auto-Assign on Base Layer (Layer 0)
+  (if (.layers | length > 0) then
+    
+    # Build a target map based on UI selections
+    (
+      (if $swap_semi == "yes" then { "SEMI": {"value": "&mm_swap_semi"} } else {} end) +
+      (if $swap_sqt == "yes"  then { "SQT":  {"value": "&mm_swap_sqt"} } else {} end)
+    ) as $map |
+    
+    # Iterate over the base layer keys
+    .layers[0] |= map(
+      if type == "object" and .value == "&kp" and .params and (.params | length > 0) and (.params[0].value | in($map)) then
+        # Replace the key with the mapped Mod-Morph (0 parameters) and preserve decorations
+        $map[.params[0].value] + (if .decoration then {decoration: .decoration} else {} end)
+      else
+        .
+      end
+    )
+    
+  else . end)
+)
+"""
+
+# ==============================================================================
+# UI PARAMETERS 
+# ==============================================================================
+
+[[param]]
+id = "swap_semi"
+label = "Swap Semicolon / Colon"
+type = "select"
+options = ["yes", "no"]
+labels = ["Yes (Tap: Colon, Shift: Semicolon)", "No (Keep Default)"]
+default = "yes"
+
+[[param]]
+id = "swap_sqt"
+label = "Swap Single / Double Quotes"
+type = "select"
+options = ["yes", "no"]
+labels = ["Yes (Tap: Double, Shift: Single)", "No (Keep Default)"]
+default = "yes"
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60", "glove80"]
+icon = "🔀"      
+theme = "blue" 
+
+[config]
+category = "Advanced Behaviors"
