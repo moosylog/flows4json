@@ -1,0 +1,196 @@
+uid = "2json"
+type = "mutation"
+language = "jq"
+title = "DTSI to Native"
+subtitle = "JSON Migrator"
+description = """
+Extracts Macros, Hold-Taps, Tap-Dances, Mod-Morphs from Custom Defined Behaviors into native MoErgo behaviors."
+"""
+script = """
+# ZMK Native DTSI Migrator v2.14 (Auto-Wiring & Strict Schema Mapping)
+
+# 1. Polyfill for walk() (Ensures compatibility with all jq environments)
+def walk(f):
+  . as $in
+  | if type == "object" then
+      reduce keys_unsorted[] as $key
+        ({}; . + { ($key):  ($in[$key] | walk(f)) } ) | f
+  elif type == "array" then map( walk(f) ) | f
+  else f
+  end;
+
+# 2. Stable Unique Reducer
+def stable_unique:
+  reduce .[] as $x ({seen: {}, res: []}; if .seen[$x.name] then . else .seen[$x.name] = true | .res += [$x] end) | .res;
+
+# 3. Recursive Parameter Parser
+def parse_param:
+  try (
+    if test("^[A-Z0-9_]+\\(.*\\)$") then
+      (capture("^(?<mod>[A-Z0-9_]+)\\((?<inner>.*)\\)$") | {
+        value: .mod, 
+        params: [(try (.inner | parse_param) catch {value: "none", params: []})]
+      })
+    elif test("^[0-9]+$") then
+      {value: tonumber, params: []}
+    else
+      {value: ., params: []}
+    end
+  ) catch {value: "ERROR", params: []};
+
+# 4. Tokenizing Reducer for Bindings
+def parse_bindings:
+  try (
+    gsub("[<>,;]"; " ") | split(" ") | map(select(. != "")) |
+    reduce .[] as $t ( [];
+       if ($t | startswith("&")) then
+         . + [{value: $t, params: []}]
+       else
+         if length > 0 then
+           .[length-1].params += [($t | parse_param)]
+         else . end
+       end
+    )
+  ) catch [];
+
+# 5. Main Execution
+(if type == "object" and .keymap? then .keymap else . end) |= (
+  . as $root |
+  (.custom_defined_behaviors // "") as $raw_c |
+  
+  # Step A: Clean Comments
+  ($raw_c | if type != "string" then "" else . end | gsub("/\\*[^*]*\\*/"; "") | gsub("//.*"; "")) as $c_clean |
+  
+  # Step B: Parse Hold-Taps
+  (
+    [
+      $c_clean | 
+      scan("([a-zA-Z0-9_-]+)\\s*:\\s*([a-zA-Z0-9_-]+)\\s*\\{([^}]*compatible\\s*=\\s*.zmk,behavior-hold-tap.[^}]*)\\};?") |
+      { name: ("&" + .[0]), description: .[1], body: .[2] } |
+      .flavor = (try (.body | capture("(?m)^\\s*flavor\\s*=\\s*.(?<f>[a-z-]+).").f) catch "tap-preferred") |
+      .tappingTermMs = (try (.body | capture("(?m)^\\s*tapping-term-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch 200) |
+      .quickTapMs = (try (.body | capture("(?m)^\\s*quick-tap-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch null) |
+      .requirePriorIdleMs = (try (.body | capture("(?m)^\\s*require-prior-idle-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch null) |
+      .holdTriggerOnRelease = (try (if .body | test("(?m)^\\s*hold-trigger-on-release") then true else false end) catch false) |
+      .bindings = (try (.body | capture("(?m)^\\s*bindings\\s*=\\s*(?<b>[^;]+);").b | parse_bindings) catch [{value:"&kp", params:[]}, {value:"&kp", params:[]}]) |
+      del(.body) | with_entries(select(.value != null))
+    ]
+  ) as $parsed_hts |
+
+  # Step C: Parse Macros
+  (
+    [
+      $c_clean |
+      scan("([a-zA-Z0-9_-]+)\\s*:\\s*([a-zA-Z0-9_-]+)\\s*\\{([^}]*compatible\\s*=\\s*.zmk,behavior-macro(?:-[a-z]+)*.[^}]*)\\};?") |
+      { name: ("&" + .[0]), description: .[1], body: .[2] } |
+      .waitMs = (try (.body | capture("(?m)^\\s*wait-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch 30) |
+      .tapMs = (try (.body | capture("(?m)^\\s*tap-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch 30) |
+      .params = (try (if .body | test("(?m)^\\s*#binding-cells\\s*=\\s*<1>") then ["code"] elif .body | test("(?m)^\\s*#binding-cells\\s*=\\s*<2>") then ["code", "layer"] else [] end) catch []) |
+      .bindings = (try (.body | capture("(?m)^\\s*bindings\\s*=\\s*(?<b>[^;]+);").b | parse_bindings) catch []) |
+      del(.body) | with_entries(select(.value != null))
+    ]
+  ) as $parsed_macros |
+
+  # Step D: Parse Tap-Dances
+  (
+    [
+      $c_clean |
+      scan("([a-zA-Z0-9_-]+)\\s*:\\s*([a-zA-Z0-9_-]+)\\s*\\{([^}]*compatible\\s*=\\s*.zmk,behavior-tap-dance.[^}]*)\\};?") |
+      { name: ("&" + .[0]), description: .[1], body: .[2] } |
+      .tappingTermMs = (try (.body | capture("(?m)^\\s*tapping-term-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch 200) |
+      .bindings = (try (.body | capture("(?m)^\\s*bindings\\s*=\\s*(?<b>[^;]+);").b | parse_bindings) catch []) |
+      del(.body) | with_entries(select(.value != null))
+    ]
+  ) as $parsed_tds |
+
+  # Step E: Parse Mod-Morphs -> EXACT 2-Case Schema Matching
+  (
+    [
+      $c_clean |
+      scan("([a-zA-Z0-9_-]+)\\s*:\\s*([a-zA-Z0-9_-]+)\\s*\\{([^}]*compatible\\s*=\\s*.zmk,behavior-mod-morph.[^}]*)\\};?") |
+      { name: ("&" + .[0]), description: .[1], body: .[2] } |
+      
+      .parsed_bindings = (try (.body | capture("(?m)^\\s*bindings\\s*=\\s*(?<b>[^;]+);").b | parse_bindings) catch []) |
+      
+      .mods_raw = (if .body | test("(?m)^\\s*mods\\s*=\\s*<([^>]+)>") then (.body | capture("(?m)^\\s*mods\\s*=\\s*<(?<m>[^>]+)>").m) else "" end) |
+      .mods = (if .mods_raw != "" then (.mods_raw | split("|") | map(gsub("[\\s()]"; "")) | map(select(. != ""))) else [] end) |
+      
+      .keep_mods_raw = (if .body | test("(?m)^\\s*keep-mods\\s*=\\s*<([^>]+)>") then (.body | capture("(?m)^\\s*keep-mods\\s*=\\s*<(?<m>[^>]+)>").m) else "" end) |
+      .keepMods = (if .keep_mods_raw != "" then (.keep_mods_raw | split("|") | map(gsub("[\\s()]"; "")) | map(select(. != ""))) else [] end) |
+      
+      {
+        name: .name,
+        description: (if .description == (.name | sub("^&"; "")) then "" else .description end),
+        cases: [
+          {
+            binding: (if (.parsed_bindings | length) > 0 then .parsed_bindings[0] else {value: "&none", params: []} end),
+            mods: [],
+            keepMods: []
+          },
+          {
+            binding: (if (.parsed_bindings | length) > 1 then .parsed_bindings[1] else {value: "&none", params: []} end),
+            mods: .mods,
+            keepMods: .keepMods
+          }
+        ]
+      }
+    ]
+  ) as $parsed_mms |
+
+  # Step F: Parse Sticky Keys
+  (
+    [
+      $c_clean |
+      scan("([a-zA-Z0-9_-]+)\\s*:\\s*([a-zA-Z0-9_-]+)\\s*\\{([^}]*compatible\\s*=\\s*.zmk,behavior-sticky-key.[^}]*)\\};?") |
+      { name: ("&" + .[0]), description: .[1], body: .[2] } |
+      .bindings = (try (.body | capture("(?m)^\\s*bindings\\s*=\\s*(?<b>[^;]+);").b | parse_bindings) catch []) |
+      .releaseAfterMs = (try (.body | capture("(?m)^\\s*release-after-ms\\s*=\\s*<(?<v>[0-9]+)>").v | tonumber) catch null) |
+      .quickRelease = (try (if .body | test("(?m)^\\s*quick-release") then true else false end) catch false) |
+      .ignoreModifiers = (try (if .body | test("(?m)^\\s*ignore-modifiers") then true else false end) catch false) |
+      del(.body) | with_entries(select(.value != null))
+    ]
+  ) as $parsed_sks |
+
+  # Step G: Inject Natively
+  .holdTaps = ((.holdTaps // []) + $parsed_hts | stable_unique) |
+  .macros = ((.macros // []) + $parsed_macros | stable_unique) |
+  .tapDances = ((.tapDances // []) + $parsed_tds | stable_unique) |
+  .modMorphs = ((.modMorphs // []) + $parsed_mms | stable_unique) |
+  .stickyKeys = ((.stickyKeys // []) + $parsed_sks | stable_unique) |
+
+  # Step H: Generate Migration Dictionary & Auto-Wire Layers
+  (
+    ($parsed_hts + $parsed_macros + $parsed_tds + $parsed_mms + $parsed_sks) 
+    | map({key: .name, value: true}) 
+    | from_entries
+  ) as $migrated_dict |
+
+  .layers = (
+    .layers | walk(
+      if type == "object" and .value == "Custom" and (.params | type == "array") and (.params[0] | type == "object") and $migrated_dict[.params[0].value] then
+        .value = .params[0].value | .params = []
+      else
+        .
+      end
+    )
+  ) |
+  
+  # Step I: UI Rendering Cleanup
+  (if (.holdTaps | length) == 0 then del(.holdTaps) else . end) |
+  (if (.macros | length) == 0 then del(.macros) else . end) |
+  (if (.tapDances | length) == 0 then del(.tapDances) else . end) |
+  (if (.modMorphs | length) == 0 then del(.modMorphs) else . end) |
+  (if (.stickyKeys | length) == 0 then del(.stickyKeys) else . end)
+)
+"""
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["go60","glove80"]
+icon = "🔥"      
+theme = "green" 
+[config]
+category = "Test/Dev"
+num = 123
+
+
