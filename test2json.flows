@@ -175,12 +175,7 @@ def parse_bindings:
     )
   ) |
   
-  # Step I: UI Rendering Cleanup
-  (if (.holdTaps | length) == 0 then del(.holdTaps) else . end) |
-  (if (.macros | length) == 0 then del(.macros) else . end) |
-  (if (.tapDances | length) == 0 then del(.tapDances) else . end) |
-  (if (.modMorphs | length) == 0 then del(.modMorphs) else . end) |
-  (if (.stickyKeys | length) == 0 then del(.stickyKeys) else . end)
+
 )
 """
 
