@@ -1,6 +1,6 @@
 uid = "2json"
 type = "mutation"
-language = "us"
+language = "en-US"
 title = "DTSI to Native"
 subtitle = "JSON Migrator"
 description = """
