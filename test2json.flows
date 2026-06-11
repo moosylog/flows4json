@@ -4,7 +4,7 @@ language = "en-US"
 title = "DTSI to Native"
 subtitle = "JSON Migrator"
 description = """
-Extracts Macros, Hold-Taps, Tap-Dances, Mod-Morphs from Custom Defined Behaviors into native MoErgo behaviors."
+Extracts Macros, Hold-Taps, Tap-Dances, Mod-Morphs from Custom Defined Behaviors into native MoErgo behaviors.
 """
 script = """
 # ZMK Native DTSI Migrator v2.14 (Auto-Wiring & Strict Schema Mapping)
