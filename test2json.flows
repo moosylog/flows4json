@@ -173,7 +173,7 @@ def parse_bindings:
         .
       end
     )
-  ) |
+  ) 
   
 
 )
