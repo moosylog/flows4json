@@ -1,4 +1,4 @@
-uid = "theme_colors"
+uid = "s_theme_colors"
 type = "mutation"
 language = "en-US"
 title = "Smart Theme Colorizer"
