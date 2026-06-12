@@ -290,11 +290,11 @@
         <div id="viewStudio" class="view">
             <div class="product-scroll">
                 <div class="product-page">
-                    <div class="nav-back" onclick="app.showLibrary()">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-                        App Store
-                    </div>
-                    
+<div class="nav-back" onclick="app.showLibrary()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    App Store
+    <span style="opacity: 0.4; font-size: 11px; margin-left: 16px; font-weight: normal; letter-spacing: 0.5px;">[esc] to close &nbsp;&nbsp; [←] [→] to browse</span>
+</div>
                     <div class="product-header">
                         <div class="product-icon-large" id="studioIcon">🌊</div>
                         <div class="product-header-info">
@@ -514,6 +514,7 @@
 
                 this.initEditors();
                 this.bindEvents();
+				this.initKeyboardNav();
                 this.fetchCatalog();
             }
             
@@ -572,6 +573,37 @@
                     }
                 });
             }
+
+initKeyboardNav() {
+                window.addEventListener('keydown', (e) => {
+                    // Only run if we are actively viewing a flow in the Studio
+                    if (!this.state.activeFlow || !this.currentFilteredCatalog) return;
+
+                    // Ignore shortcuts if the user is typing inside an input field
+                    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT') {
+                        return;
+                    }
+
+                    const currentIndex = this.currentFilteredCatalog.findIndex(f => f.uid === this.state.activeFlow.uid);
+                    if (currentIndex === -1) return;
+
+                    if (e.key === 'ArrowRight') {
+                        e.preventDefault();
+                        const nextIndex = (currentIndex + 1) % this.currentFilteredCatalog.length;
+                        this.showStudio(this.currentFilteredCatalog[nextIndex]);
+                    } 
+                    else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        const prevIndex = (currentIndex - 1 + this.currentFilteredCatalog.length) % this.currentFilteredCatalog.length;
+                        this.showStudio(this.currentFilteredCatalog[prevIndex]);
+                    } 
+                    else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        this.showLibrary();
+                    }
+                });
+            }
+
 
             toggleMobileMenu() {
                 const sidebar = document.querySelector('.sidebar');
@@ -1175,6 +1207,8 @@ if (catQ) {
                 });
 
                 if (filtered.length === 0) { grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h2>No matches found</h2><p>Try adjusting your filters.</p></div>'; return; }
+// Inside renderGrid(), right before filtered.forEach(...)
+this.currentFilteredCatalog = filtered; // 👈 Add this line
 
                 filtered.forEach(flow => {
                     const cat = this.getCategory(flow);
