@@ -1122,8 +1122,17 @@ if (catQ) {
     }
 }
 
-                    this.renderCategories();
+ this.renderCategories();
                     this.renderGrid();
+
+                    // --- ADD THIS NEW BLOCK ---
+                    if (flowId) {
+                        const targetFlow = this.catalog.find(f => f.uid === flowId);
+                        if (targetFlow) {
+                            this.showStudio(targetFlow, true);
+                        }
+                    }
+                    // --------------------------
 
                 } catch (err) { 
                     grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon" style="color:var(--accent-red);">⚠️</div><h2>Connection Failed</h2><p>${err.message}</p></div>`; 
