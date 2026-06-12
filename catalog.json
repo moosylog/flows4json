@@ -142,7 +142,7 @@
     "mediaUrl": null
   },
   {
-    "uid": "theme_colors",
+    "uid": "s_theme_colors",
     "title": "Smart Theme Colorizer",
     "subtitle": "Visual Themes, Macros & OS Swaps",
     "description": "Automatically assigns key decorators based on key values, selected visual theme, and your operating system.\r\n\r\n* **Home Row** styles apply exclusively to Layer 0.\r\n* **Smart Shortcuts** (like Copy, Paste, Search, and Navigation) are automatically detected across *all* layers and assigned matching colors, labels, and icons.\r\n* **OS Aware:** Automatically adjusts logical shortcuts for macOS (Command) vs. Windows (Control).\r\n* Includes a **Clean Slate** mode to instantly remove all applied decorators from your layout.",
