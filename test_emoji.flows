@@ -8,6 +8,8 @@ Generate **40 ready-to-use Unicode Emoji macros** and instantly build a dedicate
 Simply drag and drop them into your preferred position in the MoErgo Layout Editor.  
 Includes the 40 most widely used emojis in collaboration tools. **Select your OS below.**
 
+😊 😉 😍 😅 😂 🤣 😭 🥺 🥲 🤔 🫡 😮 🙁 🫠 ❤️ 🫶 💔 👍 👎 🙏 👏 🤝 🤷 🤦 ✅ ❌ ⚠️ 📌 👀 🔥 ✨ 💯 🎉 🚀 😎 🙇🏻 💀 🤡 💦 💩
+
 ### ⚠️ Prerequisites: OS Unicode Support
 Standard keyboards send keycodes, not characters. To output these emojis, your OS must be configured to accept hexadecimal input:
 
@@ -26,14 +28,14 @@ Standard keyboards send keycodes, not characters. To output these emojis, your O
 # ==============================================================================
 script = """
 # -------------------------------------------------------------------------
-# ZMK UNICODE MACRO GENERATOR (Protocol v8.2 - Nested Macro Chaining)
+# ZMK UNICODE MACRO GENERATOR (Protocol v8.4 - UI Timings & Trans Padding)
 # -------------------------------------------------------------------------
 # Purpose: Automatically generates ZMK macros and a dedicated Emoji Layer.
 # Features: 
-#   1. Macro Chaining: Defines OS prefixes/suffixes once and chains them.
-#   2. Compound Support: Iterates over space-separated codepoints safely.
-#   3. Layer Builder: Reads hardware key count, maps macros, pads with &none.
-#   4. Color Coding: Dynamic JQ variables for easy palette customization.
+#   1. Abstract Naming: Macros are named generically (e.g., &UC_start, &UC_winking_face).
+#   2. Macro Chaining: Defines OS prefixes/suffixes once and chains them.
+#   3. Custom Speeds: Uses UI-defined wait and tap times to prevent OS dropped keys.
+#   4. Layer Builder: Safely pads with &trans so layer-toggles aren't broken.
 # -------------------------------------------------------------------------
 
 # =========================================================================
@@ -130,25 +132,25 @@ script = """
     # PHASE 1: GENERATE OS MODIFIER MACROS (The Prefix & Suffix)
     # =====================================================================
     {
-      "name": "&UC_start_\($target_os)",
+      "name": "&UC_start",
       "description": "Unicode Prefix Sequence (\($target_os))",
       "compatible": "zmk,behavior-macro",
-      "config": { "wait-ms": 30, "tap-ms": 30 },
+      "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
       "bindings": [ mk_bare($cfg.start_mode), ($cfg.start_keys[] | mk_kp(.)) ],
       "params": []
     } as $macro_start |
 
     {
-      "name": "&UC_end_\($target_os)",
+      "name": "&UC_end",
       "description": "Unicode Suffix Sequence (\($target_os))",
       "compatible": "zmk,behavior-macro",
-      "config": { "wait-ms": 30, "tap-ms": 30 },
+      "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
       "bindings": [ mk_bare($cfg.end_mode), ($cfg.end_keys[] | mk_kp(.)) ],
       "params": []
     } as $macro_end |
 
     # Ensure we clear out old generated macros to prevent duplication on multiple runs
-    ( [$macro_start.name, $macro_end.name] + ($macro_data | map("&UC_\(.name)_\($target_os)")) ) as $generated_names |
+    ( [$macro_start.name, $macro_end.name] + ($macro_data | map("&UC_\(.name)")) ) as $generated_names |
     
     .macros |= (
       if . == null then [] else . end |
@@ -163,7 +165,7 @@ script = """
       ([
         ($item.u | split(" ")[] | . as $cp |
           
-          # 1. Trigger the OS-specific Start Macro
+          # 1. Trigger the abstract Start Macro
           mk_bare($macro_start.name),
           
           # 2. Tap the Hex Codes
@@ -184,17 +186,17 @@ script = """
                (if . >= "0" and . <= "9" then "N" + . else . end) | mk_kp(.)
              ),
           
-          # 3. Trigger the OS-specific End Macro
+          # 3. Trigger the abstract End Macro
           mk_bare($macro_end.name)
         )
       ]) as $bindings |
 
       # CONSTRUCT AND INJECT MACRO
       {
-          "name": "&UC_\($item.name)_\($target_os)",
-          "description": "Unicode \($item.symb) \($item.name) (\($target_os))",
+          "name": "&UC_\($item.name)",
+          "description": "Unicode \($item.symb) \($item.name)",
           "compatible": "zmk,behavior-macro",
-          "config": { "wait-ms": 30, "tap-ms": 30 },
+          "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
           "bindings": $bindings,
           "params": []
       } as $new_macro |
@@ -212,7 +214,7 @@ script = """
     # 2. Map macros to standard layout array with UI decorations
     ([
       $macro_data[] | {
-        "value": "&UC_\(.name)_\($target_os)",
+        "value": "&UC_\(.name)",
         "params": [],
         "decoration": {
           "label": .symb,
@@ -221,10 +223,10 @@ script = """
       }
     ]) as $emoji_keys |
 
-    # 3. Truncate (if too many macros) and pad with &none to match key_count exactly
+    # 3. Truncate (if too many macros) and pad with &trans to match key_count exactly
     (
       $emoji_keys[0:$key_count] + 
-      [range([0, $key_count - ($emoji_keys | length)] | max) | { "value": "&none", "params": [] }]
+      [range([0, $key_count - ($emoji_keys | length)] | max) | { "value": "&trans", "params": [] }]
     ) as $new_layer |
 
     # 4. Inject layer (Overwrite existing "Emoji" layer, or append a new one)
@@ -246,6 +248,18 @@ type = "select"
 options = ["windows", "macos", "linux"]
 labels = ["Windows", "macOS", "Linux"]
 default = "windows"
+
+[[param]]
+id = "macro_wait"
+label = "Macro Wait (ms)"
+type = "number"
+default = 30
+
+[[param]]
+id = "macro_tap"
+label = "Macro Tap (ms)"
+type = "number"
+default = 30
 
 # ==============================================================================
 # METADATA & CONFIG
