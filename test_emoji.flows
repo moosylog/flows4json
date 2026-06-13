@@ -258,13 +258,13 @@ default = "windows"
 id = "macro_wait"
 label = "Macro Wait (ms)"
 type = "number"
-default = 30
+default = 10
 
 [[param]]
 id = "macro_tap"
 label = "Macro Tap (ms)"
 type = "number"
-default = 30
+default = 10
 
 # ==============================================================================
 # METADATA & CONFIG
