@@ -4,13 +4,7 @@ language = "us"
 title = "Emoji Set"
 subtitle = "Adds 40-Emoji on a Layer"
 description = """
-Generate 40 ready-to-use Unicode emoji macros and instantly create a dedicated Emoji Layer using key decorators.
-
-Assign a layer switch key manually (e.g. &to, &tog, or &layer) to enable the Emoji layer.
-
-This pack includes 40 of the most widely used emojis in modern messaging and collaboration, designed for fast access and expressive typing.
-
-Select your operating system below.
+Generate 40 Unicode emoji macros and instantly create a dedicated Emoji Layer with key decorators. Enable it via a layer switch key (&to, &tog, or &layer). Includes the most widely used emojis for fast, expressive communication across modern messaging tools.
 | Category | Emojis |
 | :--- | :--- |
 | **Faces & Emotion** | 😊 😉 😍 😅 😂 🤣 😭 🥺 🥲 🤔 🫡 😮 🙁 🫠 |
