@@ -13,7 +13,7 @@ Generate 40 Unicode emoji macros and instantly create a dedicated Emoji Layer wi
 | **Tone Nuance & Culture Boosters** | 😎 🙇🏻 💀 🤡 💦 💩 |
 
 ### ⚠️ Prerequisites: OS Unicode Support
-Standard keyboards send keycodes, not characters. To output these emojis, your OS must be configured to accept hexadecimal input:
+Standard keyboards send keycodes, not characters. To output emojis, your OS must be configured to accept hexadecimal input:
 
 🪟 **Windows (WinCompose):** Install and run [WinCompose](https://github.com/samhocevar/wincompose) in the background.
 
