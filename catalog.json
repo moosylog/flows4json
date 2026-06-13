@@ -951,13 +951,13 @@
         "id": "macro_wait",
         "label": "Macro Wait (ms)",
         "type": "number",
-        "default": "30"
+        "default": "10"
       },
       {
         "id": "macro_tap",
         "label": "Macro Tap (ms)",
         "type": "number",
-        "default": "30"
+        "default": "10"
       }
     ],
     "mediaUrl": null
