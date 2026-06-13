@@ -8,6 +8,13 @@ Generate **40 ready-to-use Unicode Emoji macros** and instantly build a dedicate
 Simply drag and drop them into your preferred position in the MoErgo Layout Editor.  
 Includes the 40 most widely used emojis in collaboration tools. **Select your OS below.**
 
+| Category | Emojis |
+| :--- | :--- |
+| **Faces & Emotion** | 😊 😉 😍 😅 😂 🤣 😭 🥺 🥲 🤔 🫡 😮 🙁 🫠 |
+| **Hands, People & Sentiment** | ❤️ 🫶 💔 👍 👎 🙏 👏 🤝 🤷 🤦 |
+| **Emphasis, Intent & Structure** | ✅ ❌ ⚠️ 📌 👀 🔥 ✨ 💯 🎉 🚀 |
+| **Tone Nuance & Culture Boosters** | 😎 🙇🏻 💀 🤡 💦 💩 |
+
 ### ⚠️ Prerequisites: OS Unicode Support
 Standard keyboards send keycodes, not characters. To output these emojis, your OS must be configured to accept hexadecimal input:
 
@@ -26,14 +33,14 @@ Standard keyboards send keycodes, not characters. To output these emojis, your O
 # ==============================================================================
 script = """
 # -------------------------------------------------------------------------
-# ZMK UNICODE MACRO GENERATOR (Protocol v8.1 - JQ Variables for Colors)
+# ZMK UNICODE MACRO GENERATOR (Protocol v8.4 - UI Timings & Trans Padding)
 # -------------------------------------------------------------------------
 # Purpose: Automatically generates ZMK macros and a dedicated Emoji Layer.
 # Features: 
-#   1. Compound Support: Iterates over space-separated codepoints.
-#   2. Flat AST: Generates purely sequential arrays for layout compatibility.
-#   3. Layer Builder: Reads hardware key count, maps macros, pads with &none.
-#   4. Color Coding: Dynamic JQ variables for easy palette customization.
+#   1. Abstract Naming: Macros are named generically (e.g., &UC_PREFIX, &UC_winking_face).
+#   2. Macro Chaining: Defines OS prefixes/suffixes once and chains them.
+#   3. Custom Speeds: Uses UI-defined wait and tap times to prevent OS dropped keys.
+#   4. Layer Builder: Safely pads with &trans so layer-toggles aren't broken.
 # -------------------------------------------------------------------------
 
 # =========================================================================
@@ -117,37 +124,58 @@ script = """
   # --- MAIN LOGIC ---
   (if .keymap then .keymap else . end) |= (
     
-    # --- KNOWLEDGE BASE ---
+    # --- KNOWLEDGE BASE: Prefix & Suffix definitions ---
     {
-      # Windows (WinCompose): Taps RALT, U, Hex, ENTER
-      "windows": { "press": [],       "prefix": ["RALT", "U"],   "suffix": ["ENTER"], "surrogate": false },
-      
-      # macOS (Hex Input): Holds LALT, Taps Hex (with Surrogates), Releases LALT
-      "macos":   { "press": ["LALT"], "prefix": [],              "suffix": [],        "surrogate": true  },
-      
-      # Linux (IBus): Taps LC(LS(U)), Hex, ENTER
-      "linux":   { "press": [],       "prefix": ["LC(LS(U))"],   "suffix": ["ENTER"], "surrogate": false }
+      "windows": { "start_mode": "&macro_tap",   "start_keys": ["RALT", "U"], "end_mode": "&macro_tap",     "end_keys": ["ENTER"], "surrogate": false },
+      "macos":   { "start_mode": "&macro_press", "start_keys": ["LALT"],      "end_mode": "&macro_release", "end_keys": ["LALT"],  "surrogate": true  },
+      "linux":   { "start_mode": "&macro_tap",   "start_keys": ["LC(LS(U))"], "end_mode": "&macro_tap",     "end_keys": ["ENTER"], "surrogate": false }
     } as $os_registry |
     
     ($os_registry[$target_os]) as $cfg |
 
     # =====================================================================
-    # PHASE 1: GENERATE MACROS
+    # PHASE 1: GENERATE OS MODIFIER MACROS (The Prefix & Suffix)
+    # =====================================================================
+    {
+      "name": "&UC_PREFIX",
+      "description": "Unicode Prefix Sequence (\($target_os))",
+      "compatible": "zmk,behavior-macro",
+      "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
+      "bindings": [ mk_bare($cfg.start_mode), ($cfg.start_keys[] | mk_kp(.)) ],
+      "params": []
+    } as $macro_start |
+
+    {
+      "name": "&UC_SUFFIX",
+      "description": "Unicode Suffix Sequence (\($target_os))",
+      "compatible": "zmk,behavior-macro",
+      "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
+      "bindings": [ mk_bare($cfg.end_mode), ($cfg.end_keys[] | mk_kp(.)) ],
+      "params": []
+    } as $macro_end |
+
+    # Ensure we clear out old generated macros to prevent duplication on multiple runs
+    # (Note: added &UC_start and &UC_end to the filter list to clean up previous versions)
+    ( [$macro_start.name, $macro_end.name, "&UC_start", "&UC_end"] + ($macro_data | map("&UC_\(.name)")) ) as $generated_names |
+    
+    .macros |= (
+      if . == null then [] else . end |
+      map(select(.name as $n | $generated_names | index($n) | not)) |
+      . + [$macro_start, $macro_end]
+    ) |
+
+    # =====================================================================
+    # PHASE 2: GENERATE CHAINED EMOJI MACROS
     # =====================================================================
     (reduce $macro_data[] as $item (.;
-      
-      # BUILD THE FLAT MACRO BINDINGS
       ([
-        # 1. Macro Press Phase
-        ($cfg.press[] | ( mk_bare("&macro_press"), mk_kp(.) )),
-        
-        # 2. Macro Tap Phase
-        mk_bare("&macro_tap"),
-        
-        # 3. Process each codepoint (Handles skin tones and ZWJ)
         ($item.u | split(" ")[] | . as $cp |
           
-          ($cfg.prefix[] | mk_kp(.)),
+          # 1. Trigger the abstract Start Macro
+          mk_bare($macro_start.name),
+          
+          # 2. Tap the Hex Codes
+          mk_bare("&macro_tap"),
           
           ( reduce ($cp | ascii_upcase | split("") | .[]) as $char 
             (0; . * 16 + ("0123456789ABCDEF" | index($char))) 
@@ -164,32 +192,26 @@ script = """
                (if . >= "0" and . <= "9" then "N" + . else . end) | mk_kp(.)
              ),
           
-          ($cfg.suffix[] | mk_kp(.))
-        ),
-        
-        # 4. Macro Release Phase
-        ($cfg.press[] | ( mk_bare("&macro_release"), mk_kp(.) ))
+          # 3. Trigger the abstract End Macro
+          mk_bare($macro_end.name)
+        )
       ]) as $bindings |
 
       # CONSTRUCT AND INJECT MACRO
       {
-          "name": "&UC_\($item.name)_\($target_os)",
-          "description": "Unicode \($item.symb) \($item.name) (\($target_os))",
+          "name": "&UC_\($item.name)",
+          "description": "Unicode \($item.symb) \($item.name)",
           "compatible": "zmk,behavior-macro",
-          "config": { "wait-ms": 30, "tap-ms": 30 },
+          "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
           "bindings": $bindings,
           "params": []
       } as $new_macro |
 
-      .macros |= (
-          if . == null then [] else . end |
-          map(select(.name != "&UC_\($item.name)_\($target_os)")) |
-          . + [$new_macro]
-      )
+      .macros |= . + [$new_macro]
     )) |
 
     # =====================================================================
-    # PHASE 2: GENERATE EMOJI LAYER
+    # PHASE 3: GENERATE EMOJI LAYER
     # =====================================================================
     
     # 1. Read hardware key count from base layer
@@ -198,7 +220,7 @@ script = """
     # 2. Map macros to standard layout array with UI decorations
     ([
       $macro_data[] | {
-        "value": "&UC_\(.name)_\($target_os)",
+        "value": "&UC_\(.name)",
         "params": [],
         "decoration": {
           "label": .symb,
@@ -207,10 +229,10 @@ script = """
       }
     ]) as $emoji_keys |
 
-    # 3. Truncate (if too many macros) and pad with &none to match key_count exactly
+    # 3. Truncate (if too many macros) and pad with &trans to match key_count exactly
     (
       $emoji_keys[0:$key_count] + 
-      [range([0, $key_count - ($emoji_keys | length)] | max) | { "value": "&none", "params": [] }]
+      [range([0, $key_count - ($emoji_keys | length)] | max) | { "value": "&trans", "params": [] }]
     ) as $new_layer |
 
     # 4. Inject layer (Overwrite existing "Emoji" layer, or append a new one)
@@ -232,6 +254,18 @@ type = "select"
 options = ["windows", "macos", "linux"]
 labels = ["Windows", "macOS", "Linux"]
 default = "windows"
+
+[[param]]
+id = "macro_wait"
+label = "Macro Wait (ms)"
+type = "number"
+default = 10
+
+[[param]]
+id = "macro_tap"
+label = "Macro Tap (ms)"
+type = "number"
+default = 10
 
 # ==============================================================================
 # METADATA & CONFIG
