@@ -1,4 +1,4 @@
-uid = "emoji"
+uid = "emoji_macros"
 type = "mutation"
 language = "us"
 title = "Emoji Set"
