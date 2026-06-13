@@ -5,7 +5,7 @@ title = "Emoji Set"
 subtitle = "Adds 40-Emoji on a Layer"
 description = """
 Generate **40 ready-to-use Unicode Emoji macros** and instantly build a dedicated **Emoji Layer** with key decorators.  
-Simply drag and drop them into your preferred position in the MoErgo Layout Editor.  
+Simply drag and drop them into your preferred position in the MoErgo Layout Editor and create a layer reference (&mo/&lt key).  
 Includes the 40 most widely used emojis in collaboration tools. **Select your OS below.**
 
 | Category | Emojis |
