@@ -37,7 +37,7 @@ script = """
 # -------------------------------------------------------------------------
 # Purpose: Automatically generates ZMK macros and a dedicated Emoji Layer.
 # Features: 
-#   1. Abstract Naming: Macros are named generically (e.g., &UC_start, &UC_winking_face).
+#   1. Abstract Naming: Macros are named generically (e.g., &UC_PREFIX, &UC_winking_face).
 #   2. Macro Chaining: Defines OS prefixes/suffixes once and chains them.
 #   3. Custom Speeds: Uses UI-defined wait and tap times to prevent OS dropped keys.
 #   4. Layer Builder: Safely pads with &trans so layer-toggles aren't broken.
@@ -137,7 +137,7 @@ script = """
     # PHASE 1: GENERATE OS MODIFIER MACROS (The Prefix & Suffix)
     # =====================================================================
     {
-      "name": "&UC_start",
+      "name": "&UC_PREFIX",
       "description": "Unicode Prefix Sequence (\($target_os))",
       "compatible": "zmk,behavior-macro",
       "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
@@ -146,7 +146,7 @@ script = """
     } as $macro_start |
 
     {
-      "name": "&UC_end",
+      "name": "&UC_SUFFIX",
       "description": "Unicode Suffix Sequence (\($target_os))",
       "compatible": "zmk,behavior-macro",
       "config": { "wait-ms": $macro_wait, "tap-ms": $macro_tap },
@@ -155,7 +155,8 @@ script = """
     } as $macro_end |
 
     # Ensure we clear out old generated macros to prevent duplication on multiple runs
-    ( [$macro_start.name, $macro_end.name] + ($macro_data | map("&UC_\(.name)")) ) as $generated_names |
+    # (Note: added &UC_start and &UC_end to the filter list to clean up previous versions)
+    ( [$macro_start.name, $macro_end.name, "&UC_start", "&UC_end"] + ($macro_data | map("&UC_\(.name)")) ) as $generated_names |
     
     .macros |= (
       if . == null then [] else . end |
