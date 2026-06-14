@@ -4,7 +4,7 @@ language = "us"
 title = "Emoji Set"
 subtitle = "Adds 40-Emoji on a Layer"
 description = """
-Adds an Emoji layer featuring 40 of the most widely used emojis for fast, expressive communication across modern messaging tools. Assign your own layer switch key (&to, &tog, or &layer) to activate it.
+Adds an Emoji layer featuring 40 of the most widely used emojis for fast, expressive communication across modern messaging tools. Assign your own layer switch key (`&to`, `&tog` or `&layer`) to activate it.
 | Category | Emojis |
 | :--- | :--- |
 | **Faces & Emotion** | 😊 😉 😍 😅 😂 🤣 😭 🥺 🥲 🤔 🫡 😮 🙁 🫠 |
