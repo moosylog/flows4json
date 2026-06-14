@@ -48,10 +48,10 @@ Instead of reading a long tutorial, you just pick a Flow, answer a few simple qu
 
 ### 🚀 How to use it (In less than 1 minute)
 
-1. **Export:** Download your current layout file from the MoErgo Layout Editor.
-2. **Apply:** Open the Flows Store, pick the feature you want, click **Apply**, and upload your file.
-3. **Download:** The app instantly gives you a new, updated layout file.
-4. **Import:** Bring that new file back into the MoErgo Layout Editor and update your keyboard. 
+1. **Export:** Go to the MoErgo Layout Editor and download your current layout as a `.JSON` file.
+2. **Apply:** Open the Flows Store, pick your favorite feature, and click **Apply** to select your `.JSON` layout file.
+3. **Download:** The app instantly processes your changes and saves a brand-new layout file straight to your Downloads folder.
+4. **Import:** Bring that new file back into the MoErgo Layout Editor, check your keys, and flash your keyboard!
 
 ---
 
