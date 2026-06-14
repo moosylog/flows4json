@@ -10,7 +10,6 @@ Customizing advanced keyboards like the Glove80 or Go60 is incredibly powerful â
 Think of Flows as a friendly App Store for your keyboard. Instead of building complex setups by hand, you simply find the feature you want, click Apply, and let the app handle the rest.
 
 No coding, no endless layout configurations, and no frustration. Just one click.
-
 <br>
 <a href="https://moosylog.github.io/flows4json/" target="_blank">
   <img 
