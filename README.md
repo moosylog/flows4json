@@ -57,7 +57,7 @@ Instead of reading a long tutorial, you just pick a Flow, answer a few simple qu
 
 ### ⌨️ Supported Hardware
 
-The app automatically recognizes your hardware and makes sure everything stays safe. Currently, the store supports:
+The app automatically recognizes your hardware and makes sure everything stays safe. Currently, the app supports:
 * **MoErgo Glove80**
 * **MoErgo Go60**
 
