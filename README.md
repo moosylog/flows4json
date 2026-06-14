@@ -3,13 +3,13 @@
 
 # 🌊 Add a New Feature to Your Layout with a Single Click
 
-Customizing advanced keyboards like the Glove80 or Go60 is powerful — but setting up advanced features usually takes a lot of time, endless clicking, and complicated guides.
+Customizing advanced keyboards like the Glove80 or Go60 is incredibly powerful — but adding advanced features usually means hours of tedious clicking and getting lost in complicated ZMK guides.
 
 **Flows changes everything.**
 
-Think of Flows as a friendly **App Store** for your keyboard. Instead of building complex features by hand, you just find the feature you want, click **Apply**, and let the app do the work for you.
+Think of Flows as a friendly App Store for your keyboard. Instead of building complex setups by hand, you simply find the feature you want, click Apply, and let the app handle the rest.
 
-**No coding. No frustration. Just one click.**
+No coding, no endless layout configurations, and no frustration. Just one click.
 
 <br>
 
