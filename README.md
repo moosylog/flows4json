@@ -15,7 +15,7 @@ No coding, no endless layout configurations, and no frustration. **Just one clic
 <a href="https://moosylog.github.io/flows4json/" target="_blank">
   <img 
     src="https://img.shields.io/badge/🚀%20LAUNCH%20FLOWS%20STORE-NOW-00FF66?style=for-the-badge"
-    alt="Launch Flows Store"
+    alt="Launch Flows App"
   />
 </a>
 
