@@ -1,0 +1,147 @@
+uid = "tynstar_behaviors"
+type = "mutation"
+language = "us"
+title = "Tynstar Custom Behaviors"
+subtitle = "Combos, Shift-Morphs, & Timers"
+description = """
+Injects the complete suite of Tynstar behaviors:
+- Horizontal & Vertical spatial combos.
+- Cross-shift parenthesis tapping.
+- 100ms tap-protection for ESC & Print Screen.
+- RALT to LALT normalization.
+- InfiniKey One-Shot Layer generation.
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+(.keymap.layers[0] // .layers[0]) as $base_layer |
+($base_layer | length) as $len |
+
+(if .keymap then .keymap else . end) |= (
+  
+  # ------------------------------------------------------------------------------
+  # 1. INFINIKEY LAYER INITIALIZATION
+  # ------------------------------------------------------------------------------
+  (
+    .layer_names |= (. // []) | .layers |= (. // []) |
+    if (.layer_names | index("InfiniKey") == null) then 
+      .layer_names += ["InfiniKey"] | 
+      .layers += [[
+        range($len) as $i | 
+        {"value": "&kp", "params": [{"value": ("F" + (($i % 24 + 1) | tostring))}]}
+      ]] 
+    else . end
+  ) |
+  
+  (.layer_names | index("InfiniKey")) as $idx_infini |
+
+  # ------------------------------------------------------------------------------
+  # 2. CUSTOM BEHAVIORS (Hold-Taps)
+  # ------------------------------------------------------------------------------
+  .holdTaps = ((.holdTaps // []) + [
+    {
+      "name": "&ht_shift",
+      "description": "Shift Hold, Parenthesis Tap",
+      "bindings": ["&kp", "&kp"],
+      "tappingTermMs": 200,
+      "flavor": "hold-preferred"
+    },
+    {
+      "name": "&ht_protect",
+      "description": "100ms Hold requirement",
+      "bindings": ["&kp", "&none"],
+      "tappingTermMs": 100,
+      "flavor": "hold-preferred"
+    }
+  ] | unique_by(.name)) |
+
+  # ------------------------------------------------------------------------------
+  # 3. BASE LAYER KEY REPLACEMENTS (Shift, Esc, PRTSC, RALT, Magic)
+  # ------------------------------------------------------------------------------
+  .layers[0] = [
+    range($len) as $i |
+    $base_layer[$i] as $k |
+    (if ($k | type == "object") then ($k.params[0].value // "") else ($k | tostring) end) as $val |
+
+    if $val == "LSHFT" then
+      {"value": "&ht_shift", "params": [{"value": "LSHFT"}, {"value": "LPAR"}]}
+    elif $val == "RSHFT" then
+      {"value": "&ht_shift", "params": [{"value": "RSHFT"}, {"value": "RPAR"}]}
+    elif $val == "ESC" then
+      {"value": "&ht_protect", "params": [{"value": "ESC"}]}
+    elif $val == "PSCRN" or $val == "PRINTSCREEN" then
+      {"value": "&ht_protect", "params": [{"value": "PSCRN"}]}
+    elif $val == "RALT" then
+      {"value": "&kp", "params": [{"value": "LALT"}]}
+    elif (if ($k | type == "object") then $k.value == "&magic" else ($k | type == "string" and startswith("&magic")) end) then
+      {"value": "&sl", "params": [{"value": ($idx_infini | tostring)}]}
+    else
+      $k
+    end
+  ] |
+
+  # ------------------------------------------------------------------------------
+  # 4. DATA-DRIVEN COMBO GENERATOR (Proxy-Safe)
+  # ------------------------------------------------------------------------------
+  (
+    [
+      .layers[0][] | 
+      if type == "object" and (.value == "&kp" or .value == "&ht_shift" or .value == "&ht_protect") then (.params[0].value // "")
+      elif type == "string" and startswith("&kp ") then (split(" ")[1] // "")
+      else "" end
+    ]
+  ) as $l0_kps |
+  
+  (
+    [
+      {"n": "Combo_Home", "k1": ["H"], "k2": ["J"], "b": "HOME"},
+      {"n": "Combo_End", "k1": ["K"], "k2": ["L"], "b": "END"},
+      {"n": "Combo_Cut", "k1": ["X"], "k2": ["C"], "b": "LC(X)"},
+      {"n": "Combo_Copy", "k1": ["C"], "k2": ["V"], "b": "LC(C)"},
+      {"n": "Combo_Paste", "k1": ["V"], "k2": ["B"], "b": "LC(V)"},
+      {"n": "Combo_SelAll", "k1": ["A"], "k2": ["S"], "b": "LC(A)"},
+      {"n": "Combo_Undo", "k1": ["Z"], "k2": ["X"], "b": "LC(Z)"},
+      {"n": "Combo_Enter", "k1": ["BSPC", "BACKSPACE"], "k2": ["DEL", "DELETE"], "b": "RET"},
+      {"n": "Combo_Space", "k1": ["DEL", "DELETE"], "k2": ["LGUI", "RGUI", "WIN", "COMMAND"], "b": "SPACE"},
+      {"n": "Combo_Home_Arr", "k1": ["BSLH"], "k2": ["LEFT"], "b": "HOME"},
+      {"n": "Combo_End_Arr", "k1": ["LEFT"], "k2": ["RIGHT"], "b": "END"},
+      {"n": "Combo_PgUp", "k1": ["UP"], "k2": ["DOWN"], "b": "PG_UP"},
+      {"n": "Combo_PgDn", "k1": ["DOWN"], "k2": ["LBKT"], "b": "PG_DN"},
+      {"n": "Combo_AE", "k1": ["A"], "k2": ["Z"], "b": "RA(Q)"},
+      {"n": "Combo_UE", "k1": ["U"], "k2": ["J"], "b": "RA(Y)"},
+      {"n": "Combo_OE", "k1": ["O"], "k2": ["L"], "b": "RA(P)"},
+      {"n": "Combo_SS", "k1": ["S"], "k2": ["X"], "b": "RA(S)"},
+      {"n": "Combo_EUR", "k1": ["E"], "k2": ["D"], "b": "RA(N5)"},
+      {"n": "Combo_DEG", "k1": ["D"], "k2": ["C"], "b": "RA(LS(SEMI))"},
+      {"n": "Combo_MUL", "k1": ["X"], "k2": ["BSLH"], "b": "RA(MINUS)"},
+      {"n": "Combo_ELP", "k1": ["DOT"], "k2": ["LBKT"], "b": "RA(DOT)"}
+    ] | map(
+      . as $c |
+      ($l0_kps | to_entries | map(select(.value as $v | $c.k1 | index($v))) | if length > 0 then .[0].key else null end) as $i1 |
+      ($l0_kps | to_entries | map(select(.value as $v | $c.k2 | index($v))) | if length > 0 then .[0].key else null end) as $i2 |
+      if $i1 != null and $i2 != null then
+        {
+          "name": $c.n,
+          "keyPositions": [$i1, $i2],
+          "bindings": [{"value": "&kp", "params": [{"value": $c.b}]}],
+          "layers": [0],
+          "timeoutMs": 50
+        }
+      else empty end
+    )
+  ) as $new_combos |
+
+  .combos = ((.combos // []) + $new_combos | unique_by(.name // .keyPositions))
+)
+"""
+
+[manifest]
+author = "tynstar"
+keyboards = ["glove80", "go60"]
+icon = "✨"
+theme = "blue"
+
+[config]
+category = "Test/Dev"
