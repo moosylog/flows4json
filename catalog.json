@@ -444,7 +444,7 @@
         "default": "GACS"
       }
     ],
-    "mediaUrl": null
+    "mediaUrl": "https://moosylog.github.io/flows4json/hrm_bil80.png"
   },
   {
     "uid": "hrm_remove",
