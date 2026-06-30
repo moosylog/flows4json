@@ -23,7 +23,7 @@ Advanced home-row mods with bilateral combination enforcement improve typing flo
 
 ⚠️ You can make 'HRM_Bil' your base layer and use QWERTY Swap to convert everything to another alpha layer, like Colemak-DH or other.
 
-⚠️ Go60 not supported at this moment but you can always used Glove80 and export to Go60 from the Layout Editor
+⚠️ Go60 is not supported at the moment. You can still use Glove80 and export to Go60 from the Layout Editor.
 """
 
 # ==============================================================================
