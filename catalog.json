@@ -209,7 +209,7 @@
         "default": "tailorkey"
       }
     ],
-    "mediaUrl": "https://moosylog.github.io/flows4json/colors_decorations.png"
+    "mediaUrl": null
   },
   {
     "uid": "colors_launch_kiilix",
