@@ -19,9 +19,11 @@ Advanced home-row mods with bilateral combination enforcement improve typing flo
 
 **Notes**
 
-⚠️ This module adds the layers and behaviors to your layout, but does not automatically organize or validate them in the Layout Editor. Manual layer setup is required.
+⚠️ This adds all finger layers and behaviors to your layout.
 
 ⚠️ You can make 'HRM_Bil' your base layer and use QWERTY Swap to convert everything to another alpha layer, like Colemak-DH or other.
+
+⚠️ Go60 not supported at this moment but you can always used Glove80 and export to Go60 from the Layout Editor
 """
 
 # ==============================================================================
