@@ -25,7 +25,7 @@ No coding, no endless layout configurations, and no frustration. ****Modular lay
 
 Usually, if you want to add popular community features (like "AutoShift" or "Home-Row Mods"), you have to spend hours manually clicking and setting up every single key in your layout editor. It is a slow, tedious process.
 
-Flows is your smart assistant. It acts like a **macro tool** for your layout settings. When you choose a feature from our store, Flows automatically runs an automation script that updates your layout perfectly in less than a second — saving you hundreds of boring manual clicks. 
+Flows is your smart assistant. It acts like **automation** for your layout settings. When you choose a feature from our store, Flows automatically runs an automation script that updates your layout perfectly in less than a second — saving you hundreds of boring manual clicks. 
 
 Best of all? It changes only what you want, leaving the rest of your personal layout completely safe and untouched.
 
