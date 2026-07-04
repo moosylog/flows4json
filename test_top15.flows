@@ -4,10 +4,9 @@ language = "en-US"
 title = "Top 15 Advanced Examples"
 subtitle = "Community Vetted Tap-Dances & Mod-Morphs"
 description = """
+# ⚠️ Dev: This Flow requires a newer, unreleased version of the Layout Editor.
 
-# Test/Dev – Do Not Use This Flow
-
-⚠️ **This is a test/development flow and should not be used. It requires capabilities that are not yet available.**
+---
 
 
 ## Top 15 Community-Vetted Use Cases
