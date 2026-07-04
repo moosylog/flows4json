@@ -4,6 +4,11 @@ language = "en-US"
 title = "Primeagen's NumRow DEV"
 subtitle = "Custom Number Row"
 description = """
+
+# Test/Dev – Do Not Use This Flow
+
+⚠️ **This is a test/development flow and should not be used. It requires capabilities that are not yet available.**
+
 Modifies the number row to use dual-function keys.
 
 Inspired by ThePrimeagen, this maps specific programmer symbols directly onto the number row so you don't have to stretch for the Shift key. 
