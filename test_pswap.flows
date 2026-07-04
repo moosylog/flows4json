@@ -4,9 +4,9 @@ language = "en-US"
 title = "Programmer Punctuation Swap"
 subtitle = "Invert Semicolon, Quotes & F4"
 description = """
-# Test/Dev – Do Not Use This Flow
+# ⚠️ Dev: This Flow requires a newer, unreleased version of the Layout Editor.
 
-⚠️ **This is a test/development flow and should not be used. It requires capabilities that are not yet available.**
+---
 
 Swaps the shifted and unshifted states of common punctuation keys using Mod-Morphs, and adds an optional Tap-Dance for F4 to close windows.
 
