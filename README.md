@@ -64,5 +64,7 @@ The app automatically recognizes your hardware and makes sure everything stays s
 
 ---
 
+Simplexity in Flows is the idea that a highly complex keyboard configuration system is hidden behind a simple, one-click interface that lets users apply powerful features without dealing with the underlying complexity.
+
 ### 🤝 Share Your Own Flows!
 Are you an advanced user who loves creating automated layout shortcuts? You can build your own Flow packages and share them to help the community save time! Click the **Developer Console** inside the app to see how it works.
