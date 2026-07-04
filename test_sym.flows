@@ -4,13 +4,9 @@ language = "en-US"
 title = "Primeagen's NumRow DEV"
 subtitle = "Custom Number Row"
 description = """
+# ⚠️ Dev: This Flow requires a newer, unreleased version of the Layout Editor.
 
-# Test/Dev – Do Not Use This Flow
-
-⚠️ **This is a test/development flow and should not be used. It requires capabilities that are not yet available.**
-
-
-
+---
 
 
 Modifies the number row to use dual-function keys.
