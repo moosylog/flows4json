@@ -4,7 +4,7 @@ language = "us"
 title = "Sunaku's Bilateral HRM"
 subtitle = "Adds Home-Row Modifiers"
 description = """
-Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips. You can use the [Remove HRMs Flow](https://moosylog.github.io/flows4json/?id=hrm_remove) before applying a new one.
+Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips. 
 
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)
 
@@ -24,6 +24,8 @@ Advanced home-row mods with bilateral combination enforcement improve typing flo
 ⚠️ You can make 'HRM_Bil' your base layer and use QWERTY Swap to convert everything to another alpha layer, like Colemak-DH or other.
 
 ⚠️ Go60 is not supported at the moment. You can still use Glove80 and export to Go60 from the Layout Editor.
+
+⚠️ This will add HRMs to your layout. To avoid conflicts or duplicates, remove any existing HRMs first. You can do this using the [Remove HRMs Flow](https://moosylog.github.io/flows4json/?id=hrm_remove) before applying a new layout.
 """
 
 # ==============================================================================
