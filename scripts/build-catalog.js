@@ -2,7 +2,16 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
-const outputFile = path.join(rootDir, 'catalog.json');
+const useLocalUrls = process.argv.includes('--local');
+const outputArgIndex = process.argv.findIndex((arg) => arg === '--output');
+const outputArg = process.argv.find((arg) => arg.startsWith('--output='));
+const outputPath =
+  outputArgIndex >= 0
+    ? process.argv[outputArgIndex + 1]
+    : outputArg
+      ? outputArg.slice('--output='.length)
+      : 'catalog.json';
+const outputFile = path.resolve(rootDir, outputPath);
 
 const files = fs.readdirSync(rootDir).sort();
 const flows = files.filter((file) => file.endsWith('.flows'));
@@ -94,10 +103,13 @@ const catalog = flows.map((file) => {
     manifest: parseNamedBlock(content, 'manifest'),
     config: parseNamedBlock(content, 'config'),
     param: parseParams(content),
-    mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null,
+    mediaUrl: matchingMedia
+      ? (useLocalUrls ? `/${matchingMedia}` : `https://moosylog.github.io/flows4json/${matchingMedia}`)
+      : null,
   };
 });
 
+fs.mkdirSync(path.dirname(outputFile), { recursive: true });
 fs.writeFileSync(outputFile, JSON.stringify(catalog, null, 2));
 
 console.log(`Wrote ${path.relative(process.cwd(), outputFile)} with ${catalog.length} flows`);

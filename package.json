@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build:catalog": "node scripts/build-catalog.js",
+    "dev": "node scripts/dev-server.js"
+  }
+}
