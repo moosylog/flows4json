@@ -15,113 +15,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Generate catalog.json
-        uses: actions/github-script@v6
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          script: |
-            const fs = require('fs');
-            const files = fs.readdirSync('.');
-            const flows = files.filter(f => f.endsWith('.flows'));
-            const media = files.filter(f => f.match(/\.(png|jpg|gif)$/));
-            
-            const catalog = flows.map(file => {
-              const content = fs.readFileSync(file, 'utf8');
-              
-              const extVal = (key) => { const m = content.match(new RegExp(`(?:^|\\n)${key}\\s*=\\s*"([^"]+)"`)); return m ? m[1] : ''; };
-              const extMulti = (key) => { const m = content.match(new RegExp(`${key}\\s*=\\s*"""([\\s\\S]*?)"""`)); return m ? m[1].trim() : ''; };
-              
-              // --- NEW: Parse the [manifest] block (icon, theme, author, keyboards) ---
-              let manifestObj = {};
-              const mManifest = content.match(/\[manifest\]([\s\S]*?)(?=\n\[|$)/);
-              if (mManifest) {
-                mManifest[1].split('\n').forEach(l => {
-                  const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
-                  if (kv) {
-                    let k = kv[1].trim();
-                    let v = kv[2].trim();
-                    
-                    if (v.startsWith('"') && v.endsWith('"')) {
-                      v = v.slice(1, -1); // String
-                    } else if (v.startsWith('[') && v.endsWith(']')) {
-                      // Array (like keyboards = ["go60", "glove80"])
-                      const strMatches = v.match(/"([^"]*)"/g);
-                      v = strMatches ? strMatches.map(s => s.slice(1, -1)) : v.slice(1, -1).split(',').map(s => s.trim()).filter(Boolean);
-                    }
-                    manifestObj[k] = v;
-                  }
-                });
-              }
+          node-version: 20
 
-              // Parse the [config] block
-              let cfg = {};
-              const mCfg = content.match(/\[config\]([\s\S]*?)(?=\n\[|$)/);
-              if (mCfg) {
-                mCfg[1].split('\n').forEach(l => {
-                  const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
-                  if (kv) {
-                    let v = kv[2].trim();
-                    if (v.startsWith('"') && v.endsWith('"')) v = v.slice(1, -1);
-                    cfg[kv[1]] = v;
-                  }
-                });
-              }
-
-              // Parse the [[param]] blocks
-              let params = [];
-              const paramMatches = content.match(/\[\[param\]\]([\s\S]*?)(?=\n\[|$)/g);
-              if (paramMatches) {
-                paramMatches.forEach(block => {
-                  let paramObj = {};
-                  block.split('\n').forEach(l => {
-                    const kv = l.match(/^\s*([a-zA-Z0-9_\-]+)\s*=\s*(.+?)\s*$/);
-                    if (kv) {
-                      let k = kv[1].trim();
-                      let v = kv[2].trim();
-                      
-                      // Type casting for parameters
-                      if (v.startsWith('"') && v.endsWith('"')) {
-                        v = v.slice(1, -1); // String
-                      } else if (v === 'true') {
-                        v = true;           // Boolean True
-                      } else if (v === 'false') {
-                        v = false;          // Boolean False
-                      } else if (v.startsWith('[') && v.endsWith(']')) { 
-                        // Advanced Array Parser: Extracts inside quotes so commas in labels don't break!
-                        const strMatches = v.match(/"([^"]*)"/g);
-                        if (strMatches) {
-                          v = strMatches.map(s => s.slice(1, -1));
-                        } else {
-                          // Fallback for non-string arrays
-                          v = v.slice(1, -1).split(',').map(s => s.trim()).filter(Boolean);
-                        }
-                      }
-                      
-                      paramObj[k] = v;
-                    }
-                  });
-                  if (paramObj.id) params.push(paramObj);
-                });
-              }
-
-              const baseName = file.substring(0, file.lastIndexOf('.'));
-              const matchingMedia = media.find(m => m.startsWith(baseName + '.'));
-              
-              return {
-                uid: extVal("uid"), 
-                title: extVal("title") || "Untitled", 
-                subtitle: extVal("subtitle"),
-                description: extMulti("description"), 
-                script: extMulti("script"), 
-                category: extVal("category") || "Utilities",
-                appUrl: extVal("appUrl") || null,
-                manifest: manifestObj, // <-- Injects theme, icon, author, keyboards into JSON
-                config: cfg,
-                param: params,
-                mediaUrl: matchingMedia ? `https://moosylog.github.io/flows4json/${matchingMedia}` : null
-              };
-            });
-            
-            fs.writeFileSync('catalog.json', JSON.stringify(catalog, null, 2));
+      - name: Generate catalog.json
+        run: node scripts/build-catalog.js
 
       - name: Save to Repository
         run: |
