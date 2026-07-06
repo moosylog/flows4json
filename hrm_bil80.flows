@@ -4,7 +4,7 @@ language = "us"
 title = "Sunaku's Bilateral HRM"
 subtitle = "Adds Home-Row Modifiers"
 description = """
-Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
+Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips. You can use the [Remove HRMs Flow[(https://moosylog.github.io/flows4json/?id=hrm_remove) before applying a new one.
 
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)
 
