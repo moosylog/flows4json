@@ -469,6 +469,11 @@
         }
         const terminal = new Logger('logPanel');
 
+        function getCatalogUrl() {
+            const isLocal = ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname);
+            return isLocal ? '/.dev/catalog.json' : 'https://moosylog.github.io/flows4json/catalog.json';
+        }
+
         function getGradient(flow) {
             const themeMap = {
                 'red': 'linear-gradient(135deg, #FF3B30 0%, #FF9500 100%)',
@@ -1133,7 +1138,7 @@ initKeyboardNav() {
                 grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📡</div><h2>Connecting to App Store</h2><p>Fetching latest flows...</p></div>';
                 
                 try {
-                    const response = await fetch(`https://moosylog.github.io/flows4json/catalog.json?t=${new Date().getTime()}`);
+                    const response = await fetch(`${getCatalogUrl()}?t=${new Date().getTime()}`);
                     if (!response.ok) throw new Error("Could not reach the App Store server.");
                     
                     this.catalog = await response.json();

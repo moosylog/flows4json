@@ -68,3 +68,18 @@ Simplexity in Flows is the idea that a highly complex keyboard configuration sys
 
 ### 🤝 Share Your Own Flows!
 Are you an advanced user who loves creating automated layout shortcuts? You can build your own Flow packages and share them to help the community save time! Click the **Developer Console** inside the app to see how it works.
+
+---
+
+### 🧑‍💻 Local Development
+
+Run the local dev server from the repository root:
+
+```sh
+npm run dev
+```
+
+Then open `http://localhost:7103/`.
+
+The dev server builds a local catalog in `.dev/catalog.json`, serves local media
+files, and hot reloads the browser when flows, images, HTML, JS, or CSS change.
