@@ -19,8 +19,8 @@ This script safely adds four new items to your settings (inspired by the popular
 
 1.  **A New Sticky Key (`&sticky_key_quickrel`):** Automatically turns the key off after 500 milliseconds.
 2.  **A New Macro (`&sticky_key_oneshot`):** The hidden sequence that makes the tap action work properly.
-3.  **A New Hold-Tap (`&sticky_key_modtap`):** The actual dual-function behavior. **This is the item you will use when setting up your own keys.** 
-4.  **A New Layer (`OneShot_example`):** A safe, extra layer created just to give you a working example. It contains a ready-to-use Shift key so you can see exactly how to assign it.
+3.  **A New Hold-Tap (`&sticky_key_modtap`):** The actual dual-function behavior. **Use this when setting up your own keys.** 
+4.  **A New Layer (`OneShot_example`):** An extra layer created just to give you a working example. It contains a ready-to-use Shift key so you can see exactly how to assign it.
 
 ---
 
