@@ -173,6 +173,7 @@ id = "behavior_type"
 label = "Trigger Behavior"
 type = "select"
 options = ["hold-tap", "tap-dance", "mod-morph", "restore"]
+default = "mod-morph"
 
 # FIXED: The UI labels now properly match the ZMK bindings behavior
 labels = [
@@ -181,7 +182,6 @@ labels = [
   "Mod-Morph - Tap for Symbol, Shift for Number",
   "Restore the Factory NumRow"
 ]
-default = "hold-tap"
 
 # ==============================================================================
 # METADATA & CONFIG
