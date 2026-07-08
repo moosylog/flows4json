@@ -1,12 +1,10 @@
 uid = "hrm_bil_dynamic"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRM (beta)"
-subtitle = "Hardware-Agnostic Home-Row Modifiers"
+title = "Bilateral HRM Sunaku"
+subtitle = "Sunaku Bilateral Home-Row Modifiers"
 description = """
-## Please try and report any issues
-
-This version should support both Glove80 and Go60.
+**This version should support both Glove80 and Go60. Please report any issues.**
 
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
 
