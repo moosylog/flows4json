@@ -10,8 +10,8 @@ description = """
 This feature gives you a seamless way to switch between apps (like Alt-Tab on Windows or Cmd-Tab on Mac) directly from your keyboard. It also includes a dedicated navigation layout loaded with useful shortcuts like arrow keys, copy, paste, and cut. 
 
 **What happens automatically:**
-When you apply this, the script automatically builds the background code for you. Specifically, it adds:
-* **The underlying logic:** Two special macros (`&mod_tab_chord_v2_TKZ` and `mod_tab_switcher_chord`) that make the app switcher work smoothly.
+This flow automatically builds the background code for you. Specifically, it adds:
+* **The underlying logic:** Two special macros (`&mod_tab_chord_v2_TKZ` and `mod_tab_switcher_chord`) that make the happen.
 * **A new layout:** A dedicated navigation layer named `Flows_Nav`. 
 
 **What YOU need to do to make it work:**
