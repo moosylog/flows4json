@@ -1,10 +1,10 @@
 uid = "sym_numrw"
 type = "mutation"
 language = "en-US"
-title = "Primeagen's NumRow DEV"
+title = "Primeagen's NumRow"
 subtitle = "Custom Number Row"
 description = """
-## ⚠️ Developer Preview: Requires the newest, unreleased Layout Editor.
+## ⚠️ Developer Preview: Requires the latest unreleased version of the Layout Editor.
 
 ---
 
