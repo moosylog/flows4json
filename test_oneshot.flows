@@ -4,15 +4,20 @@ language = "us"
 title = "OneShot Modifier"
 subtitle = "OneShot Sticky Keys"
 description = """
-**OneShot Shift**
+### **What is OneShot Shift?**
 
-This script automatically adds a popular ergonomic feature to your layout that lets you type capital letters without holding down the Shift key.
-It creates a smart, dual-function key by merging a standard hold-Shift with a "sticky" tap-Shift.
-If you tap the key, Shift stays active for exactly one letter; if you hold the key, it acts just like a normal Shift until you let go.
+This tool adds a popular comfort feature to your keyboard, allowing you to type capital letters without straining your hands to hold down the Shift key. It turns Shift into a smart, two-in-one key:
 
-Automatically injects the native `&sticky_key_quickrel` behavior, the `&sticky_key_modtap` hold-tap, and its required macro as used in Glorious Engrammer.
-Pre-validates the AST to prevent duplicates; breaks with a terminal error if any items already exist.
-Safely generates a `OneShot_example` layer scaled perfectly to your hardware (80 keys or 60 keys).
+*   **Tap the key:** It "sticks" on just long enough to capitalize your next letter, then turns off automatically.
+*   **Hold the key:** It acts exactly like a normal Shift key until you let go.
+
+---
+
+### **What this script does:**
+
+*   **Sets everything up automatically:** It safely adds all the hidden background settings needed to make this work (inspired by the popular Glorious Engrammer layout).
+*   **Keeps your layout file safe:** It checks your file first before making changes. If you already have these settings installed, the script will safely stop and show a warning so it doesn't create duplicates.
+*   **Gives you a working example:** It generates a new, safe test layer called `OneShot_example` with the new Shift key ready to go. You can simply copy this key over to your main typing layer!
 """
 
 # ==============================================================================
