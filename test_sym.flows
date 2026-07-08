@@ -190,7 +190,7 @@ label = "Trigger Behavior"
 type = "select"
 options = ["hold-tap", "tap-dance", "mod-morph", "restore"]
 labels = ["Hold-Tap (Tap for Symbol, Hold for Number)", "Tap-Dance (Tap for Symbol, Double-Tap for Number)", "Shift for Numbers (Tap for Symbol, Shift for Number)", "Restore Defaults (Standard NumRow)"]
-default = "hold-tap"
+default = "mod-morph"
 
 [[param]]
 id = "add_labels"
