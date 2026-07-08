@@ -4,7 +4,7 @@ language = "us"
 title = "OneShot Modifier"
 subtitle = "OneShot Sticky Keys"
 description = """
-# ⚠️ Dev: This Flow requires a newer, unreleased version of the Layout Editor.
+## ⚠️ Developer Preview: Requires the newest, unreleased Layout Editor.
 
 ---
 ### **What is OneShot Shift?**
