@@ -1,10 +1,10 @@
 uid = "hrm_bil80"
 type = "mutation"
 language = "us"
-title = "Glove80 Bilateral HRM"
-subtitle = "Adds Home-Row Modifiers"
+title = "G80 Bilateral HRM Sunaku"
+subtitle = "Sunaku's Bilateral Home-Row Modifiers"
 description = """
-**This should be replaced by the Bilateral HRM that supports both Go60 and Glove80**
+**Glove80 only. This should be replaced by the Bilateral HRM that supports both Go60 and Glove80**
 
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips. 
 
