@@ -2,7 +2,7 @@ uid = "hrm_bil_dynamic"
 type = "mutation"
 language = "us"
 title = "Bilateral HRM Sunaku"
-subtitle = "Sunaku Bilateral Home-Row Modifiers"
+subtitle = "Sunaku's Bilateral Home-Row Modifiers"
 description = """
 **This version should support both Glove80 and Go60. Please report any issues.**
 
