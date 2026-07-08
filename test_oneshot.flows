@@ -10,7 +10,7 @@ This script automatically adds a popular ergonomic feature to your layout that l
 It creates a smart, dual-function key by merging a standard hold-Shift with a "sticky" tap-Shift.
 If you tap the key, Shift stays active for exactly one letter; if you hold the key, it acts just like a normal Shift until you let go.
 
-Automatically injects the native `&sticky_key_quickrel` behavior, the `&sticky_key_modtap` hold-tap, and its required macro. 
+Automatically injects the native `&sticky_key_quickrel` behavior, the `&sticky_key_modtap` hold-tap, and its required macro as used in Glorious Engrammer.
 Pre-validates the AST to prevent duplicates; breaks with a terminal error if any items already exist.
 Safely generates a `OneShot_example` layer scaled perfectly to your hardware (80 keys or 60 keys).
 """
