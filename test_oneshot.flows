@@ -4,6 +4,9 @@ language = "us"
 title = "OneShot Modifier"
 subtitle = "OneShot Sticky Keys"
 description = """
+# ⚠️ Dev: This Flow requires a newer, unreleased version of the Layout Editor.
+
+---
 ### **What is OneShot Shift?**
 
 This flow adds a popular ergonomic feature to your keyboard, allowing you to type capital letters without straining your hands to hold down the Shift key. It turns Shift into a smart, two-in-one key:
