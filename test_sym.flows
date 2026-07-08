@@ -4,21 +4,25 @@ language = "en-US"
 title = "Primeagen's NumRow DEV"
 subtitle = "Custom Number Row"
 description = """
-# ⚠️ Dev: This Flow requires a newer, unreleased version of the Layout Editor.
+# ⚠️ Developer Preview: Requires the newest, unreleased Layout Editor.
 
 ---
 
-Modifies the number row to use dual-function keys.
+### **What is the Primeagen Number Row?**
 
-Inspired by ThePrimeagen, this maps specific programmer symbols directly onto the number row so you don't have to stretch for the Shift key. 
+Normally, you tap a number key to type `1` and hold Shift to type `!`. 
+This tool flips that around! Inspired by ThePrimeagen, it makes typing programmer symbols much easier by putting them front and center, so your pinky doesn't have to stretch for the Shift key constantly.
 
-**⚠️Warning: It replaces your current NumRow on layer0**
+**⚠️ Warning: This will automatically overwrite the top number row on your main typing layer (Layer 0).**
 
-Supports dynamically injecting:
-* **Hold-Tap:** Tap for Symbol, Hold for Number  *(1 Behavior definition)*
-* **Tap-Dance:** Tap for Symbol, Double-Tap for Number  *(12 Behavior definitions)*
-* **Mod-Morph:** Tap for Symbol, Shift for Number  *(12 Behavior definitions)*
-* **Restore Factory NumRow:** Reverts the row back to standard QWERTY NumRow (`=`, `1`-`0`, `-`).
+### **Choose how your number keys work:**
+
+You can pick from four different typing styles when running this tool:
+
+1. **Hold-Tap:** Tap the key for the Symbol (`!`), Hold the key down for the Number (`1`).
+2. **Tap-Dance:** Tap the key once for the Symbol (`!`), Tap it twice fast for the Number (`1`).
+3. **Shift for Numbers (Mod-Morph):** Tap the key for the Symbol (`!`), hold Shift to get the Number (`1`). *(This is the exact opposite of a normal keyboard).*
+4. **Restore Defaults:** Don't like it? Use this option to safely change the row back to standard normal numbers (`=`, `1` through `0`, `-`).
 """
 
 # ==============================================================================
