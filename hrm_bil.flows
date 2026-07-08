@@ -18,8 +18,9 @@ Instead of hardcoding layouts, this script reads your current Base layer and dyn
 **Safety First:**
 This script features headless pre-flight checks. It will instantly abort with a terminal error if any HRM items already exist in your layout to prevent accidental duplication.
 
-**Compatibility:**
-100% compatible with both Glove80 and Go60 hardware arrays.
+**Configure:**
+- Scroll down to select your operating system.
+- For more advanced, pre-defined configurations (difficulty levels), use the [HRM Tuning Tool](https://moosylog.github.io/flows4json/?id=l_hrm_tuner)
 """
 
 # ==============================================================================
