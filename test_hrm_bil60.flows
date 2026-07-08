@@ -1,9 +1,11 @@
 uid = "hrm_bil_dynamic"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRM (Generative)"
+title = "Sunaku's Bilateral HRM (TEST/DEV)"
 subtitle = "Hardware-Agnostic Home-Row Modifiers"
 description = """
+# TEST/DEV
+
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
 
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)
