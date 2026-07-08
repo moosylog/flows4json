@@ -1,99 +1,25 @@
-uid = "hrm_bil60"
+uid = "hrm_bil_dynamic"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRMxx!"
-subtitle = "Adds Home-Row Modifiers"
+title = "Sunaku's Bilateral HRM (Generative)"
+subtitle = "Hardware-Agnostic Home-Row Modifiers"
 description = """
-
-# Test/Dev – Do Not Use This Flow
-
-⚠️ **This is a test/development flow and should not be used. **
-
-
-
-
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
 
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)
 
-
-**This injects**
-
+**What this Generative Script does:**
+Instead of hardcoding layouts, this script reads your current Base layer and dynamically spawns:
 - 16 macros 
 - 32 hold-taps
-- 1 new QWERTY HRM layer called 'HRM_Bil'
-- 8 finger layers
+- 1 new QWERTY HRM layer ('HRM_Bil')
+- 8 finger layers perfectly adapted to your exact base layout keys
 
+**Safety First:**
+This script features headless pre-flight checks. It will instantly abort with a terminal error if any HRM items already exist in your layout to prevent accidental duplication.
 
-**Notes**
-
-⚠️ This module adds the layers and behaviors to your layout, but does not automatically organize or validate them in the Layout Editor. Manual layer setup is required.
-
-⚠️ You can make 'HRM_Bil' your base layer and use QWERTY Swap to convert everything to another alpha layer, like Colemak-DH or other.
-"""
-
-# ==============================================================================
-# JQ SCRIPT (Must remain at the top before any headers!)
-# ==============================================================================
-script = """
-{
-  "GACS": { "L1": "LGUI",  "R1": "RGUI",  "L2": "LCTRL", "R2": "RCTRL", "C1": "#d9f9c9", "C2":"#fbe6fe" },
-  "CAGS": { "L1": "LCTRL", "R1": "RCTRL", "L2": "LGUI",  "R2": "RGUI",  "C1": "#fbe6fe", "C2":"#d9f9c9" }
-}[$mod_preset] as $mod |
-
-# ==============================================================================
-# Go60 key layout (60 keys, sequential index):
-#  Row 0  ( 0-11): F1-F12
-#  Row 1  (12-23): =  1  2  3  4  5  | 6  7  8  9  0  -
-#  Row 2  (24-35): TAB Q  W  E  R  T  | Y  U  I  O  P  \
-#  Row 3  (36-47): ESC A  S  D  F  G  | H  J  K  L  ;  '   <- home row
-#  Row 4L (48-50): `  Z  X
-#  Row 4R (51-53): N  M  ,
-#  Thumb L (54-56): LSHFT  MOD_L2  LCTRL
-#  Thumb R (57-59): MOD_R2 RSHFT   SPACE
-# ==============================================================================
-
-# 1. Guarantee all required layers exist before resolving indices
-(
-  ["HRM_Bil","LeftPinky","LeftRingy","LeftMiddy","LeftIndex",
-   "RightIndex","RightMiddy","RightRingy","RightPinky"] as $req |
-  .layer_names |= (. // []) |
-  .layers      |= (. // []) |
-  reduce $req[] as $ln (
-    .;
-    if (.layer_names | index($ln)) == null then
-      .layer_names += [$ln] | .layers += [[]]
-    else . end
-  )
-) |
-
-# 2. Resolve layer indices dynamically by name
-(.layer_names | index("HRM_Bil"))    as $idx_hrm |
-(.layer_names | index("LeftPinky"))  as $idx_lp  |
-(.layer_names | index("LeftRingy"))  as $idx_lr  |
-(.layer_names | index("LeftMiddy"))  as $idx_lm  |
-(.layer_names | index("LeftIndex"))  as $idx_li  |
-(.layer_names | index("RightIndex")) as $idx_ri  |
-(.layer_names | index("RightMiddy")) as $idx_rm  |
-(.layer_names | index("RightRingy")) as $idx_rr  |
-(.layer_names | index("RightPinky")) as $idx_rp  |
-
-# 3. Inject HoldTaps (32 bilateral hold-taps, Go60 holdTriggerKeyPositions)
-  .holdTaps = [{"name":"&HRM_left_index_middy_v1B_TKZ","description":"HRM_left_index_middy_bilateral -> &kp - &HRM_left_index_tap - TailorKey","bindings":["&kp","&HRM_left_index_tap_v1B_TKZ"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_index_pinky_v1B_TKZ","description":"HRM_left_index_pinky_bilateral -> &kp - &HRM_left_index_tap - TailorKey","bindings":["&kp","&HRM_left_index_tap_v1B_TKZ"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_index_ringv1_TKZ","description":"HRM_left_index_ring_bilateral -> &kp - &HRM_left_index_tap - TailorKey","bindings":["&kp","&HRM_left_index_tap_v1B_TKZ"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_index_v1B_TKZ","description":"HRM_left_index_bilateral -> &HRM_left_index_hold -> &kp - TailorKey","bindings":["&HRM_left_index_hold_v1B_TKZ","&kp"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_middy_index_v1B_TKZ","description":"HRM_left_middy_index_bilateral  -> &kp ->&HRM_left_middy_tap - TailorKey","bindings":["&kp","&HRM_left_middy_tap_v1B_TKZ"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_middy_pinky_v1B_TKZ","description":"HRM_left_middy_pinky_bilateral -> &kp - &HRM_left_pinky_tap - TailorKey","bindings":["&kp","&HRM_left_middy_tap_v1B_TKZ"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_middy_ring_v1B_TKZ","description":"HRM_left_middy_ring_bilateral -> &kp - &HRM_left_middy_tap - TailorKey","bindings":["&kp","&HRM_left_middy_tap_v1B_TKZ"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_middy_v1B_TKZ","description":"HRM_left_middy_bilateral -> &HRM_left_index_hold -> &kp - TailorKey","bindings":["&HRM_left_middy_hold_v1B_TKZ","&kp"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_pinky_index_v1B_TKZ","description":"HRM_left_pinky_index_bilateral  -> &kp ->&HRM_left_pinky_tap - TailorKey","bindings":["&kp","&HRM_left_pinky_tap_v1B_TKZ"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_pinky_middy_v1B_TKZ","description":"HRM_left_pinky_middy_bilateral -> &kp - &HRM_left_pinky_tap - TailorKey","bindings":["&kp","&HRM_left_pinky_tap_v1B_TKZ"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_pinky_ring_v1B_TKZ","description":"HRM_left_pinky_ring_bilateral -> &kp - &HRM_left_pinky_tap - TailorKey","bindings":["&kp","&HRM_left_pinky_tap_v1B_TKZ"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_pinky_v1B_TKZ","description":"HRM_left_pinky_bilateral  - &HRM_left_pinky_hold -> &kp - TailorKey","bindings":["&HRM_left_pinky_hold_v1B_TKZ","&kp"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_ring_index_v1B_TKZ","description":"HRM_left_ring_index_bilateral  -> &kp ->&HRM_left_ring_tap - TailorKey","bindings":["&kp","&HRM_left_ring_tap_v1B_TKZ"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_ring_middy_v1B_TKZ","description":"HRM_left_ring_middy_bilateral -> &kp - &HRM_left_ring_tap - TailorKey","bindings":["&kp","&HRM_left_ring_tap_v1B_TKZ"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_ring_pinky_v1B_TKZ","description":"HRM_left_ring_pinky_bilateral -> &kp - &HRM_left_ring_tap - TailorKey","bindings":["&kp","&HRM_left_ring_tap_v1B_TKZ"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_left_ring_v1B_TKZ","description":"HRM_left_ring_bilateral  - &HRM_left_ring_hold -> &kp - TailorKey","bindings":["&HRM_left_ring_hold_v1B_TKZ","&kp"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[6,7,8,9,10,11,18,19,20,21,22,23,30,31,32,33,34,35,42,43,44,45,46,47,51,52,53,57,58,59]},{"name":"&HRM_right_index_middy_v1B_TKZ","description":"HRM_right_index_middy_bilateral -> &kp - &HRM_right_index_tap - TailorKey","bindings":["&kp","&HRM_right_index_tap_v1B_TKZ"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_index_pinky_v1B_TKZ","description":"HRM_right_index_pinky_bilateral -> &kp - &HRM_right_index_tap - TailorKey","bindings":["&kp","&HRM_right_index_tap_v1B_TKZ"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_index_ring_v1B_TKZ","description":"HRM_right_index_ring_bilateral -> &kp - &HRM_right_index_tap - TailorKey","bindings":["&kp","&HRM_right_index_tap_v1B_TKZ"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_index_v1B_TKZ","description":"HRM_right_index_bilateral -> &HRM_right_index_hold -> &kp - TailorKey","bindings":["&HRM_right_index_hold_v1B_TKZ","&kp"],"tappingTermMs":180,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_middy_index_v1B_TKZ","description":"HRM_right_middy_index_bilateral  -> &kp ->&HRM_right_middy_tap - TailorKey","bindings":["&kp","&HRM_right_middy_tap_v1B_TKZ"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_middy_pinky_v1B_TKZ","description":"HRM_right_middy_pinky_bilateral -> &kp - &HRM_right_pinky_tap - TailorKey","bindings":["&kp","&HRM_right_middy_tap_v1B_TKZ"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_middy_ring_v1B_TKZ","description":"HRM_right_middy_ring_bilateral -> &kp - &HRM_right_middy_tap - TailorKey","bindings":["&kp","&HRM_right_middy_tap_v1B_TKZ"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_middy_v1B_TKZ","description":"HRM_right_middy_bilateral -> &HRM_right_index_hold -> &kp - TailorKey","bindings":["&HRM_right_middy_hold_v1B_TKZ","&kp"],"tappingTermMs":210,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_pinky_index_v1B_TKZ","description":"HRM_right_pinky_index_bilateral  -> &kp ->&HRM_right_pinky_tap - TailorKey","bindings":["&kp","&HRM_right_pinky_tap_v1B_TKZ"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_pinky_middy_v1B_TKZ","description":"HRM_right_pinky_middy_bilateral -> &kp - &HRM_right_pinky_tap - TailorKey","bindings":["&kp","&HRM_right_pinky_tap_v1B_TKZ"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_pinky_ring_v1B_TKZ","description":"HRM_right_pinky_ring_bilateral -> &kp - &HRM_right_pinky_tap - TailorKey","bindings":["&kp","&HRM_right_pinky_tap_v1B_TKZ"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_pinky_v1B_TKZ","description":"HRM_right_pinky_bilateral  - &HRM_right_pinky_hold -> &kp - TailorKey","bindings":["&HRM_right_pinky_hold_v1B_TKZ","&kp"],"tappingTermMs":270,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":150,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_ring_index_v1B_TKZ","description":"HRM_right_ring_index_bilateral  -> &kp ->&HRM_right_ring_tap - TailorKey","bindings":["&kp","&HRM_right_ring_tap_v1B_TKZ"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_ring_middy_v1B_TKZ","description":"HRM_right_ring_middy_bilateral -> &kp - &HRM_right_ring_tap - TailorKey","bindings":["&kp","&HRM_right_ring_tap_v1B_TKZ"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_ring_pinky_v1B_TKZ","description":"HRM_right_ring_pinky_bilateral -> &kp - &HRM_right_ring_tap - TailorKey","bindings":["&kp","&HRM_right_ring_tap_v1B_TKZ"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]},{"name":"&HRM_right_ring_v1B_TKZ","description":"HRM_right_ring_bilateral  - &HRM_right_ring_hold -> &kp - TailorKey","bindings":["&HRM_right_ring_hold_v1B_TKZ","&kp"],"tappingTermMs":240,"flavor":"tap-preferred","quickTapMs":300,"requirePriorIdleMs":100,"holdTriggerOnRelease":true,"holdTriggerKeyPositions":[0,1,2,3,4,5,12,13,14,15,16,17,24,25,26,27,28,29,36,37,38,39,40,41,48,49,50,54,55,56]}] |
-
-# 4. Inject Macros (16 macros with dynamic layer index references)
-  .macros = [{"name":"&HRM_left_index_hold_v1B_TKZ","description":"HRM_left_index_hold -> swich layer  - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_li}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_li}]}],"params":["code"]},{"name":"&HRM_left_index_tap_v1B_TKZ","description":"HRM_left_index_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"F"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_left_middy_hold_v1B_TKZ","description":"HRM_left_middy_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_lm}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_lm}]}],"params":["code"]},{"name":"&HRM_left_middy_tap_v1B_TKZ","description":"HRM_left_middy_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"D"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_left_pinky_hold_v1B_TKZ","description":"HRM_left_pinky_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_lp}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_lp}]}],"params":["code"]},{"name":"&HRM_left_pinky_tap_v1B_TKZ","description":"HRM_left_pinky_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_left_ring_hold_v1B_TKZ","description":"HRM_left_ring_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_lr}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_lr}]}],"params":["code"]},{"name":"&HRM_left_ring_tap_v1B_TKZ","description":"HRM_left_ring_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"S"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_right_index_hold_v1B_TKZ","description":"HRM_right_index_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_ri}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_ri}]}],"params":["code"]},{"name":"&HRM_right_index_tap_v1B_TKZ","description":"HRM_right_index_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"J"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_right_middy_hold_v1B_TKZ","description":"HRM_right_middy_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_rm}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_rm}]}],"params":["code"]},{"name":"&HRM_right_middy_tap_v1B_TKZ","description":"HRM_right_middy_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"K"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_right_pinky_hold_v1B_TKZ","description":"HRM_right_pinky_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_rp}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_rp}]}],"params":["code"]},{"name":"&HRM_right_pinky_tap_v1B_TKZ","description":"HRM_right_pinky_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"SEMI"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]},{"name":"&HRM_right_ring_hold_v1B_TKZ","description":"HRM_right_ring_hold -> swich layer - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_rr}]},{"value":"&macro_pause_for_release"},{"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":$idx_rr}]}],"params":["code"]},{"name":"&HRM_right_ring_tap_v1B_TKZ","description":"HRM_right_ring_tap - incl. QWERTY alpha character - TailorKey","waitMs":0,"tapMs":0,"bindings":[{"value":"&macro_release"},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"LALT"}]},{"value":"&kp","params":[{"value":"RALT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":$mod.L1}]},{"value":"&kp","params":[{"value":$mod.R1}]},{"value":"&macro_tap"},{"value":"&kp","params":[{"value":"L"}]},{"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}],"params":["code"]}] |
-
-# 5. Inject layer bindings (60 keys each)
-  .layers[$idx_hrm] = [{"value":"&kp","params":[{"value":"F1"}]},{"value":"&kp","params":[{"value":"F2"}]},{"value":"&kp","params":[{"value":"F3"}]},{"value":"&kp","params":[{"value":"F4"}]},{"value":"&kp","params":[{"value":"F5"}]},{"value":"&kp","params":[{"value":"F6"}]},{"value":"&kp","params":[{"value":"F7"}]},{"value":"&kp","params":[{"value":"F8"}]},{"value":"&kp","params":[{"value":"F9"}]},{"value":"&kp","params":[{"value":"F10"}]},{"value":"&kp","params":[{"value":"F11"}]},{"value":"&kp","params":[{"value":"F12"}]},{"value":"&kp","params":[{"value":"EQUAL"}]},{"value":"&kp","params":[{"value":"N1"}]},{"value":"&kp","params":[{"value":"N2"}]},{"value":"&kp","params":[{"value":"N3"}]},{"value":"&kp","params":[{"value":"N4"}]},{"value":"&kp","params":[{"value":"N5"}]},{"value":"&kp","params":[{"value":"N6"}]},{"value":"&kp","params":[{"value":"N7"}]},{"value":"&kp","params":[{"value":"N8"}]},{"value":"&kp","params":[{"value":"N9"}]},{"value":"&kp","params":[{"value":"N0"}]},{"value":"&kp","params":[{"value":"MINUS"}]},{"value":"&kp","params":[{"value":"TAB"}]},{"value":"&kp","params":[{"value":"Q"}]},{"value":"&kp","params":[{"value":"W"}]},{"value":"&kp","params":[{"value":"E"}]},{"value":"&kp","params":[{"value":"R"}]},{"value":"&kp","params":[{"value":"T"}]},{"value":"&kp","params":[{"value":"Y"}]},{"value":"&kp","params":[{"value":"U"}]},{"value":"&kp","params":[{"value":"I"}]},{"value":"&kp","params":[{"value":"O"}]},{"value":"&kp","params":[{"value":"P"}]},{"value":"&kp","params":[{"value":"BSLH"}]},{"value":"&kp","params":[{"value":"ESC"}]},{"value":"&HRM_left_pinky_v1B_TKZ","params":[{"value":$mod.L1},{"value":"A"}],"decoration":{"background":$mod.C2}},{"value":"&HRM_left_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"S"}],"decoration":{"background":"#e5feff"}},{"value":"&HRM_left_middy_v1B_TKZ","params":[{"value":$mod.L2},{"value":"D"}],"decoration":{"background":$mod.C1}},{"value":"&HRM_left_index_v1B_TKZ","params":[{"value":"LSHFT"},{"value":"F"}],"decoration":{"background":"#fffec9"}},{"value":"&kp","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},{"value":"&HRM_right_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}],"decoration":{"background":"#fffec9"}},{"value":"&HRM_right_middy_v1B_TKZ","params":[{"value":$mod.R2},{"value":"K"}],"decoration":{"background":$mod.C1}},{"value":"&HRM_right_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}],"decoration":{"background":"#e5feff"}},{"value":"&HRM_right_pinky_v1B_TKZ","params":[{"value":$mod.R1},{"value":"SEMI"}],"decoration":{"background":$mod.C2}},{"value":"&kp","params":[{"value":"SQT"}]},{"value":"&kp","params":[{"value":"GRAVE"}]},{"value":"&kp","params":[{"value":"Z"}]},{"value":"&kp","params":[{"value":"X"}]},{"value":"&kp","params":[{"value":"N"}]},{"value":"&kp","params":[{"value":"M"}]},{"value":"&kp","params":[{"value":"COMMA"}]},{"value":"&kp","params":[{"value":"LSHFT"}]},{"value":"&kp","params":[{"value":$mod.L2}]},{"value":"&none"},{"value":"&kp","params":[{"value":$mod.R2}]},{"value":"&kp","params":[{"value":"RSHFT"}]},{"value":"&kp","params":[{"value":"SPACE"}]}] |
-  .layers[$idx_lp]  = [{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"F1"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"F2"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"F3"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"F4"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"F5"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"F6"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"EQUAL"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"N1"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"N2"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"N3"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"N4"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"N5"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"Q"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"W"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"E"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"R"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"T"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&none"},{"value":"&HRM_left_pinky_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"S"}]},{"value":"&HRM_left_pinky_middy_v1B_TKZ","params":[{"value":$mod.L2},{"value":"D"}]},{"value":"&HRM_left_pinky_index_v1B_TKZ","params":[{"value":"LSHFT"},{"value":"F"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},{"value":"&kp","params":[{"value":"J"}]},{"value":"&kp","params":[{"value":"K"}]},{"value":"&kp","params":[{"value":"L"}]},{"value":"&kp","params":[{"value":"SEMI"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"Z"}]},{"value":"&HRM_left_pinky_tap_v1B_TKZ","params":[{"value":"X"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_lr]  = [{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"F1"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"F2"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"F3"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"F4"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"F5"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"F6"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"EQUAL"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"N1"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"N2"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"N3"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"N4"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"N5"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"Q"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"W"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"E"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"R"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"T"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_ring_pinky_v1B_TKZ","params":[{"value":$mod.L1},{"value":"A"}]},{"value":"&none"},{"value":"&HRM_left_ring_middy_v1B_TKZ","params":[{"value":$mod.L2},{"value":"D"}]},{"value":"&HRM_left_ring_index_v1B_TKZ","params":[{"value":"LSHFT"},{"value":"F"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},{"value":"&kp","params":[{"value":"J"}]},{"value":"&kp","params":[{"value":"K"}]},{"value":"&kp","params":[{"value":"L"}]},{"value":"&kp","params":[{"value":"SEMI"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"Z"}]},{"value":"&HRM_left_ring_tap_v1B_TKZ","params":[{"value":"X"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_lm]  = [{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"F1"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"F2"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"F3"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"F4"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"F5"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"F6"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"EQUAL"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"N1"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"N2"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"N3"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"N4"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"N5"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"Q"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"W"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"E"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"R"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"T"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_middy_pinky_v1B_TKZ","params":[{"value":$mod.L1},{"value":"A"}]},{"value":"&HRM_left_middy_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"S"}]},{"value":"&none"},{"value":"&HRM_left_middy_index_v1B_TKZ","params":[{"value":"LSHFT"},{"value":"F"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},{"value":"&kp","params":[{"value":"J"}]},{"value":"&kp","params":[{"value":"K"}]},{"value":"&kp","params":[{"value":"L"}]},{"value":"&kp","params":[{"value":"SEMI"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"Z"}]},{"value":"&HRM_left_middy_tap_v1B_TKZ","params":[{"value":"X"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_li]  = [{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"F1"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"F2"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"F3"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"F4"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"F5"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"F6"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"EQUAL"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"N1"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"N2"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"N3"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"N4"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"N5"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"Q"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"W"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"E"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"R"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"T"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_index_pinky_v1B_TKZ","params":[{"value":$mod.L1},{"value":"A"}]},{"value":"&HRM_left_index_ringv1_TKZ","params":[{"value":"LALT"},{"value":"S"}]},{"value":"&HRM_left_index_middy_v1B_TKZ","params":[{"value":$mod.L2},{"value":"D"}]},{"value":"&none"},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"G"}]},{"value":"&kp","params":[{"value":"H"}]},{"value":"&kp","params":[{"value":"J"}]},{"value":"&kp","params":[{"value":"K"}]},{"value":"&kp","params":[{"value":"L"}]},{"value":"&kp","params":[{"value":"SEMI"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"Z"}]},{"value":"&HRM_left_index_tap_v1B_TKZ","params":[{"value":"X"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_ri]  = [{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"F7"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"F8"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"F9"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"F10"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"F11"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"F12"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"N6"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"N7"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"N8"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"N9"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"N0"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"MINUS"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"Y"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"U"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"I"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"O"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"P"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"BSLH"}]},{"value":"&trans"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&kp","params":[{"value":"S"}]},{"value":"&kp","params":[{"value":"D"}]},{"value":"&kp","params":[{"value":"F"}]},{"value":"&trans"},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"H"}]},{"value":"&none"},{"value":"&HRM_right_index_middy_v1B_TKZ","params":[{"value":$mod.R2},{"value":"K"}]},{"value":"&HRM_right_index_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}]},{"value":"&HRM_right_index_pinky_v1B_TKZ","params":[{"value":$mod.R1},{"value":"SEMI"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"SQT"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"N"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"M"}]},{"value":"&HRM_right_index_tap_v1B_TKZ","params":[{"value":"COMMA"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_rm]  = [{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"F7"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"F8"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"F9"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"F10"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"F11"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"F12"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"N6"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"N7"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"N8"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"N9"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"N0"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"MINUS"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"Y"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"U"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"I"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"O"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"P"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"BSLH"}]},{"value":"&trans"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&kp","params":[{"value":"S"}]},{"value":"&kp","params":[{"value":"D"}]},{"value":"&kp","params":[{"value":"F"}]},{"value":"&trans"},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"H"}]},{"value":"&HRM_right_middy_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}]},{"value":"&none"},{"value":"&HRM_right_middy_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}]},{"value":"&HRM_right_middy_pinky_v1B_TKZ","params":[{"value":$mod.R1},{"value":"SEMI"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"SQT"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"N"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"M"}]},{"value":"&HRM_right_middy_tap_v1B_TKZ","params":[{"value":"COMMA"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_rr]  = [{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"F7"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"F8"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"F9"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"F10"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"F11"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"F12"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"N6"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"N7"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"N8"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"N9"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"N0"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"MINUS"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"Y"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"U"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"I"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"O"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"P"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"BSLH"}]},{"value":"&trans"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&kp","params":[{"value":"S"}]},{"value":"&kp","params":[{"value":"D"}]},{"value":"&kp","params":[{"value":"F"}]},{"value":"&trans"},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"H"}]},{"value":"&HRM_right_ring_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}]},{"value":"&HRM_right_ring_middy_v1B_TKZ","params":[{"value":$mod.R2},{"value":"K"}]},{"value":"&none"},{"value":"&HRM_right_ring_pinky_v1B_TKZ","params":[{"value":$mod.R1},{"value":"SEMI"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"SQT"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"N"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"M"}]},{"value":"&HRM_right_ring_tap_v1B_TKZ","params":[{"value":"COMMA"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]  |
-  .layers[$idx_rp]  = [{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F7"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F8"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F9"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F10"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F11"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"F12"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N6"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N7"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N8"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N9"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N0"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"MINUS"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"Y"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"U"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"I"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"O"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"P"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"BSLH"}]},{"value":"&trans"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&kp","params":[{"value":"S"}]},{"value":"&kp","params":[{"value":"D"}]},{"value":"&kp","params":[{"value":"F"}]},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"H"}]},{"value":"&HRM_right_pinky_index_v1B_TKZ","params":[{"value":"RSHFT"},{"value":"J"}]},{"value":"&HRM_right_pinky_middy_v1B_TKZ","params":[{"value":$mod.R2},{"value":"K"}]},{"value":"&HRM_right_pinky_ring_v1B_TKZ","params":[{"value":"LALT"},{"value":"L"}]},{"value":"&none"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"SQT"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"N"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"M"}]},{"value":"&HRM_right_pinky_tap_v1B_TKZ","params":[{"value":"COMMA"}]},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"},{"value":"&trans"}]
+**Compatibility:**
+100% compatible with both Glove80 and Go60 hardware arrays.
 """
 
 # ==============================================================================
@@ -114,9 +40,198 @@ default = "GACS"
 
 [manifest]
 author = "moosyresearch"
-keyboards = ["go60"]
+keyboards = ["glove80", "go60"]
 icon = "📦"
-# Optional: red, green, blue, purple, yellow, orange
 theme = "red"
+
 [config]
 category = "Test/Dev"
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+(if type == "object" and .keymap? then .keymap else . end) |= (
+  
+  # 1. PRE-FLIGHT CONFLICT CHECK
+  (
+    [
+      (if (.layer_names // []) | index("HRM_Bil") != null then "- Layer: 'HRM_Bil'" else empty end),
+      (if (.holdTaps // []) | any(.name | startswith("&HRM_")) then "- HoldTaps: '&HRM_...'" else empty end),
+      (if (.macros // []) | any(.name | startswith("&HRM_")) then "- Macros: '&HRM_...'" else empty end)
+    ]
+  ) as $conflicts |
+  
+  if ($conflicts | length > 0) then
+    error("ABORTED: The following items already exist in the layout:\n" + ($conflicts | join("\n")))
+  else
+    
+    # 2. RESOLVE MODIFIERS & HARDWARE MAPS
+    {
+      "GACS": { "L1": "LGUI",  "R1": "RGUI",  "L2": "LCTRL", "R2": "RCTRL", "C1": "#d9f9c9", "C2":"#fbe6fe" },
+      "CAGS": { "L1": "LCTRL", "R1": "RCTRL", "L2": "LGUI",  "R2": "RGUI",  "C1": "#fbe6fe", "C2":"#d9f9c9" }
+    }[$mod_preset] as $mod |
+
+    (.layers[0] | length) as $kb_len |
+
+    # Dynamic Left/Right Split Mapping for Glove80 vs Go60
+    (if $kb_len == 80 then
+      [0,1,2,3,4, 10,11,12,13,14,15, 22,23,24,25,26,27, 34,35,36,37,38,39, 46,47,48,49,50,51, 52,53,54,55,56,57, 69,70,71,72,73,74]
+    else
+      [0,1,2,3,4,5, 12,13,14,15,16,17, 24,25,26,27,28,29, 36,37,38,39,40,41, 48,49,50, 54,55,56]
+    end) as $lh_keys |
+
+    (if $kb_len == 80 then
+      [5,6,7,8,9, 16,17,18,19,20,21, 28,29,30,31,32,33, 40,41,42,43,44,45, 58,59,60,61,62,63, 75,76,77,78,79]
+    else
+      [6,7,8,9,10,11, 18,19,20,21,22,23, 30,31,32,33,34,35, 42,43,44,45,46,47, 51,52,53, 57,58,59]
+    end) as $rh_keys |
+
+    (if $kb_len == 80 then [35, 36, 37, 38] else [37, 38, 39, 40] end) as $l_hrm |
+    (if $kb_len == 80 then [41, 42, 43, 44] else [43, 44, 45, 46] end) as $r_hrm |
+
+    # 3. ENSURE LAYERS EXIST
+    ( ["HRM_Bil", "LeftPinky", "LeftRingy", "LeftMiddy", "LeftIndex", "RightIndex", "RightMiddy", "RightRingy", "RightPinky"] as $req |
+      reduce $req[] as $ln (.; if (.layer_names | index($ln) == null) then .layer_names += [$ln] | .layers += [[]] else . end)
+    ) |
+
+    (.layer_names | index("HRM_Bil")) as $idx_hrm |
+    (.layer_names | index("LeftPinky")) as $idx_lp |
+    (.layer_names | index("LeftRingy")) as $idx_lr |
+    (.layer_names | index("LeftMiddy")) as $idx_lm |
+    (.layer_names | index("LeftIndex")) as $idx_li |
+    (.layer_names | index("RightIndex")) as $idx_ri |
+    (.layer_names | index("RightMiddy")) as $idx_rm |
+    (.layer_names | index("RightRingy")) as $idx_rr |
+    (.layer_names | index("RightPinky")) as $idx_rp |
+
+    # Extract dynamic Base Layer keystrokes
+    (.layers[0][$l_hrm[0]].params[0].value // "A") as $lk_p |
+    (.layers[0][$l_hrm[1]].params[0].value // "S") as $lk_r |
+    (.layers[0][$l_hrm[2]].params[0].value // "D") as $lk_m |
+    (.layers[0][$l_hrm[3]].params[0].value // "F") as $lk_i |
+    (.layers[0][$r_hrm[0]].params[0].value // "J") as $rk_i |
+    (.layers[0][$r_hrm[1]].params[0].value // "K") as $rk_m |
+    (.layers[0][$r_hrm[2]].params[0].value // "L") as $rk_r |
+    (.layers[0][$r_hrm[3]].params[0].value // "SEMI") as $rk_p |
+
+    [
+      {"h":"left", "f":"pinky", "ms":270, "mod":$mod.L1, "idx":$idx_lp, "bk":$lk_p, "others":["ring","middy","index"]},
+      {"h":"left", "f":"ring",  "ms":240, "mod":"LALT",  "idx":$idx_lr, "bk":$lk_r, "others":["pinky","middy","index"]},
+      {"h":"left", "f":"middy", "ms":210, "mod":$mod.L2, "idx":$idx_lm, "bk":$lk_m, "others":["pinky","ring","index"]},
+      {"h":"left", "f":"index", "ms":180, "mod":"LSHFT", "idx":$idx_li, "bk":$lk_i, "others":["pinky","ring","middy"]},
+      {"h":"right","f":"index", "ms":180, "mod":"RSHFT", "idx":$idx_ri, "bk":$rk_i, "others":["pinky","ring","middy"]},
+      {"h":"right","f":"middy", "ms":210, "mod":$mod.R2, "idx":$idx_rm, "bk":$rk_m, "others":["pinky","ring","index"]},
+      {"h":"right","f":"ring",  "ms":240, "mod":"RALT",  "idx":$idx_rr, "bk":$rk_r, "others":["pinky","middy","index"]},
+      {"h":"right","f":"pinky", "ms":270, "mod":$mod.R1, "idx":$idx_rp, "bk":$rk_p, "others":["ring","middy","index"]}
+    ] as $fingers |
+
+    # 4. GENERATE MACROS PROCEDURALLY
+    def hold_mac(name; target_idx):
+      {
+        "name": name, "waitMs": 0, "tapMs": 0,
+        "bindings": [
+          {"value":"&macro_press"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":target_idx}]},
+          {"value":"&macro_pause_for_release"},
+          {"value":"&macro_release"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]},{"value":"&mo","params":[{"value":target_idx}]}
+        ],
+        "params": ["code"]
+      };
+
+    def tap_mac(name; base_key):
+      {
+        "name": name, "waitMs": 0, "tapMs": 0,
+        "bindings": [
+          {"value":"&macro_release"},
+          {"value":"&kp","params":[{"value":"LSHFT"}]}, {"value":"&kp","params":[{"value":"RSHFT"}]},
+          {"value":"&kp","params":[{"value":"LALT"}]}, {"value":"&kp","params":[{"value":"RALT"}]},
+          {"value":"&kp","params":[{"value":$mod.L2}]}, {"value":"&kp","params":[{"value":$mod.R2}]},
+          {"value":"&kp","params":[{"value":$mod.L1}]}, {"value":"&kp","params":[{"value":$mod.R1}]},
+          {"value":"&macro_tap"},{"value":"&kp","params":[{"value":base_key}]},
+          {"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}
+        ],
+        "params": ["code"]
+      };
+
+    .macros = ((.macros // []) + ($fingers | map(hold_mac("&HRM_\(.h)_\(.f)_hold_v1B_TKZ"; .idx), tap_mac("&HRM_\(.h)_\(.f)_tap_v1B_TKZ"; .bk)))) |
+
+    # 5. GENERATE HOLD-TAPS PROCEDURALLY
+    .holdTaps = ((.holdTaps // []) + ($fingers | map(
+      . as $cfg |
+      (if .h == "left" then $rh_keys else $lh_keys end) as $triggers |
+      {
+        "name": "&HRM_\(.h)_\(.f)_v1B_TKZ",
+        "flavor": "tap-preferred", "tappingTermMs": .ms, "quickTapMs": 300, 
+        "requirePriorIdleMs": (if .f=="index" or .f=="ring" then 100 else 150 end),
+        "holdTriggerOnRelease": true, "holdTriggerKeyPositions": $triggers,
+        "bindings": ["&HRM_\(.h)_\(.f)_hold_v1B_TKZ", "&kp"]
+      },
+      (.others[] | {
+        "name": "&HRM_\($cfg.h)_\($cfg.f)_\(.)_v1B_TKZ",
+        "flavor": "tap-preferred", "tappingTermMs": $cfg.ms, "quickTapMs": 300, 
+        "requirePriorIdleMs": (if $cfg.f=="index" or $cfg.f=="ring" then 100 else 150 end),
+        "holdTriggerOnRelease": true, "holdTriggerKeyPositions": $triggers,
+        "bindings": ["&kp", "&HRM_\($cfg.h)_\($cfg.f)_tap_v1B_TKZ"]
+      })
+    ))) |
+
+    # 6. GENERATE ALL 9 LAYERS PROCEDURALLY
+    (.layers[0] | to_entries | map(
+      .key as $k | .value as $v |
+      if $k == $l_hrm[0] then {"value":"&HRM_left_pinky_v1B_TKZ", "params":[{"value":$mod.L1},{"value":$lk_p}], "decoration":{"background":$mod.C2}}
+      elif $k == $l_hrm[1] then {"value":"&HRM_left_ring_v1B_TKZ", "params":[{"value":"LALT"},{"value":$lk_r}], "decoration":{"background":"#e5feff"}}
+      elif $k == $l_hrm[2] then {"value":"&HRM_left_middy_v1B_TKZ", "params":[{"value":$mod.L2},{"value":$lk_m}], "decoration":{"background":$mod.C1}}
+      elif $k == $l_hrm[3] then {"value":"&HRM_left_index_v1B_TKZ", "params":[{"value":"LSHFT"},{"value":$lk_i}], "decoration":{"background":"#fffec9"}}
+      elif $k == $r_hrm[0] then {"value":"&HRM_right_index_v1B_TKZ", "params":[{"value":"RSHFT"},{"value":$rk_i}], "decoration":{"background":"#fffec9"}}
+      elif $k == $r_hrm[1] then {"value":"&HRM_right_middy_v1B_TKZ", "params":[{"value":$mod.R2},{"value":$rk_m}], "decoration":{"background":$mod.C1}}
+      elif $k == $r_hrm[2] then {"value":"&HRM_right_ring_v1B_TKZ", "params":[{"value":"LALT"},{"value":$rk_r}], "decoration":{"background":"#e5feff"}}
+      elif $k == $r_hrm[3] then {"value":"&HRM_right_pinky_v1B_TKZ", "params":[{"value":$mod.R1},{"value":$rk_p}], "decoration":{"background":$mod.C2}}
+      else $v end
+    )) as $hrm_bil_layer |
+
+    def build_finger_layer($hand; $finger; $base_layer):
+      ($fingers | map(select(.h == $hand and .f == $finger))[0]) as $cfg |
+      $base_layer | to_entries | map(
+        .key as $k | .value as $v |
+        ($v.params[0].value // "NONE") as $bp |
+        
+        if ($v.value != "&kp") then {"value": "&trans"}
+        else
+          if $hand == "left" then
+            if ($k | IN($lh_keys[])) then
+              if $k == $l_hrm[0] then (if $finger == "pinky" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_pinky_v1B_TKZ", "params":[{"value":$mod.L1}, {"value":$bp}]} end)
+              elif $k == $l_hrm[1] then (if $finger == "ring" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_ring_v1B_TKZ", "params":[{"value":"LALT"}, {"value":$bp}]} end)
+              elif $k == $l_hrm[2] then (if $finger == "middy" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_middy_v1B_TKZ", "params":[{"value":$mod.L2}, {"value":$bp}]} end)
+              elif $k == $l_hrm[3] then (if $finger == "index" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_index_v1B_TKZ", "params":[{"value":"LSHFT"}, {"value":$bp}]} end)
+              else {"value": "&HRM_left_\($finger)_tap_v1B_TKZ", "params": [{"value":$bp}]} end
+            else
+              $v 
+            end
+          else 
+            if ($k | IN($rh_keys[])) then
+              if $k == $r_hrm[0] then (if $finger == "index" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_index_v1B_TKZ", "params":[{"value":"RSHFT"}, {"value":$bp}]} end)
+              elif $k == $r_hrm[1] then (if $finger == "middy" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_middy_v1B_TKZ", "params":[{"value":$mod.R2}, {"value":$bp}]} end)
+              elif $k == $r_hrm[2] then (if $finger == "ring" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_ring_v1B_TKZ", "params":[{"value":"LALT"}, {"value":$bp}]} end)
+              elif $k == $r_hrm[3] then (if $finger == "pinky" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_pinky_v1B_TKZ", "params":[{"value":$mod.R1}, {"value":$bp}]} end)
+              else {"value": "&HRM_right_\($finger)_tap_v1B_TKZ", "params": [{"value":$bp}]} end
+            else
+              $v 
+            end
+          end
+        end
+      )
+    ;
+
+    (.layers[0]) as $base_layer |
+    .layers[$idx_hrm] = $hrm_bil_layer |
+    .layers[$idx_lp] = build_finger_layer("left"; "pinky"; $base_layer) |
+    .layers[$idx_lr] = build_finger_layer("left"; "ring"; $base_layer) |
+    .layers[$idx_lm] = build_finger_layer("left"; "middy"; $base_layer) |
+    .layers[$idx_li] = build_finger_layer("left"; "index"; $base_layer) |
+    .layers[$idx_ri] = build_finger_layer("right"; "index"; $base_layer) |
+    .layers[$idx_rm] = build_finger_layer("right"; "middy"; $base_layer) |
+    .layers[$idx_rr] = build_finger_layer("right"; "ring"; $base_layer) |
+    .layers[$idx_rp] = build_finger_layer("right"; "pinky"; $base_layer)
+  end
+)
+"""
