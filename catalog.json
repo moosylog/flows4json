@@ -1081,8 +1081,8 @@
           "mod-morph",
           "restore"
         ],
-        "labels": "[",
-        "default": "hold-tap"
+        "default": "mod-morph",
+        "labels": "["
       }
     ],
     "mediaUrl": null
