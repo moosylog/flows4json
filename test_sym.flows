@@ -4,7 +4,7 @@ language = "en-US"
 title = "Primeagen's NumRow DEV"
 subtitle = "Custom Number Row"
 description = """
-# ⚠️ Developer Preview: Requires the newest, unreleased Layout Editor.
+## ⚠️ Developer Preview: Requires the newest, unreleased Layout Editor.
 
 ---
 
@@ -22,7 +22,7 @@ You can pick from four different typing styles when running this tool:
 1. **Hold-Tap:** Tap the key for the Symbol (`!`), Hold the key down for the Number (`1`).
 2. **Tap-Dance:** Tap the key once for the Symbol (`!`), Tap it twice fast for the Number (`1`).
 3. **Shift for Numbers (Mod-Morph):** Tap the key for the Symbol (`!`), hold Shift to get the Number (`1`). *(This is the exact opposite of a normal keyboard).*
-4. **Restore Defaults:** Don't like it? Use this option to safely restore the default (`=`, `1` through `0`, `-`).
+4. **Restore Defaults:** Don't like it? Use this option to safely change the row back to standard normal numbers (`=`, `1` through `0`, `-`).
 """
 
 # ==============================================================================
@@ -137,12 +137,14 @@ def get_primeagen_holdtap: {
       # Safely extract existing decorations (like background color) to prevent overwriting them
       (if type == "object" and .decoration then .decoration else {} end) as $base_dec |
       
-      # Inject or remove the specific 'label' property based on behavior and add_labels option
-      (if $behavior_type == "restore" or $add_labels == "no" then
-        (if $base_dec | has("label") then del($base_dec.label) else $base_dec end)
-      else
-        ($base_dec + { "label": $arr_labels[$idx] })
-      end) as $new_dec |
+      # Safely inject or remove the specific 'label' property based on user selection
+      ($base_dec | 
+        if $behavior_type == "restore" or $add_labels == "no" then
+          del(.label)
+        else
+          . + { "label": $arr_labels[$idx] }
+        end
+      ) as $new_dec |
       
       # Re-wrap into the decoration object if not empty
       (if $new_dec == {} then {} else { "decoration": $new_dec } end) as $dec_obj |
@@ -189,7 +191,12 @@ id = "behavior_type"
 label = "Trigger Behavior"
 type = "select"
 options = ["hold-tap", "tap-dance", "mod-morph", "restore"]
-labels = ["Hold-Tap (Tap for Symbol, Hold for Number)", "Tap-Dance (Tap for Symbol, Double-Tap for Number)", "Shift for Numbers (Tap for Symbol, Shift for Number)", "Restore Defaults (Standard NumRow)"]
+labels = [
+  "Hold-Tap (Tap for Symbol, Hold for Number)", 
+  "Tap-Dance (Tap for Symbol, Double-Tap for Number)", 
+  "Shift for Numbers (Tap for Symbol, Shift for Number)",
+  "Restore Defaults (Standard NumRow)"
+]
 default = "mod-morph"
 
 [[param]]
