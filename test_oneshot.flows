@@ -1,0 +1,116 @@
+uid = "sticky_oneshot_injector"
+type = "mutation"
+language = "us"
+title = "OneShot Modifier"
+subtitle = "OneShot Sticky Keys"
+description = """
+**OneShot Shift**
+
+This script automatically adds a popular ergonomic feature to your layout that lets you type capital letters without holding down the Shift key.
+It creates a smart, dual-function key by merging a standard hold-Shift with a "sticky" tap-Shift.
+If you tap the key, Shift stays active for exactly one letter; if you hold the key, it acts just like a normal Shift until you let go.
+
+Automatically injects the native `&sticky_key_quickrel` behavior, the `&sticky_key_modtap` hold-tap, and its required macro. 
+Pre-validates the AST to prevent duplicates; breaks with a terminal error if any items already exist.
+Safely generates a `OneShot_example` layer scaled perfectly to your hardware (80 keys or 60 keys).
+"""
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+(if type == "object" and .keymap? then .keymap else . end) |= (
+  
+  # 1. Pre-flight Conflict Checks
+  (
+    [
+      (if (.stickyKeys // []) | any(.name == "&sticky_key_quickrel") then "- StickyKey: '&sticky_key_quickrel'" else empty end),
+      (if (.macros // []) | any(.name == "&sticky_key_oneshot") then "- Macro: '&sticky_key_oneshot'" else empty end),
+      (if (.holdTaps // []) | any(.name == "&sticky_key_modtap") then "- HoldTap: '&sticky_key_modtap'" else empty end),
+      (if (.layer_names // []) | index("OneShot_example") != null then "- Layer: 'OneShot_example'" else empty end)
+    ]
+  ) as $conflicts |
+  
+  # Halt execution and print to stderr if conflicts exist
+  if ($conflicts | length > 0) then
+    error("ABORTED: The following items already exist in the layout:\n" + ($conflicts | join("\n")))
+  else
+    
+    # 2. Determine Hardware Matrix Size dynamically
+    (.layers[0] | length) as $kb_len |
+
+    # 3. ── Sticky Keys (NEW Native Support) ──
+    # No need for unique_by(.name) since we already verified they don't exist
+    .stickyKeys = ((.stickyKeys // []) + [
+      {
+        "name": "&sticky_key_quickrel",
+        "description": "",
+        "releaseAfterMs": 500,
+        "quickRelease": true,
+        "lazy": false,
+        "ignoreModifiers": true,
+        "bindings": ["&kp"]
+      }
+    ]) |
+
+    # 4. ── Macros ──
+    .macros = ((.macros // []) + [
+      {
+        "name": "&sticky_key_oneshot",
+        "description": "",
+        "waitMs": 0,
+        "tapMs": 0,
+        "bindings": [
+          {"value": "&macro_tap"},
+          {"value": "&macro_param_1to1"},
+          {
+            "value": "&sticky_key_quickrel", 
+            "params": [{"value": "MACRO_PLACEHOLDER"}]
+          }
+        ]
+      }
+    ]) |
+
+    # 5. ── HoldTaps ──
+    .holdTaps = ((.holdTaps // []) + [
+      {
+        "name": "&sticky_key_modtap",
+        "description": "",
+        "flavor": "tap-preferred",
+        "tappingTermMs": 250,
+        "bindings": ["&kp", "&sticky_key_oneshot"]
+      }
+    ]) |
+
+    # 6. ── Layers ──
+    .layer_names = ((.layer_names // []) + ["OneShot_example"]) |
+    .layers = ((.layers // []) + [[
+      range($kb_len) |
+      
+      # Inject the key at index 46. 
+      if . == 46 then
+        {
+          "value": "&sticky_key_modtap",
+          "params": [{"value": "LSHFT"}, {"value": "LSHFT"}],
+          "decoration": {
+            "label": "Shift",
+            "icon": "fa-angle-double-up",
+            "background": "#ffecb3"
+          }
+        }
+      else
+        {"value": "&none"}
+      end
+    ]])
+  end
+)
+"""
+
+[manifest]
+author = "moosyresearch"
+keyboards = ["glove80", "go60"]
+icon = "✨"
+theme = "purple"
+
+[config]
+category = "Test/Dev"
