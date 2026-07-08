@@ -11,7 +11,7 @@ description = """
 ### **What is the Primeagen Number Row?**
 
 Normally, you tap a number key to type `1` and hold Shift to type `!`. 
-This tool flips that around in the [ThePrimeagen symbol order](https://www.youtube.com/watch?v=VzsxDbkV4rE&t=1150s), it makes typing programmer symbols much easier by putting them front and center, so your pinky doesn't have to stretch for the Shift key constantly.
+This tool flips that around! Inspired by ThePrimeagen, it makes typing programmer symbols much easier by putting them front and center, so your pinky doesn't have to stretch for the Shift key constantly.
 
 **⚠️ Warning: This will automatically overwrite the top number row on your main typing layer (Layer 0).**
 
@@ -91,7 +91,6 @@ def get_primeagen_holdtap: {
 ]) as $new_dances |
 
 # Explicitly mapped parameters for the single Hold-Tap behavior
-# Note: ZMK syntax is "&ht HOLD TAP", so param 0 is HOLD (Number), param 1 is TAP (Symbol)
 [
   [ {"value": "LS", "params": [{"value": "N2"}]}, {"value": "LS", "params": [{"value": "EQUAL"}]} ],
   [ {"value": "N1"}, {"value": "LS", "params": [{"value": "N1"}]} ],
@@ -109,6 +108,9 @@ def get_primeagen_holdtap: {
 
 # Array 3: Defaults (for Restore option)
 ["EQUAL","N1","N2","N3","N4","N5","N6","N7","N8","N9","N0","MINUS"] as $arr_defaults |
+
+# Array 4: Visual UI Labels for the keys (Symbol + Number)
+["+ @", "! 1", "[ 2", "{ 3", "( 4", "& 5", "= 6", ") 7", "} 8", "] 9", "* 0", "$ %"] as $arr_labels |
 
 (GetHardware) as $hw |
 
@@ -130,32 +132,42 @@ def get_primeagen_holdtap: {
     # Check if the current key index is strictly inside the hardware's number row
     if ($i >= $hw.offset) and ($i < ($hw.offset + $hw.len)) then
       
-      ($i - $hw.offset) as $idx | # Maps index back to 0-11 to pull from our arrays cleanly
+      ($i - $hw.offset) as $idx | 
 
-      # Safely preserve any UI decorators the user has applied
-      (if type == "object" and .decoration then { decoration: .decoration } else {} end) as $dec |
+      # Safely extract existing decorations (like background color) to prevent overwriting them
+      (if type == "object" and .decoration then .decoration else {} end) as $base_dec |
+      
+      # Inject or remove the specific 'label' property based on behavior and add_labels option
+      (if $behavior_type == "restore" or $add_labels == "no" then
+        (if $base_dec | has("label") then del($base_dec.label) else $base_dec end)
+      else
+        ($base_dec + { "label": $arr_labels[$idx] })
+      end) as $new_dec |
+      
+      # Re-wrap into the decoration object if not empty
+      (if $new_dec == {} then {} else { "decoration": $new_dec } end) as $dec_obj |
       
       if $behavior_type == "restore" then
         {
           value: "&kp",
           params: [{"value": $arr_defaults[$idx]}]
-        } + $dec
+        } + $dec_obj
         
       elif $behavior_type == "hold-tap" then
         {
           value: "&ht_primeagen",
           params: $ht_params[$idx]
-        } + $dec
+        } + $dec_obj
         
       elif $behavior_type == "tap-dance" then
         {
           value: ("&td_pr_" + ($idx | tostring))
-        } + $dec
+        } + $dec_obj
         
       elif $behavior_type == "mod-morph" then
         {
           value: ("&mm_pr_" + ($idx | tostring))
-        } + $dec
+        } + $dec_obj
         
       else 
         . 
@@ -177,10 +189,20 @@ id = "behavior_type"
 label = "Trigger Behavior"
 type = "select"
 options = ["hold-tap", "tap-dance", "mod-morph", "restore"]
-default = "mod-morph"
+labels = [
+  "Hold-Tap (Tap for Symbol, Hold for Number)", 
+  "Tap-Dance (Tap for Symbol, Double-Tap for Number)", 
+  "Shift for Numbers (Tap for Symbol, Shift for Number)",
+  "Restore Defaults (Standard NumRow)"
+]
+default = "hold-tap"
 
-# FIXED: The UI labels now properly match the ZMK bindings behavior
-labels = ["Hold-Tap - Tap for Symbol, Hold for Number","Tap-Dance - Tap for Symbol, Double-Tap for Number","Mod-Morph - Tap for Symbol, Shift for Number","Restore the Factory NumRow"]
+[[param]]
+id = "add_labels"
+label = "Add key decorator labels"
+type = "select"
+options = ["yes", "no"]
+default = "yes"
 
 # ==============================================================================
 # METADATA & CONFIG
