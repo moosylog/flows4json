@@ -1082,7 +1082,12 @@
           "restore"
         ],
         "default": "mod-morph",
-        "labels": "["
+        "labels": [
+          "Hold-Tap - Tap for Symbol, Hold for Number",
+          "Tap-Dance - Tap for Symbol, Double-Tap for Number",
+          "Mod-Morph - Tap for Symbol, Shift for Number",
+          "Restore the Factory NumRow"
+        ]
       }
     ],
     "mediaUrl": null
