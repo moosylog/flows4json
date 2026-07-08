@@ -1087,7 +1087,7 @@
           "Shift for Numbers (Tap for Symbol, Shift for Number)",
           "Restore Defaults (Standard NumRow)"
         ],
-        "default": "hold-tap"
+        "default": "mod-morph"
       },
       {
         "id": "add_labels",
