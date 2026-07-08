@@ -13,11 +13,20 @@ This tool adds a popular comfort feature to your keyboard, allowing you to type 
 
 ---
 
-### **What this script does:**
+### **Exactly what this script adds to your layout:**
 
-*   **Sets everything up automatically:** It safely adds all the hidden background settings needed to make this work (inspired by the popular Glorious Engrammer layout).
-*   **Keeps your layout file safe:** It checks your file first before making changes. If you already have these settings installed, the script will safely stop and show a warning so it doesn't create duplicates.
-*   **Gives you a working example:** It generates a new, safe test layer called `OneShot_example` with the new Shift key ready to go. You can simply copy this key over to your main typing layer!
+This script safely adds four new items to your settings (inspired by the popular Glorious Engrammer layout). After running it, you will see these new items in your layout editor:
+
+1.  **A New Sticky Key (`&sticky_key_quickrel`):** The setting that controls the timing so the key turns off automatically after 500 milliseconds.
+2.  **A New Macro (`&sticky_key_oneshot`):** The hidden sequence that makes the tap action work properly.
+3.  **A New Hold-Tap (`&sticky_key_modtap`):** The actual dual-function behavior. **This is the item you will use when setting up your own keys.** 
+4.  **A New Layer (`OneShot_example`):** A safe, extra layer created just to give you a working example. It contains a ready-to-use Shift key so you can see exactly how to assign it.
+
+---
+
+### **Safety First:**
+
+The script checks your file *before* making any changes. If you already have these specific items installed, the script will safely stop and show a warning so it doesn't create messy duplicates. Once the script runs, you can simply copy the example key from the new layer over to your main typing layer!
 """
 
 # ==============================================================================
