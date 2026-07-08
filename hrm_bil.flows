@@ -8,12 +8,12 @@ Sunaku's Advanced home-row mods with bilateral combination enforcement improve t
 
 [Learn more](https://sites.google.com/view/keyboards/layout/homerow-mods-explained)
 
-**What this Generative Script does:**
-Instead of hardcoding layouts, this script reads your current Base layer and dynamically spawns:
-- 16 macros 
-- 32 hold-taps
-- 1 new QWERTY HRM layer ('HRM_Bil')
-- 8 finger layers perfectly adapted to your exact base layout keys
+**What this does:**
+Instead of hardcoding layouts, this script reads your current Base layer and dynamically creates the following to support BHRM.
+- 1 new Bilateral HRM layer ('HRM_Bil') 
+- 16 required macros 
+- 32 required hold-taps 
+- 8 required finger layers 
 
 **Safety First:**
 This script features headless pre-flight checks. It will instantly abort with a terminal error if any HRM items already exist in your layout to prevent accidental duplication.
