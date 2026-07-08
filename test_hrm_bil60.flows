@@ -1,7 +1,7 @@
 uid = "hrm_bil_dynamic"
 type = "mutation"
 language = "us"
-title = "Sunaku's Bilateral HRM (TEST/DEV)"
+title = "TEST/DEV Sunaku's Bilateral HRM (TEST/DEV)"
 subtitle = "Hardware-Agnostic Home-Row Modifiers"
 description = """
 # TEST/DEV
