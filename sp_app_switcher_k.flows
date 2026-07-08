@@ -7,16 +7,16 @@ description = """
 ### Single-Key App Switcher (Alt-Tab)
 
 **What this does:**
-Normally, switching between open apps requires holding one key and tapping another (like Alt + Tab on Windows or Cmd + Tab on Mac). This feature makes things more efficient by condensing that entire action into a single, easy button press.
+Normally, switching between open apps requires holding one key and tapping another (like Alt + Tab on Windows or Cmd + Tab on Mac). This flow makes things more efficient by condensing that entire action into a single, easy button press.
 
 **What happens automatically:**
-When you apply this, the script does the heavy lifting for you. It automatically builds a special background shortcut (a macro) called **`&AppSwitch`** and sets it up with optimal timings so the app switching feels snappy and reliable.
+When you apply this, the flow does the heavy lifting for you. It automatically builds a special background shortcut (a macro) called **`&AppSwitch`** and sets it up with optimal timings so the app switching feels snappy and reliable.
 
 **What YOU need to do to make it work:**
 Because everyone likes their shortcuts in different places, you need to tell your keyboard which button should trigger this feature.
 
 **Step-by-Step Setup:**
-1. Go to your keyboard layout editor.
+1. Open the Layout Editor.
 2. Choose a specific key (or a combo) that you want to use for switching apps.
 3. Assign the newly created **`&AppSwitch`** macro to that key. 
 
