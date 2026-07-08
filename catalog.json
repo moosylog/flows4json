@@ -1100,7 +1100,7 @@
         "default": "yes"
       }
     ],
-    "mediaUrl": "https://moosylog.github.io/flows4json/test_sym.png"
+    "mediaUrl": null
   },
   {
     "uid": "top_15_zmk_behaviors",
