@@ -176,10 +176,10 @@ options = ["hold-tap", "tap-dance", "mod-morph", "restore"]
 
 # FIXED: The UI labels now properly match the ZMK bindings behavior
 labels = [
-  "Hold-Tap (Tap for Symbol, Hold for Number)", 
-  "Tap-Dance (Tap for Symbol, Double-Tap for Number)", 
-  "Mod-Morph (Tap for Symbol, Shift for Number)",
-  "Restore Defaults (Standard NumRow)"
+  "Hold-Tap - Tap for Symbol, Hold for Number", 
+  "Tap-Dance - Tap for Symbol, Double-Tap for Number", 
+  "Mod-Morph - Tap for Symbol, Shift for Number",
+  "Restore the Factory NumRow"
 ]
 default = "hold-tap"
 
