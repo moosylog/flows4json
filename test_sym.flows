@@ -18,7 +18,7 @@ Supports dynamically injecting:
 * **Hold-Tap:** Tap for Symbol, Hold for Number  *(1 Behavior definition)*
 * **Tap-Dance:** Tap for Symbol, Double-Tap for Number  *(12 Behavior definitions)*
 * **Mod-Morph:** Tap for Symbol, Shift for Number  *(12 Behavior definitions)*
-* **Restore Defaults:** Reverts the row back to standard QWERTY NumRow (`=`, `1`-`0`, `-`).
+* **Restore Factory NumRow:** Reverts the row back to standard QWERTY NumRow (`=`, `1`-`0`, `-`).
 """
 
 # ==============================================================================
