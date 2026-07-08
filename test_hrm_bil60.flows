@@ -1,10 +1,10 @@
 uid = "hrm_bil_dynamic"
 type = "mutation"
 language = "us"
-title = "TEST/DEV Sunaku's Bilateral HRM (TEST/DEV)"
+title = "TEST Sunaku's Bilateral HRM (Dev)"
 subtitle = "Hardware-Agnostic Home-Row Modifiers"
 description = """
-# TEST/DEV
+#TEST
 
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips.
 
@@ -76,9 +76,13 @@ script = """
 
     (.layers[0] | length) as $kb_len |
 
-    # Dynamic Left/Right Split Mapping for Glove80 vs Go60
+    # Dynamic Home Row Selection
+    (if $kb_len == 80 then [35, 36, 37, 38] else [25, 26, 27, 28] end) as $l_hrm |
+    (if $kb_len == 80 then [41, 42, 43, 44] else [31, 32, 33, 34] end) as $r_hrm |
+
+    # Dynamic Left/Right Trigger Matrix Mapping
     (if $kb_len == 80 then
-      [0,1,2,3,4, 10,11,12,13,14,15, 22,23,24,25,26,27, 34,35,36,37,38,39, 46,47,48,49,50,51, 52,53,54,55,56,57, 69,70,71,72,73,74]
+      [0,1,2,3,4, 10,11,12,13,14,15, 22,23,24,25,26,27, 34,35,36,37,38,39, 46,47,48,49,50,51, 64,65,66,67,68]
     else
       [0,1,2,3,4,5, 12,13,14,15,16,17, 24,25,26,27,28,29, 36,37,38,39,40,41, 48,49,50, 54,55,56]
     end) as $lh_keys |
@@ -88,9 +92,6 @@ script = """
     else
       [6,7,8,9,10,11, 18,19,20,21,22,23, 30,31,32,33,34,35, 42,43,44,45,46,47, 51,52,53, 57,58,59]
     end) as $rh_keys |
-
-    (if $kb_len == 80 then [35, 36, 37, 38] else [37, 38, 39, 40] end) as $l_hrm |
-    (if $kb_len == 80 then [41, 42, 43, 44] else [43, 44, 45, 46] end) as $r_hrm |
 
     # 3. ENSURE LAYERS EXIST
     ( ["HRM_Bil", "LeftPinky", "LeftRingy", "LeftMiddy", "LeftIndex", "RightIndex", "RightMiddy", "RightRingy", "RightPinky"] as $req |
@@ -107,15 +108,15 @@ script = """
     (.layer_names | index("RightRingy")) as $idx_rr |
     (.layer_names | index("RightPinky")) as $idx_rp |
 
-    # Extract dynamic Base Layer keystrokes
-    (.layers[0][$l_hrm[0]].params[0].value // "A") as $lk_p |
-    (.layers[0][$l_hrm[1]].params[0].value // "S") as $lk_r |
-    (.layers[0][$l_hrm[2]].params[0].value // "D") as $lk_m |
-    (.layers[0][$l_hrm[3]].params[0].value // "F") as $lk_i |
-    (.layers[0][$r_hrm[0]].params[0].value // "J") as $rk_i |
-    (.layers[0][$r_hrm[1]].params[0].value // "K") as $rk_m |
-    (.layers[0][$r_hrm[2]].params[0].value // "L") as $rk_r |
-    (.layers[0][$r_hrm[3]].params[0].value // "SEMI") as $rk_p |
+    # Extract dynamic Base Layer keystrokes (Safely extracting full param objects)
+    (.layers[0][$l_hrm[0]].params[0] // {"value": "A"}) as $lk_p |
+    (.layers[0][$l_hrm[1]].params[0] // {"value": "S"}) as $lk_r |
+    (.layers[0][$l_hrm[2]].params[0] // {"value": "D"}) as $lk_m |
+    (.layers[0][$l_hrm[3]].params[0] // {"value": "F"}) as $lk_i |
+    (.layers[0][$r_hrm[0]].params[0] // {"value": "J"}) as $rk_i |
+    (.layers[0][$r_hrm[1]].params[0] // {"value": "K"}) as $rk_m |
+    (.layers[0][$r_hrm[2]].params[0] // {"value": "L"}) as $rk_r |
+    (.layers[0][$r_hrm[3]].params[0] // {"value": "SEMI"}) as $rk_p |
 
     [
       {"h":"left", "f":"pinky", "ms":270, "mod":$mod.L1, "idx":$idx_lp, "bk":$lk_p, "others":["ring","middy","index"]},
@@ -140,7 +141,7 @@ script = """
         "params": ["code"]
       };
 
-    def tap_mac(name; base_key):
+    def tap_mac(name; base_param_obj):
       {
         "name": name, "waitMs": 0, "tapMs": 0,
         "bindings": [
@@ -149,7 +150,7 @@ script = """
           {"value":"&kp","params":[{"value":"LALT"}]}, {"value":"&kp","params":[{"value":"RALT"}]},
           {"value":"&kp","params":[{"value":$mod.L2}]}, {"value":"&kp","params":[{"value":$mod.R2}]},
           {"value":"&kp","params":[{"value":$mod.L1}]}, {"value":"&kp","params":[{"value":$mod.R1}]},
-          {"value":"&macro_tap"},{"value":"&kp","params":[{"value":base_key}]},
+          {"value":"&macro_tap"},{"value":"&kp","params":[base_param_obj]},
           {"value":"&macro_tap"},{"value":"&macro_param_1to1"},{"value":"&kp","params":[{"value":"A"}]}
         ],
         "params": ["code"]
@@ -180,14 +181,14 @@ script = """
     # 6. GENERATE ALL 9 LAYERS PROCEDURALLY
     (.layers[0] | to_entries | map(
       .key as $k | .value as $v |
-      if $k == $l_hrm[0] then {"value":"&HRM_left_pinky_v1B_TKZ", "params":[{"value":$mod.L1},{"value":$lk_p}], "decoration":{"background":$mod.C2}}
-      elif $k == $l_hrm[1] then {"value":"&HRM_left_ring_v1B_TKZ", "params":[{"value":"LALT"},{"value":$lk_r}], "decoration":{"background":"#e5feff"}}
-      elif $k == $l_hrm[2] then {"value":"&HRM_left_middy_v1B_TKZ", "params":[{"value":$mod.L2},{"value":$lk_m}], "decoration":{"background":$mod.C1}}
-      elif $k == $l_hrm[3] then {"value":"&HRM_left_index_v1B_TKZ", "params":[{"value":"LSHFT"},{"value":$lk_i}], "decoration":{"background":"#fffec9"}}
-      elif $k == $r_hrm[0] then {"value":"&HRM_right_index_v1B_TKZ", "params":[{"value":"RSHFT"},{"value":$rk_i}], "decoration":{"background":"#fffec9"}}
-      elif $k == $r_hrm[1] then {"value":"&HRM_right_middy_v1B_TKZ", "params":[{"value":$mod.R2},{"value":$rk_m}], "decoration":{"background":$mod.C1}}
-      elif $k == $r_hrm[2] then {"value":"&HRM_right_ring_v1B_TKZ", "params":[{"value":"LALT"},{"value":$rk_r}], "decoration":{"background":"#e5feff"}}
-      elif $k == $r_hrm[3] then {"value":"&HRM_right_pinky_v1B_TKZ", "params":[{"value":$mod.R1},{"value":$rk_p}], "decoration":{"background":$mod.C2}}
+      if $k == $l_hrm[0] then {"value":"&HRM_left_pinky_v1B_TKZ", "params":[{"value":$mod.L1}, $lk_p], "decoration":{"background":$mod.C2}}
+      elif $k == $l_hrm[1] then {"value":"&HRM_left_ring_v1B_TKZ", "params":[{"value":"LALT"}, $lk_r], "decoration":{"background":"#e5feff"}}
+      elif $k == $l_hrm[2] then {"value":"&HRM_left_middy_v1B_TKZ", "params":[{"value":$mod.L2}, $lk_m], "decoration":{"background":$mod.C1}}
+      elif $k == $l_hrm[3] then {"value":"&HRM_left_index_v1B_TKZ", "params":[{"value":"LSHFT"}, $lk_i], "decoration":{"background":"#fffec9"}}
+      elif $k == $r_hrm[0] then {"value":"&HRM_right_index_v1B_TKZ", "params":[{"value":"RSHFT"}, $rk_i], "decoration":{"background":"#fffec9"}}
+      elif $k == $r_hrm[1] then {"value":"&HRM_right_middy_v1B_TKZ", "params":[{"value":$mod.R2}, $rk_m], "decoration":{"background":$mod.C1}}
+      elif $k == $r_hrm[2] then {"value":"&HRM_right_ring_v1B_TKZ", "params":[{"value":"LALT"}, $rk_r], "decoration":{"background":"#e5feff"}}
+      elif $k == $r_hrm[3] then {"value":"&HRM_right_pinky_v1B_TKZ", "params":[{"value":$mod.R1}, $rk_p], "decoration":{"background":$mod.C2}}
       else $v end
     )) as $hrm_bil_layer |
 
@@ -195,27 +196,27 @@ script = """
       ($fingers | map(select(.h == $hand and .f == $finger))[0]) as $cfg |
       $base_layer | to_entries | map(
         .key as $k | .value as $v |
-        ($v.params[0].value // "NONE") as $bp |
+        ($v.params[0] // {"value": "NONE"}) as $bp |
         
         if ($v.value != "&kp") then {"value": "&trans"}
         else
           if $hand == "left" then
             if ($k | IN($lh_keys[])) then
-              if $k == $l_hrm[0] then (if $finger == "pinky" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_pinky_v1B_TKZ", "params":[{"value":$mod.L1}, {"value":$bp}]} end)
-              elif $k == $l_hrm[1] then (if $finger == "ring" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_ring_v1B_TKZ", "params":[{"value":"LALT"}, {"value":$bp}]} end)
-              elif $k == $l_hrm[2] then (if $finger == "middy" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_middy_v1B_TKZ", "params":[{"value":$mod.L2}, {"value":$bp}]} end)
-              elif $k == $l_hrm[3] then (if $finger == "index" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_index_v1B_TKZ", "params":[{"value":"LSHFT"}, {"value":$bp}]} end)
-              else {"value": "&HRM_left_\($finger)_tap_v1B_TKZ", "params": [{"value":$bp}]} end
+              if $k == $l_hrm[0] then (if $finger == "pinky" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_pinky_v1B_TKZ", "params":[{"value":$mod.L1}, $bp]} end)
+              elif $k == $l_hrm[1] then (if $finger == "ring" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_ring_v1B_TKZ", "params":[{"value":"LALT"}, $bp]} end)
+              elif $k == $l_hrm[2] then (if $finger == "middy" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_middy_v1B_TKZ", "params":[{"value":$mod.L2}, $bp]} end)
+              elif $k == $l_hrm[3] then (if $finger == "index" then {"value":"&none"} else {"value":"&HRM_left_\($finger)_index_v1B_TKZ", "params":[{"value":"LSHFT"}, $bp]} end)
+              else {"value": "&HRM_left_\($finger)_tap_v1B_TKZ", "params": [$bp]} end
             else
               $v 
             end
           else 
             if ($k | IN($rh_keys[])) then
-              if $k == $r_hrm[0] then (if $finger == "index" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_index_v1B_TKZ", "params":[{"value":"RSHFT"}, {"value":$bp}]} end)
-              elif $k == $r_hrm[1] then (if $finger == "middy" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_middy_v1B_TKZ", "params":[{"value":$mod.R2}, {"value":$bp}]} end)
-              elif $k == $r_hrm[2] then (if $finger == "ring" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_ring_v1B_TKZ", "params":[{"value":"LALT"}, {"value":$bp}]} end)
-              elif $k == $r_hrm[3] then (if $finger == "pinky" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_pinky_v1B_TKZ", "params":[{"value":$mod.R1}, {"value":$bp}]} end)
-              else {"value": "&HRM_right_\($finger)_tap_v1B_TKZ", "params": [{"value":$bp}]} end
+              if $k == $r_hrm[0] then (if $finger == "index" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_index_v1B_TKZ", "params":[{"value":"RSHFT"}, $bp]} end)
+              elif $k == $r_hrm[1] then (if $finger == "middy" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_middy_v1B_TKZ", "params":[{"value":$mod.R2}, $bp]} end)
+              elif $k == $r_hrm[2] then (if $finger == "ring" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_ring_v1B_TKZ", "params":[{"value":"LALT"}, $bp]} end)
+              elif $k == $r_hrm[3] then (if $finger == "pinky" then {"value":"&none"} else {"value":"&HRM_right_\($finger)_pinky_v1B_TKZ", "params":[{"value":$mod.R1}, $bp]} end)
+              else {"value": "&HRM_right_\($finger)_tap_v1B_TKZ", "params": [$bp]} end
             else
               $v 
             end
