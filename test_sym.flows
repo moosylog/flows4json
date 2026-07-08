@@ -11,7 +11,7 @@ description = """
 ### **What is the Primeagen Number Row?**
 
 Normally, you tap a number key to type `1` and hold Shift to type `!`. 
-This tool flips that around! Inspired by ThePrimeagen, it makes typing programmer symbols much easier by putting them front and center, so your pinky doesn't have to stretch for the Shift key constantly.
+This tool flips that around! [Inspired by ThePrimeagen](https://www.youtube.com/watch?v=VzsxDbkV4rE&t=1150s), it makes typing programmer symbols much easier by putting them front and center, so your pinky doesn't have to stretch for the Shift key constantly.
 
 **⚠️ Warning: This will automatically overwrite the top number row on your main typing layer (Layer 0).**
 
