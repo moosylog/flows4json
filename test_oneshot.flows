@@ -26,7 +26,7 @@ This script safely adds four new items to your settings (inspired by the popular
 
 ### **Safety First:**
 
-The script checks your file *before* making any changes. If you already have these specific items installed, the script will safely stop and show a warning so it doesn't create messy duplicates. Once the script runs, you can simply copy the example key from the new layer over to your main typing layer!
+The flow checks your layout *before* making any changes. If you already have these specific items installed, the script will safely stop and show a warning so it doesn't create messy duplicates. Once the script runs, you can simply copy the example key from the new layer over to your main typing layer!
 """
 
 # ==============================================================================
