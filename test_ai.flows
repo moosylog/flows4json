@@ -2,14 +2,14 @@ uid = "AI_control"
 type = "mutation"
 language = "en-US"
 title = "AI Control Layer"
-subtitle = "Claude Layer Inject"
+subtitle = "AI Layer Inject"
 description = """
 ## ⚠️ Developer Preview: Requires the upcoming Layout Editor release.
 Injects the Dongdong AI Control layout into your Glove80.
 
 https://discord.com/channels/877392805654306816/1193051200938049546/1527525298856529931
 
-## ⚠️ BETA
+## ⚠️ BETA  -  Claude Code and Codex CLI
 
 **What this does:**
 1. Adds a dedicated `AI_Control` layer populated with specialized AI macros.
