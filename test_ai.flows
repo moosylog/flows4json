@@ -9,6 +9,8 @@ Injects the Dongdong AI Control layout into your Glove80.
 
 https://discord.com/channels/877392805654306816/1193051200938049546/1527525298856529931
 
+## NOT TESTED
+
 **What this does:**
 1. Adds a dedicated `AI_Control` layer populated with specialized AI macros.
 2. Creates or updates the `Lower` layer with matching navigation/media bindings.
@@ -20,18 +22,17 @@ https://discord.com/channels/877392805654306816/1193051200938049546/152752529885
 * **Layer Check:** If `AI_Control` already exists, it will stop immediately to prevent corrupting your layout.
 * **Non-Destructive Behaviors:** If any macro or behavior (like `&sticky_key_oneshot`) already exists, it safely skips them and keeps your original settings intact.
 """
-
 # ==============================================================================
 # METADATA & CONFIG
 # ==============================================================================
 [manifest]
 author = "Dongdong"
 keyboards = ["glove80"]
-icon = "??"      
+icon = "🤖"      
 theme = "purple" 
 
 [config]
-category = "Test/Dev"
+category = "Productivity"
 
 # ==============================================================================
 # JQ SCRIPT 
@@ -57,6 +58,11 @@ script = """
   # 2. BEHAVIOR INJECTIONS (Idempotent - Skips if already exists)
   # ----------------------------------------------------------------------------
   
+  # Inject Sticky Keys safely (This fixes the missing &sticky_key_quickrel error)
+  .stickyKeys = ((.stickyKeys // []) + [
+    { "name": "&sticky_key_quickrel", "description": "Quick Release Sticky Key", "releaseAfterMs": 500, "quickRelease": true, "lazy": false, "ignoreModifiers": true, "bindings": ["&kp"] }
+  ] | unique_by(.name)) |
+
   # Inject HoldTaps safely
   .holdTaps = ((.holdTaps // []) + [
     { "name": "&sticky_key_modtap", "description": "", "flavor": "tap-preferred", "tappingTermMs": 250, "bindings": ["&kp", "&sticky_key_oneshot"] }
