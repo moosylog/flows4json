@@ -982,7 +982,7 @@
       "script": "\""
     },
     "param": [],
-    "mediaUrl": "https://moosylog.github.io/flows4json/test_ai.png"
+    "mediaUrl": null
   },
   {
     "uid": "sticky_oneshot_injector",
