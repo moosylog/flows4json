@@ -9,7 +9,7 @@ Injects the Dongdong AI Control layout into your Glove80.
 
 https://discord.com/channels/877392805654306816/1193051200938049546/1527525298856529931
 
-## NOT TESTED
+## BETA
 
 **What this does:**
 1. Adds a dedicated `AI_Control` layer populated with specialized AI macros.
