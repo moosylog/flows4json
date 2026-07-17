@@ -32,7 +32,7 @@ icon = "AI"
 theme = "purple" 
 
 [config]
-category = "Productivity"
+category = "Test/Dev"
 
 # ==============================================================================
 # JQ SCRIPT 
