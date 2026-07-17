@@ -1,7 +1,7 @@
 uid = "AI_control"
 type = "mutation"
 language = "en-US"
-title = "AI control layer"
+title = "AI Control Layer"
 subtitle = "Claude Layer Inject"
 description = """
 ## ?? Developer Preview: Requires the upcoming Layout Editor release.
