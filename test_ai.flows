@@ -28,7 +28,7 @@ https://discord.com/channels/877392805654306816/1193051200938049546/152752529885
 [manifest]
 author = "Dongdong"
 keyboards = ["glove80"]
-icon = "🤖"      
+icon = "AI"      
 theme = "purple" 
 
 [config]
