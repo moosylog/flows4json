@@ -1,7 +1,7 @@
 uid = "mirror_keyboard_halves"
 type = "mutation"
 language = "en-US"
-title = "Mirror Keyboard Halves"
+title = "Mirror Keyboard Keys"
 subtitle = "Swaps Left and Right Sides"
 description = """
 Automatically swaps all keybindings between the left and right halves of your keyboard for a specific layer.
