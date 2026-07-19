@@ -8,9 +8,9 @@ Automatically swaps all keybindings between the left and right halves of your ke
 
 This uses exact, 1:1 hardware matrix arrays for both **Go60** and **Glove80**, guaranteeing zero glitches around the thumb clusters or skipped bottom rows.
 
-### Choose your style:
-* **Symmetric Mirror:** Flips the layout like a mirror. Your Left Pinky column becomes your Right Pinky column. Ideal for creating one-handed typing layers.
-* **Block Swap:** Scoots the exact block over as-is. Your Left Pinky column becomes your Right Index column.
+### Features:
+* **Swap Style:** Choose between a physical block translation or a symmetric reflection (pinky-to-pinky).
+* **Thumb Exclusion:** Optionally lock your thumb keys in place so only the finger-wells mirror.
 
 ### Safety Check:
 If you select a layer that doesn't exist, or run this on an unsupported keyboard, the script will gracefully abort to protect your layout.
@@ -34,6 +34,14 @@ type = "select"
 options = ["symmetric", "block"]
 labels = ["Symmetric Mirror (Pinky -> Pinky)", "Block Swap (Left Side -> Right Side)"]
 default = "symmetric"
+
+[[param]]
+id = "exclude_thumbs"
+label = "Exclude Thumb Keys"
+type = "select"
+options = ["no", "yes"]
+labels = ["No, swap thumbs too", "Yes, keep thumb keys in their original place"]
+default = "no"
 
 # ==============================================================================
 # METADATA & CONFIG
@@ -82,7 +90,13 @@ def build_lookup(left; right; size):
     else
       [5,6,7,8,9, 16,17,18,19,20,21, 28,29,30,31,32,33, 40,41,42,43,44,45, 58,59,60,61,62,63, 55,56,57, 75,76,77,78,79, 72,73,74]
     end) as $R |
-    build_lookup($L; $R; 80)
+   
+    build_lookup($L; $R; 80) |
+   
+    # Safely overwrite the thumb indices to map to themselves if excluded
+    (if $exclude_thumbs == "yes" then
+      reduce [52,53,54,55,56,57,69,70,71,72,73,74][] as $t (.; .[$t] = $t)
+    else . end)
    
   elif $kb_len == 60 then
     [0,1,2,3,4,5, 12,13,14,15,16,17, 24,25,26,27,28,29, 36,37,38,39,40,41, 48,49,50, 54,55,56] as $L |
@@ -91,7 +105,13 @@ def build_lookup(left; right; size):
     else
       [6,7,8,9,10,11, 18,19,20,21,22,23, 30,31,32,33,34,35, 42,43,44,45,46,47, 51,52,53, 57,58,59]
     end) as $R |
-    build_lookup($L; $R; 60)
+   
+    build_lookup($L; $R; 60) |
+   
+    # Safely overwrite the thumb indices to map to themselves if excluded
+    (if $exclude_thumbs == "yes" then
+      reduce [54,55,56,57,58,59][] as $t (.; .[$t] = $t)
+    else . end)
    
   else
     error("FATAL: Unsupported matrix. Expected 80 or 60 keys, found " + ($kb_len | tostring))
