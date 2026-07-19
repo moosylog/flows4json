@@ -45,7 +45,7 @@ icon = "🪞"
 theme = "blue"
 
 [config]
-category = "Special keys"
+category = "Special Keys"
 
 # ==============================================================================
 # JQ SCRIPT
@@ -53,6 +53,9 @@ category = "Special keys"
 script = """
 (if type == "object" and .keymap? then .keymap else . end) |= (
  
+  # Ensure the UI parameter is strictly treated as an integer
+  ($layer_idx | tonumber) as $l_idx |
+
   # ----------------------------------------------------------------------------
   # 1. HARDWARE DETECTION & ERROR HANDLING
   # ----------------------------------------------------------------------------
@@ -71,8 +74,8 @@ script = """
     error("FATAL: Unsupported keyboard matrix. Expected 80 (Glove80) or 60 (Go60) keys, but found " + ($kb_len | tostring) + " keys.")
   end) as $ranges |
 
-  (if (.layers | length) <= $layer_idx then
-    error("FATAL: Target Layer " + ($layer_idx | tostring) + " does not exist. (Max layer in your layout is " + ((.layers | length) - 1 | tostring) + ").")
+  (if (.layers | length) <= $l_idx then
+    error("FATAL: Target Layer " + ($l_idx | tostring) + " does not exist. (Max layer in your layout is " + ((.layers | length) - 1 | tostring) + ").")
   else . end) |
 
   # ----------------------------------------------------------------------------
@@ -96,7 +99,7 @@ script = """
   # 3. SAFE TRANSFORMATION
   # ----------------------------------------------------------------------------
   # Execute the rewrite on the target layer, safely handling missing keys with null-coalescing
-  .layers[$layer_idx] |= (
+  .layers[$l_idx] |= (
     . as $old_layer |
     [ range($kb_len) |
       ($old_layer[map_idx(.; $ranges; $mirror_style)] // { "value": "&none" })
