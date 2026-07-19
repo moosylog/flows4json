@@ -1,0 +1,106 @@
+uid = "mirror_keyboard_halves"
+type = "mutation"
+language = "en-US"
+title = "Mirror Keyboard Halves"
+subtitle = "Swaps Left and Right Sides"
+description = """
+Automatically swaps all keybindings between the left and right halves of your keyboard for a specific layer.
+
+It dynamically calculates the hardware matrix, making it 100% compatible with both **Go60** and **Glove80**. Special matrix math is included to correctly handle the Go60's unique dual-row thumb cluster numbering.
+
+### Choose your style:
+* **Symmetric Mirror:** Flips the layout like a mirror. Your Left Pinky column becomes your Right Pinky column. Ideal for creating one-handed typing layers.
+* **Block Swap:** Scoots the exact block over as-is. Your Left Pinky column becomes your Right Index column.
+
+### Safety Check:
+If you select a layer that doesn't exist, or run this on an unsupported keyboard, the script will gracefully abort to protect your layout.
+"""
+
+# ==============================================================================
+# UI PARAMETERS
+# ==============================================================================
+
+[[param]]
+id = "layer_idx"
+label = "Layer to Mirror"
+type = "select"
+options = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]
+default = 0
+
+[[param]]
+id = "mirror_style"
+label = "Swap Style"
+type = "select"
+options = ["symmetric", "block"]
+labels = ["Symmetric Mirror (Pinky -> Pinky)", "Block Swap (Left Side -> Right Side)"]
+default = "symmetric"
+
+# ==============================================================================
+# METADATA & CONFIG
+# ==============================================================================
+[manifest]
+author = "MoosyResearch"
+keyboards = ["glove80", "go60"]
+icon = "🪞"      
+theme = "blue"
+
+[config]
+category = "Special keys"
+
+# ==============================================================================
+# JQ SCRIPT
+# ==============================================================================
+script = """
+(if type == "object" and .keymap? then .keymap else . end) |= (
+ 
+  # ----------------------------------------------------------------------------
+  # 1. HARDWARE DETECTION & ERROR HANDLING
+  # ----------------------------------------------------------------------------
+  (if .layers == null or (.layers | length) == 0 then
+    error("FATAL: Keymap contains no layers. Cannot proceed.")
+  else . end) |
+ 
+  (.layers[0] | length) as $kb_len |
+  (if $kb_len == 80 then
+    # Glove80 Row Array Map (Row 6 is a 22-key wrap-around)
+    [ [0,9], [10,21], [22,33], [34,45], [46,57], [58,79] ]
+  elif $kb_len == 60 then
+    # Go60 Row Array Map (Rows 5 & 6 handle the dual-tier thumb clusters: 6 keys each)
+    [ [0,11], [12,23], [24,35], [36,47], [48,53], [54,59] ]
+  else
+    error("FATAL: Unsupported keyboard matrix. Expected 80 (Glove80) or 60 (Go60) keys, but found " + ($kb_len | tostring) + " keys.")
+  end) as $ranges |
+
+  (if (.layers | length) <= $layer_idx then
+    error("FATAL: Target Layer " + ($layer_idx | tostring) + " does not exist. (Max layer in your layout is " + ((.layers | length) - 1 | tostring) + ").")
+  else . end) |
+
+  # ----------------------------------------------------------------------------
+  # 2. ADVANCED MAPPING ENGINE
+  # ----------------------------------------------------------------------------
+  def map_idx(x; ranges; style):
+    # Locate which physical row this key belongs to
+    (ranges | map(select(x >= .[0] and x <= .[1])) | .[0]) as $r |
+    if $r != null then
+      if style == "symmetric" then
+        # Mirrors the row (Start + End - Current)
+        ($r[0] + $r[1] - x)
+      else
+        # Translates the block based on the exact midpoint of the row array
+        ((($r[1] - $r[0] + 1) / 2) | floor) as $half |
+        if x < $r[0] + $half then (x + $half) else (x - $half) end
+      end
+    else x end;
+
+  # ----------------------------------------------------------------------------
+  # 3. SAFE TRANSFORMATION
+  # ----------------------------------------------------------------------------
+  # Execute the rewrite on the target layer, safely handling missing keys with null-coalescing
+  .layers[$layer_idx] |= (
+    . as $old_layer |
+    [ range($kb_len) |
+      ($old_layer[map_idx(.; $ranges; $mirror_style)] // { "value": "&none" })
+    ]
+  )
+)
+"""
