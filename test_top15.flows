@@ -4,7 +4,7 @@ language = "en-US"
 title = "Top 15 Advanced Examples"
 subtitle = "Community Vetted Tap-Dances & Mod-Morphs"
 description = """
-## ⚠️ Developer Preview: Requires the upcoming Layout Editor release.
+## ⚠️ NEW: Requires the Layout Editor native Tap-Dance & Mod-Morph.
 
 ---
 
@@ -193,4 +193,4 @@ icon = "🏆"
 theme = "green"
 
 [config]
-category = "Test/Dev"
+category = "Special keys"
