@@ -4,7 +4,7 @@ language = "us"
 title = "OneShot Modifier"
 subtitle = "OneShot Sticky Keys"
 description = """
-## ⚠️ Developer Preview: Requires the upcoming Layout Editor release.
+## ⚠️ NEW: Requires the Layout Editor native Tap-Dance & Mod-Morph.
 
 ---
 ### **What is OneShot Shift?**
@@ -130,4 +130,4 @@ icon = "✨"
 theme = "purple"
 
 [config]
-category = "Test/Dev"
+category = "Special keys"
