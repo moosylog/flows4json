@@ -4,7 +4,7 @@ language = "en-US"
 title = "Programmer Punctuation Swap"
 subtitle = "Invert Semicolon, Quotes & F4"
 description = """
-## ⚠️ Developer Preview: Requires the upcoming Layout Editor release.
+## ⚠️ NEW: Requires the Layout Editor native Tap-Dance & Mod-Morph.
 ---
 
 Swaps the shifted and unshifted states of common punctuation keys using Mod-Morphs, and adds an optional Tap-Dance for F4 to close windows.
@@ -160,4 +160,4 @@ icon = "🔀"
 theme = "blue" 
 
 [config]
-category = "Test/Dev"
+category = "Symbols"
