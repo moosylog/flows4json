@@ -33,7 +33,7 @@ icon = "AI"
 theme = "purple" 
 
 [config]
-category = "Test/Dev"
+category = "Special keys"
 
 # ==============================================================================
 # JQ SCRIPT 
