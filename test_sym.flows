@@ -1,10 +1,10 @@
 uid = "sym_numrw"
 type = "mutation"
 language = "en-US"
-title = "Primeagen's NumRow"
+title = "Primeagen's NumRow v2"
 subtitle = "Custom Number Row"
 description = """
-## ⚠️ Developer Preview: Requires the upcoming Layout Editor release.
+## ⚠️ NEW: Requires the Layout Editor native Tap-Dance & Mod-Morph.
 
 ---
 
@@ -212,4 +212,4 @@ icon = "🔢"
 theme = "yellow" 
 
 [config]
-category = "Test/Dev"
+category = "Symbols"
