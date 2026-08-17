@@ -1,0 +1,199 @@
+uid = "colemak_dh_native_converter"
+type = "mutation"
+language = "en-US"
+title = "Colemak-DH Native Converter"
+subtitle = "Hardcoded generation for specific layout"
+description = """
+Specifically tailored to the Colemak-DH 36-key layout.
+Manually expands C-macros into native MoErgo JSON AST nodes:
+* Autoshift pairs (e.g., as_bslh_caret)
+* Home Row Mods (lh_hr_mt, rh_hr_mt)
+* Thumb Layer Taps (fst_lt, rt_lt)
+* DO_MACRO expansions (do_a, do_ymd, etc.)
+"""
+
+[manifest]
+author = "MoosyResearch"
+keyboards = ["glove80", "go60"]
+icon = "🎯"      
+theme = "purple"
+
+[config]
+category = "test"
+
+script = """
+(if type == "object" and .keymap? then .keymap else . end) |= (
+ 
+  # ============================================================================
+  # 1. SPECIFIC LAYOUT DEFINITIONS (Manually Unrolled)
+  # ============================================================================
+ 
+  # Hold Taps
+  ([
+    {
+      "name": "&as",
+      "flavor": "tap-preferred",
+      "tappingTermMs": 200,
+      "bindings": ["&kp", "&kp"]
+    },
+    {
+      "name": "&lh_hr_mt",
+      "flavor": "balanced",
+      "tappingTermMs": 300,
+      "quickTapMs": 200,
+      "requirePriorIdleMs": 175,
+      "holdTriggerOnRelease": true,
+      "bindings": ["&kp", "&kp"]
+    },
+    {
+      "name": "&rh_hr_mt",
+      "flavor": "balanced",
+      "tappingTermMs": 300,
+      "quickTapMs": 200,
+      "requirePriorIdleMs": 175,
+      "holdTriggerOnRelease": true,
+      "bindings": ["&kp", "&kp"]
+    },
+    {
+      "name": "&fst_lt",
+      "flavor": "balanced",
+      "tappingTermMs": 200,
+      "bindings": ["&mo", "&kp"]
+    },
+    {
+      "name": "&rt_lt",
+      "flavor": "balanced",
+      "tappingTermMs": 200,
+      "quickTapMs": 250,
+      "bindings": ["&mo", "&kp"]
+    }
+  ]) as $hardcoded_hts |
+
+  # Autoshift Morph Pairs [Name, Lower, Upper]
+  [
+    ["as_bslh_caret", "BSLH", "CARET"],
+    ["as_n7_lbkt", "N7", "LBKT"],
+    ["as_n8_rbkt", "N8", "RBKT"],
+    ["as_n9_star", "N9", "STAR"],
+    ["as_fslh_amps", "FSLH", "AMPS"],
+    ["as_colon_excl", "COLON", "EXCL"],
+    ["as_n4_lpar", "N4", "LPAR"],
+    ["as_n5_rpar", "N5", "RPAR"],
+    ["as_n6_equal", "N6", "EQUAL"],
+    ["as_hash_pipe", "HASH", "PIPE"],
+    ["as_at_prcnt", "AT", "PRCNT"],
+    ["as_n1_lbrc", "N1", "LBRC"],
+    ["as_n2_rbrc", "N2", "RBRC"],
+    ["as_n3_dllr", "N3", "DLLR"],
+    ["as_grave_tilde", "GRAVE", "TILDE"],
+    ["as_minus_plus", "MINUS", "PLUS"],
+    ["as_n0_under", "N0", "UNDER"],
+    ["as_lt_gt", "LT", "GT"]
+  ] as $autoshift_defs |
+
+  # DO_MACRO definitions [Name, [Keys...]]
+  [
+    ["do_a", ["A"]],
+    ["do_c", ["C"]],
+    ["do_e", ["E"]],
+    ["do_f1", ["F"]],
+    ["do_f2", ["F", "F"]],
+    ["do_n1", ["N"]],
+    ["do_n2", ["N", "N"]],
+    ["do_p1", ["P"]],
+    ["do_p2", ["P", "P"]],
+    ["do_s", ["S"]],
+    ["do_ts", ["T", "S"]],
+    ["do_tss", ["T", "S", "S"]],
+    ["do_tsr", ["T", "S", "R"]],
+    ["do_u", ["U"]],
+    ["do_z1", ["Z"]],
+    ["do_z2", ["Z", "Z"]],
+    ["do_ymd", ["Y", "M", "D"]],
+    ["do_dmy", ["D", "M", "Y"]],
+    ["do_mdy", ["M", "D", "Y"]],
+    ["do_lbkt", ["LBKT"]]
+  ] as $do_macro_defs |
+
+  # ============================================================================
+  # 2. GENERATE NATIVE AST NODES
+  # ============================================================================
+
+  # Generate DO_MACROS
+  ($do_macro_defs | map({
+    "name": ("&" + .[0]),
+    "waitMs": 0,
+    "tapMs": 0,
+    "bindings": (
+      [
+        {"value": "&macro_wait_time", "params": [{"value": 100}]},
+        {"value": "&kp", "params": [{"value": "LS", "params": [{"value": "LC", "params": [{"value": "LA", "params": [{"value": "LG", "params": [{"value": "SEMI"}]}]}]}]}]},
+        {"value": "&macro_wait_time", "params": [{"value": 15}]}
+      ]
+      + (.[1] | map({"value": "&kp", "params": [{"value": .}]}))
+      + [{"value": "&kp", "params": [{"value": "SEMI"}]}]
+    )
+  })) as $generated_macros |
+
+  # Generate AUTOSHIFT MORPHS
+  ($autoshift_defs | map({
+    "name": ("&" + .[0]),
+    "cases": [
+      {
+        "binding": { "value": "&as", "params": [{"value": .[2]}, {"value": .[1]}] },
+        "mods": [], "keepMods": []
+      },
+      {
+        "binding": { "value": "&kp", "params": [{"value": .[2]}] },
+        "mods": ["MOD_LSFT", "MOD_RSFT"], "keepMods": []
+      }
+    ]
+  })) as $generated_morphs |
+
+  .macros = ($generated_macros + (.macros // []) | unique_by(.name)) |
+  .modMorphs = ($generated_morphs + (.modMorphs // []) | unique_by(.name)) |
+  .holdTaps = ($hardcoded_hts + (.holdTaps // []) | unique_by(.name)) |
+
+  # ============================================================================
+  # 3. SWEEP LAYERS & CONVERT CUSTOM BINDINGS
+  # ============================================================================
+ 
+  .layers |= map(
+    if type == "array" then
+      map(
+        if .value == "Custom" and (.params | type == "array") and (.params | length > 0) and (.params[0].value | type == "string") then
+         
+          if (.params[0].value | contains("(")) then
+            .
+          else
+            .decoration as $dec |
+            (.params[0].value | split(" ") | map(select(. != ""))) as $parts |
+           
+            (if ($parts | length) == 0 then
+              .
+            else
+              ($parts[0] | if . == "&mpk" then "&mkp" else . end) as $behavior |
+              (
+                if ($parts | length) > 1 then
+                  {
+                    "value": $behavior,
+                    "params": [
+                      $parts[1:] | .[] |
+                      { "value": (if test("^-?[0-9]+$") then tonumber else . end) }
+                    ]
+                  }
+                else
+                  { "value": $behavior }
+                end
+              )
+              | (if $dec != null then . + { "decoration": $dec } else . end)
+            end)
+          end
+        else
+          .
+        end
+      )
+    else . end
+  )
+)
+"""
