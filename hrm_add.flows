@@ -262,4 +262,4 @@ icon = "🏚️"
 # Optional: red, green, blue, purple, yellow, orange
 theme = "green" 
 [config]
-category = "Home-Row Mods"
+category = "dev/test"
