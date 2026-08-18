@@ -46,7 +46,7 @@ icon = "📦"
 theme = "red"
 
 [config]
-category = "Home-Row Mods"
+category = "Test"
 
 # ==============================================================================
 # JQ SCRIPT
