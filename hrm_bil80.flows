@@ -4,6 +4,7 @@ language = "us"
 title = "G80 Bilateral HRM Sunaku"
 subtitle = "Sunaku's Bilateral Home-Row Modifiers"
 description = """
+Export your layout to a JSON file from Layout Editor to use this. 
 
 Advanced home-row mods with bilateral combination enforcement improve typing flow by placing modifiers directly under your fingertips. 
 
