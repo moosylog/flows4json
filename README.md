@@ -18,7 +18,7 @@ Think of Flows as a friendly App Store for your keyboard. Instead of building co
     alt="Launch Flows App"
   />
 </a>
-
+![Flows Demo](flows_demo.gif)
 ---
 
 ### 🤔 What does this app do?
